@@ -18,6 +18,12 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/almanbetzhorobekov/kindergarten-frontend.git",
+    "accountId": "b448e04c-b4c8-45e9-b8e8-1705332fb35f"
+  }
+}]]></component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
@@ -25,6 +31,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "JavaScript Debug.index.html.executor": "Run",
+    "git-widget-placeholder": "main",
     "node.js.selected.package.tslint": "(autodetect)",
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
   }
