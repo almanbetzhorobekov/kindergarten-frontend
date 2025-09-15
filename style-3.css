@@ -1,0 +1,158 @@
+:root {
+  --primary-color: #e4eaec; 
+  --secondary-color: #d49007;; 
+  --text-color: white;
+  --bg-color: #f9f9f9;
+  --menu-color: #25213f;
+
+  --border-radius: 8px; /*Korner*/
+  --spacing: 20px; /*Abstand zwischen Kontainer*/
+  --max-width: 1200px; /*Max Breiter des Containers*/
+  
+  --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;/*Hauptschrift*/
+  --font-size-base: 1rem; /*Basisgröße des Textes*/
+  --font-size-lg: 1.25rem;/*Größe schrifgröße z.B. Absätze*/
+  --font-size-xl: 2.5rem;/*Hauptüberschriften z.B. Willkommen usw.*/
+
+}
+
+* {
+  margin: 0;/*Standard Außerabstände zurücksetzen*/
+  padding: 0; /*Innerabstände zurücksetzen*/
+  box-sizing: border-box; /*Padding in Breite/Höhe*/
+}
+
+
+body {
+  font-family: var(--font-main); /*Hauptschrift*/
+  color: var(--text-color);/*Schriftfarbe*/
+  background-image: url("images/logos-backgrounds/playdough-art-with-seal-underwater.jpg");;
+  background-size: cover; /*Background anpassen*/
+  background-repeat: no-repeat;/*Ohne kann wiederholen*/
+  background-position: center;/*Hintergrund zentrieren*/
+  background-color: #f0f4f4;/*Wenn b-image nicht download*/
+  min-height: 100vh;/*Mindesthöhe=gesamte Bildschirmhöhe*/
+  max-width: var(--body-size);
+  margin: 0 auto;
+}
+
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);/*Menü Farbe(Hitergrund)*/
+  padding: 15px;/*Innerabstand*/
+  border-radius: 18px;/*abgerundetes Menü*/
+  opacity: 0.9;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+
+}
+
+.logo {
+  color: #e4eaec;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: bold;
+  letter-spacing: 8px;
+
+}
+
+.logo:hover {
+  color: var(--secondary-color);
+  transform: scale(1.1);
+  background: rgba(255,255,255,0.1);
+}
+
+header ul {
+  list-style: none; /*Listenpunkte enfernen*/
+  display: flex;/*Flexbox für horizontale Anordnung*/
+  justify-content: flex-end;/*Nach rechts ausrichten*/
+  gap: 30px;/*Abstand zwischen den Elementen*/
+}
+
+header ul li a {
+  color: white;/*List z.B. Startseite, Kinder usw.*/
+  text-decoration: none;/*Ohne decaration*/
+  font-weight: bold;/**/
+  padding: 8px 15px;
+  border-radius: 6px;
+  display: inline-block; 
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+header li a:hover {
+  color: var(--secondary-color); 
+  transform: scale(1.1);
+  background: rgba(255,255,255,0.1);
+}
+
+/* Haupttext */
+h2, h3 {
+  color: rgb(150, 66, 154);
+  font-weight: 700;
+  margin-bottom: var(--spacing);
+}
+
+
+
+h1 {
+  font-size: 2rem;
+  text-align: left;
+  margin-top: 30px;
+}
+
+p {
+  margin: 10px 0;
+  font-size: var(--font-size-lg);
+  line-height: 1.6;
+}
+
+main {
+  width: 100%;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 20px; 
+  margin: 0 auto;
+}
+
+.footer {
+  backdrop-filter: blur(10px);
+  margin: 0;
+  text-align: center;
+  padding: 15px;
+  background: var(--menu-color);
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+ 
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px; 
+}
+
+.footer-links li a {
+  text-decoration: none;
+  color: white;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.footer-links li a:hover {
+  color: var(--secondary-color);
+  transform: scale(1.1);
+}

@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Eltern</title>
-    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/images/logos-backgrounds/favicon.png">
+    <link rel="stylesheet" href="style-2.css">
+    <link rel="stylesheet" href="responsive.css">
 </head>
 
 <style>
@@ -11,6 +14,7 @@
         font-family: Arial, sans-serif;
         border-collapse: collapse;
         width: 100%;
+      
     }
 
     td, th {
@@ -22,10 +26,12 @@
         background-color: #dddddd;
     }
 </style>
+
 <body>
 
     <header>
-        <nav> 
+        <a class="logo" href="index.html">Wunderkind</a>
+        <nav>
             <ul>
                 <li><a href="index.html">Startseite</a></li>
                 <li><a href="kindergarten.html">Kindergarten</a></li>
@@ -34,53 +40,56 @@
                 <li><a href="parents.html">Eltern</a></li>
                 <li><a href="educator.html">Erzieher*innen</a></li>
                 <li><a href="about-me.html">Über mich</a></li>
+               
             </ul>
         </nav>
     </header>
 
     <h1>Eltern Tabelle</h1>
 
-<table>
-    <thead>
-        <tr>
-            <th>Eltern</th>
-            <th>Kontakt</th>
-            <th>Kinder</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Heinrich Steinbusch</td>
-            <td>heinrich.steinbusch@beipiel.com</td>
-            <td>Lucia Steinbusch</td>
-        </tr>
-        <tr>
-            <td>Maria Steiner</td>
-            <td>maria.steiner@beispiel.com</td>
-            <td>Berta Steiner</td>
-        </tr>
-        <tr>
-            <td>Robert Müller</td>
-            <td>robertooo@beispiel.com</td>
-            <td>Adriana Müller</td>
-        </tr>
-        <tr>
-            <td>Sebastian Fedelschtein</td>
-            <td>sem@beispiel.com</td>
-            <td>Rebeca Fedelschtein</td>
-        </tr>
-        <tr>
-            <td>Lucia Schweizer</td>
-            <td>luciii@beispiel.com</td>
-            <td>Amelia Schweizer</td>
-        </tr>
-    </tbody>
-</table>
+    <main>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Eltern</th>
+                <th>Kontakt</th>
+                <th>Kinder</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Heinrich Steinbusch</td>
+                <td>heinrich.steinbusch@beipiel.com</td>
+                <td>Lucia Steinbusch</td>
+            </tr>
+            <tr>
+                <td>Maria Steiner</td>
+                <td>maria.steiner@beispiel.com</td>
+                <td>Berta Steiner</td>
+            </tr>
+            <tr>
+                <td>Robert Müller</td>
+                <td>robertooo@beispiel.com</td>
+                <td>Adriana Müller</td>
+            </tr>
+            <tr>
+                <td>Sebastian Fedelschtein</td>
+                <td>sem@beispiel.com</td>
+                <td>Rebeca Fedelschtein</td>
+            </tr>
+            <tr>
+                <td>Lucia Schweizer</td>
+                <td>luciii@beispiel.com</td>
+                <td>Amelia Schweizer</td>
+            </tr>
+        </tbody>
+    </table>
+    </main>
 
-<footer>
+<footer class="footer">
     <p>&copy; 2025 Kindergarten Wunderkind. Alle Rechte vorbehalten.</p>
     <nav>
-        <ul>
+        <ul class="footer-links">
             <li><a href="index.html">Startseite</a></li>
             <li><a href="contact.html">Kontakt</a></li>
         </ul>

@@ -1,55 +1,73 @@
 <!DOCTYPE html>
-<html lang="ут">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Über mich</title>
-  <link rel="icon" type="image/x-icon" href="/images/favicon.png">
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="/images/logos-backgrounds/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="responsive.css">
+  <link rel="stylesheet" href="style-2.css">
+  <link rel="stylesheet" href="about-me.css">
 </head>
 <body>
-  
-  <header>
-    <nav> 
-      <ul>
-        <li><a href="index.html">Startseite</a></li>
-        <li><a href="kindergarten.html">Kindergarten</a></li>
-        <li><a href="group.html">Gruppen</a></li>
-        <li><a href="child.html">Kinder</a></li>
-        <li><a href="parents.html">Eltern</a></li>
-        <li><a href="educator.html">Erzieher*innen</a></li>
-        <li><a href="about-me.html">Über mich</a></li>
-      </ul>
-    </nav>
-  </header>
+
+    <header>
+        <a class="logo" href="index.html">Wunderkind</a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Startseite</a></li>
+                <li><a href="kindergarten.html">Kindergarten</a></li>
+                <li><a href="group.html">Gruppen</a></li>
+                <li><a href="child.html">Kindern</a></li>
+                <li><a href="parents.html">Eltern</a></li>
+                <li><a href="educator.html">Erzieher*innen</a></li>
+                <li><a href="about-me.html">Über mich</a></li>
+               
+            </ul>
+        </nav>
+    </header>
   
   <h1>Almanbet Zhorobekov</h1>
+  
+  <main>
 
-  <div class="about-container">
-    <img src="/images/Alman.jpg" alt="Profilbild">
-    <div class="about-text">
-      <p>Hallo! Mein Name ist Almanbet,</p>
-      <p>ich bin 28 Jahre alt und arbeite als Erzieher im Kindergarten.</p>
-      <p>Die Arbeit mit Kindern erfüllt mich jeden Tag aufs Neue.</p>
-      <p>Ich bin stolz darauf, Teil dieses Kindergartens zu sein und genieße jede Minute mit den Kleinen.</p>
-      <button class="btn-check">Mehr erfahren</button>
-    </div>
+  <div class="bio">
+    <p>Hallo! Mein Name ist Almanbet,</p>
+    <p>ich bin 28 Jahre alt und arbeite als Erzieher im Kindergarten.</p>
+    <p>Die Arbeit mit Kindern erfüllt mich jeden Tag aufs Neue.</p>
+    <p>Ich bin stolz darauf, Teil dieses Kindergartens zu sein und genieße jede Minute mit den Kleinen.</p>
+  </div>
+  
+  <div class="games">
+    <h3>Lieblingsspiele</h3>
+
+    <input id="newGame" type="text" placeholder="Neues Spiel">
+    <button id="addBtn">Spiel hinzufügen</button>
+    <p id="message" class="message"></p>
+
+    <input id="search" type="text" placeholder="Suche Spiel..">
+
+    <ul id="gameList" class="spiele-list">
+      <li>Basteln mit Kindern</li>
+      <li>Verstecken</li>
+      <li>Bewegungsspiele</li>
+      <li>Ballspiel</li>
+    </ul>
+
   </div>
 
-  <h3 style="text-align:center; margin-top:40px;">Hobbys & Lieblingsspiele</h3>
-  <ul style="max-width:600px; margin:20px auto; line-height:1.8;">
-    <li>Basteln mit Kindern</li>
-    <li>Bewegungsspiele</li>
-    <li>Singen</li>
-  </ul>
+</main>
 
-  <footer>
-    <p>&copy; 2025 Kindergarten Sonnenschein. Alle Rechte vorbehalten.</p>
-    <nav>
-      <ul>
-        <li><a href="index.html">Startseite</a></li>
-        <li><a href="contact.html">Kontakt</a></li>
-      </ul>
-    </nav>
-  </footer>    
-  </body>
+    <footer class="footer">
+        <p>&copy; 2025 Kindergarten Wunderkind. Alle Rechte vorbehalten.</p>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="index.html">Startseite</a></li>
+                <li><a href="contact.html">Kontakt</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+    <script src="about-me.js"></script>
+</body>
 </html>
