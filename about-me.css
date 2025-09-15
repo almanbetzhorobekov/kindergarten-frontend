@@ -1,0 +1,98 @@
+@import "style-2.css";
+/* Über mich */
+:root {
+  --main-shadow: 0px 10px wheat;
+  --main-radius: 20px;
+  --hover-radius: 40px;
+  --main-text-color: white;
+  --box-shadow-px: 0 4px 10px;
+  --box-shadow-color: wheat;
+  --title-color: oklch(79.444% 0.17083 71.184 / 0.973);
+  --btn-green:  #48ac52;
+  --btn-green-hover: #158e21;
+  --transition-fast: 0.3s ease;
+  --text-list-color: white;
+}
+
+.bio {
+  color:var(--text-list-color);          
+  text-align: left; 
+  padding: var(--main-radius);  
+  border-radius: var(--main-radius);      
+  max-width: var(--margin-width-size);        
+  margin: 30px auto;
+  margin-bottom: var(--main-radius);
+  box-shadow: var(--box-shadow-color);
+}
+
+.bio p{
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.games {
+  margin-top: 15px;
+  padding-left: var(--main-radius);
+  list-style: none;      
+  padding: var(--main-radius);
+  margin: 25px auto;
+  max-width: var(--margin-width-size);          
+  border-radius: var(--main-radius);
+  box-shadow: var(--box-shadow-px) var(--box-shadow-color); 
+}
+
+.games h3 {
+  color: var(--title-color);
+  text-shadow: var(--box-shadow-color);
+  margin-bottom: 15px;
+}
+
+.games input {
+  display: inline-block;
+  color:var(--title-color);
+  font-size: 16px;
+  font-weight: 400;
+  padding: 14px 28px;
+  border-radius: 10px;
+  text-decoration: none;
+}
+
+.games button {
+  display: inline-block;
+  background: var(--btn-green);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+}
+
+.games button:hover {
+  cursor: pointer;
+  background: var(--btn-green-hover);
+  transition: var(--transition-fast);
+}
+
+.games ul {
+  margin-top: 15px;
+  list-style: none;
+  padding-left: 0;
+}
+
+.games li {
+  font-size: 18px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd; 
+  color:var(--main-text-color);
+  transition: var(--transition-fast);
+}
+.games li:hover {
+  transform: scale(1.05);
+  border-radius:var(--hover-radius);
+}
+
+.starred::before {
+  content: "⭐ ";
+  color: gold;
+}

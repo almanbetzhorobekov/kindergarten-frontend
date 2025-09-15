@@ -6,97 +6,46 @@
 }
 
 body {
-  font-family: "Mona Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: #f9f9f9;
-  color: #333;
-  line-height: 1.6;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(
+        135deg,
+        #0c0c0c 0%,
+        #1a1a2e 15%,
+        #16213e 35%,
+        #0f3460 50%,
+        #533a7d 70%,
+        #8b5a8c 85%,
+        #a0616a 100%
+    );
+    min-height: 100vh;
+    overflow-x: hidden;
 }
-
-html, body{
-  height: 100%;
-  margin: 0;
-}
-
-header nav ul {
-  display: flex;
-  justify-content: right;
-  gap: 20px;
-  list-style: none;
-  text-underline-position: above;
-  padding: 20px;
-  background: #d497cb;
-}
-
-header nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
 
 h1 {
+  color: aquamarine;
+  font-size: 4em;
+  font-weight: bold;
   text-align: center;
-  font-size: 2.5rem;
-  color: #861a92;
-  margin: 30px 0;
 }
 
-.about-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 30px;
+p {
+  margin-bottom: 30px;
+  margin-right: 10px;
+  margin-left: 10px;
+  font-size: 20px;
+  background-color: wheat;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  padding-right: 50px;
 }
 
-.about-container img {
-  width: 250px;
-  border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+a {
+  font-size: 20px;
+  color: blueviolet;
 }
 
-.about-text p {
-  margin-bottom: 15px;
-  font-size: 2.6rem;
+img {
+  height: 1000%;
+  max-width: 700px;
 }
-
-.btn-check {
-  display: inline-flex; /*Das Text macht flexible inner Container*/
-  align-items: center; /*Gilt nur in Flexbox*/
-  padding: 10px 20px; /**/
-  background: #27ae60;
-  color: white;
-  font-weight: bold; /**/
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;/*Der Mauszeiger ändert sich zu Finger, wennn da gibt es a {} dann als default ändert*/
- 
-}
-
-.btn-check:hover {
-  background: #219150;
-}
-
-footer {
-  background: #d497cb;
-  color: white;
-  padding: 20px;
-  text-align: center;
-  margin-top: auto;
-  position:static;
-}
-
-footer nav ul {
-  list-style: none;
-  margin: 10px 0;
-}
-
-footer nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-
-
-
