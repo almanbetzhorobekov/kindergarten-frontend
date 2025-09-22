@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style-2.css">
     <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="child.css">
 </head>
 
 <body>
@@ -26,10 +27,7 @@
         </nav>
     </header>
 
-
-
     <main>
-
     <h1>Unsere kleinen Entdecker</h1>
 
     <p>
@@ -37,19 +35,38 @@
         Hier findest du eine Übersicht über unsere Kinder und ihre individuellen Talente.
     </p>
 
-    <section>
-        <article>
-            <h2>Max Mustermann</h2>
-            <p>Alter: 4 Jahre</p>
-            <p>Mag: Malen und Dinosaurier</p>
-        </article>
+    <div class="childs">
+        <form id="childForm">
+        <input type="text" id="vorname" placeholder="Vorname">
+        <span class="error" aria-live="polite"></span>
+   
+        <input type="text" id="nachname" placeholder="Nachname">
+        <span class="error" aria-live="polite"></span>
 
-        <article>
-            <h2>Emma</h2>
-            <p>Alter: 5 Jahre</p>
-            <p>Mag: Singen und tanzen</p>
-        </article>
-    </section>
+        <input type="tel" id="telefon" placeholder="Telefon Nummer">
+        <span class="error" aria-live="polite"></span>
+
+        <input type="date" id="geburtsdatum">
+        <span class="error" aria-live="polite"></span>
+        
+        <select class="gruppe" id="gruppe" required>
+            <option value="">Bitte die Gruppe auswählen...</option>
+            <option value="Rot">Rot</option>
+            <option value="Grün">Grün</option>
+            <option value="Blau">Blau</option>
+            <option value="Gelb">Gelb</option>
+        </select>
+
+        <span class="error" aria-live="polite"></span>
+
+        <button type="submit">Anmelden</button>
+    </form>
+    </div>
+    <h3 style="color: beige;">Angemeldete Kinder</h3>
+    <ul id="childrenList">
+
+    </ul>
+    <button id="clearButton">Alle Kinder löschen</button>
 
     </main>
 
@@ -62,6 +79,8 @@
             </ul>
         </nav>
     </footer>
+
+    <script src="children.js"></script>
 
 </body>
 </html>

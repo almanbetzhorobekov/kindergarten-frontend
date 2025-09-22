@@ -3,13 +3,10 @@
   --secondary-color: #d49007;; 
   --text-color: white;
   --backgound-glass: rgba(255, 255, 255, 0.15);
-
-
   --backdrop-filter-blur: blur(10px);
-  --all-border: border: 1px solid rgba(255, 255, 255, 0.4);
+  --all-border: 1px solid rgba(255, 255, 255, 0.4);
   --border-radius-forAll: 20px; /*Korner*/
   --spacing: 20px; /*Abstand zwischen Kontainer*/
-
 
   --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;/*Hauptschrift*/
   --font-size-lg: 1.25rem;/*Größe schrifgröße z.B. Absätze*/
@@ -36,7 +33,6 @@ body {
   background-repeat: no-repeat;/*Ohne kann wiederholen*/
   background-position: center;/*Hintergrund zentrieren*/
   margin-right: -80px;
-  
   max-width: var(--body-size);
   margin: 0 auto;
 

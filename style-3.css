@@ -69,26 +69,46 @@ header {
 }
 
 header ul {
-  list-style: none; /*Listenpunkte enfernen*/
-  display: flex;/*Flexbox für horizontale Anordnung*/
-  justify-content: flex-end;/*Nach rechts ausrichten*/
-  gap: 30px;/*Abstand zwischen den Elementen*/
+  list-style: none; /* Listenpunkte entfernen */
+  display: flex; /* Flexbox für horizontale Anordnung */
+  justify-content: flex-end; /* Nach rechts ausrichten */
+  gap: 30px; /* Abstand zwischen den Elementen */
 }
 
 header ul li a {
-  color: white;/*List z.B. Startseite, Kinder usw.*/
-  text-decoration: none;/*Ohne decaration*/
-  font-weight: bold;/**/
+  color: white; /* List z.B. Startseite, Kinder usw. */
+  text-decoration: none; /* Ohne decoration */
+  font-weight: bold;
   padding: 8px 15px;
-  border-radius: 6px;
+  border-radius: 12px;
   display: inline-block; 
-  transition: transform 0.2s ease, color 0.2s ease;
+  position: relative;
+  overflow: hidden; /* damit "liquid" эффект остаётся внутри */
+  transition: all 0.4s ease;
 }
 
-header li a:hover {
-  color: var(--secondary-color); 
+header ul li a::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  transform: translate(-100%, -100%) rotate(25deg);
+  transition: transform 0.6s ease;
+}
+
+header ul li a:hover {
+  color: var(--secondary-color);
   transform: scale(1.1);
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px) saturate(150%);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+header ul li a:hover::before {
+  transform: translate(0, 0) rotate(25deg);
 }
 
 /* Haupttext */
