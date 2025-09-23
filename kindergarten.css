@@ -1,0 +1,90 @@
+.gallery {
+  display: flex;
+  overflow-x: auto;                /* горизонтальная прокрутка */
+  scroll-snap-type: x mandatory;  /* привязка к слайду */
+  gap: 70px;
+  padding: 20px;
+}
+
+.gallery-item {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  position: relative;
+  text-align: center;
+}
+
+.gallery-item img {
+  margin-left: -10px;
+  max-width: 350px;
+  margin-right: -40px;
+  width: 100%;
+  height: auto;
+  object-fit:cover;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.gallery-item p {
+  position:relative;
+  bottom: 10px;
+  left: 54%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 10px -20px 0px;
+}
+
+@media (max-width: 1024px) {
+  .gallery-item img {
+    max-height: 350px;
+  }
+  .gallery-item p {
+    max-width: 350px;
+    font-size: 0.95rem;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-item img {
+    max-height: 700px;
+    border-radius: 15px;
+    margin-left: -70px;
+  }
+
+  .gallery-item p {
+    max-width: 200px;
+    font-size: 0.9rem;
+    padding: 5px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-item img {
+    max-width: 300px;
+    max-height: 200px;
+    border-radius: 12px;
+  }
+  .gallery-item p {
+    max-width: 300px;
+    left: 51%;
+    font-size: 0.85rem;
+    padding: 4px 6px;
+  }
+}
+
+@media (max-width: 320px) {
+  .gallery-item img {
+    max-height: 200px;
+    left: 20%;
+  }
+  .gallery-item p {
+    max-width: 95%;
+    font-size: 0.8rem;
+    padding: 3px 5px;
+  }
+}
