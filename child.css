@@ -10,6 +10,8 @@
   --transition-fast: 0.3s ease;
   --text-list-color: white;
   --backdrop-filter-blur: blur(10px);
+  --btn-red: #d63a26; 
+  --btn-red-hover: #a63021;
 }
 
 .childs {
@@ -158,4 +160,29 @@
 .gruppe-gelb {
   color: #ffcc00;
   font-weight: bold;
+}
+
+.error {
+  color: #ff4d4d;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.clear {
+  margin-top: 15px;
+  display: inline-block;
+  background: var(--btn-red);
+  color: #fff;
+  font-size: 16px;
+  border-color: var(--box-shadow-color);
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 300px;
+  text-decoration: none;
+}
+
+.clear:hover {
+  cursor: pointer;
+  background: var(--btn-red-hover);
+  transition: var(--transition-fast);
 }

@@ -1,4 +1,4 @@
-const form = document.getElementById("childForm");
+const form = document.getElementById("childForm");//Holt das formular
 const vorname = document.getElementById("vorname");
 const nachname = document.getElementById("nachname");
 const telefon = document.getElementById("telefon");
@@ -6,11 +6,11 @@ const geburtsdatum = document.getElementById("geburtsdatum");
 const gruppe = document.getElementById("gruppe");
 const childrenList = document.getElementById("childrenList");
 
-let children = JSON.parse(localStorage.getItem("children")) || [];
-renderChildren();
+let children = JSON.parse(localStorage.getItem("children")) || []; // JSON.parse macht aus String wieder Array
+renderChildren();//Liste beim Laden direct anzeigen
 
 form.addEventListener("submit", function(event) {
-    event.preventDefault();
+    event.preventDefault(); //Enthält Informationen über das Ereignis (Klick, Formularabsendung usw.).
 
     clearErrors();
 
@@ -28,16 +28,20 @@ form.addEventListener("submit", function(event) {
 
     const germanPhoneNumberRegex = /^\+49[1-9][0-9]{1,14}$/;
     //Ich kann nicht DE Telefonnummer richtig prüfen(
-    if (germanPhoneNumberRegex.test(telefon.value.trim())) {
+    if (!germanPhoneNumberRegex.test(telefon.value.trim())) {
         showError(telefon, "Bitte gültige Telefonnummer (7–15 Ziffern) eingeben!");
         isValid = false;  
-    }    
+    }
+
     const geburtsDatumValue = new Date(geburtsdatum.value);
     const heute = new Date();
     const alter = heute.getFullYear() - geburtsDatumValue.getFullYear();
 
     if (geburtsdatum.value === "" || geburtsDatumValue >= heute) {
         showError(geburtsdatum, "Geburtsdatum muss in der Vergangenheit liegen!");
+        isValid = false;
+    } else if (alter < 1) {
+        showError(geburtsdatum, "Kind muss mindestens 1 Jahr alt sein!");
         isValid = false;
     } else if (alter > 7) {
         showError(geburtsdatum, "Kind darf nicht älter als 7 Jahre sein!");
@@ -60,7 +64,7 @@ form.addEventListener("submit", function(event) {
     };
 
     children.push(kind);
-    localStorage.setItem("children", JSON.stringify(children));
+    localStorage.setItem("children", JSON.stringify(children));//Wandelt ein Objekt in einen String um, um es zu speichern
 
     renderChildren();
 
@@ -94,7 +98,7 @@ function renderChildren() {
     });
 }
 
-localStorage.clear();
+//localStorage.clear();
 
 document.getElementById("clearButton").addEventListener("click", function () {
     localStorage.removeItem("children");
