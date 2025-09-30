@@ -17,8 +17,7 @@
 .childs {
   list-style: none;      
   padding: var(--main-radius) 25px 25px 25px;
-  margin: 25px auto;
-  max-width: var(--margin-width-size);          
+  margin: 25px auto;        
   border-radius: var(--main-radius);
   box-shadow: var(--box-shadow-px) var(--box-shadow-color);
   backdrop-filter: var(--backdrop-filter-blur);
@@ -97,16 +96,6 @@
   box-shadow: 0 0 10px rgba(21, 142, 33, 0.7);
 }
 
-#childrenList {
-  list-style: none;     
-  padding: var(--main-radius) 25px 25px 25px;
-  margin: 25px auto;
-  max-width: var(--margin-width-size);          
-  border-radius: var(--main-radius);
-  box-shadow: var(--box-shadow-px) var(--box-shadow-color);
-  backdrop-filter: var(--backdrop-filter-blur);
-}
-
 .child-item {
   margin: 5px;
   width: 100%;
@@ -121,45 +110,9 @@
 
 }
 
-.childrenList {
-  list-style: none;
-  padding: 0;
-  margin: 25px auto;
-  max-width: var(--margin-width-size);
-}
-
-.child-card  {
-  list-style: none;
-  border-radius: 20px;
-  background: #1b1a1a;
-  color: var(--text-list-color);
-  padding: var(--main-radius);
-  margin-bottom: var(--main-radius);
-  border-bottom: 1px solid #3d3636;
-  box-shadow: var(--box-shadow-px) var(--box-shadow-color);
-  transition: var(--transition-fast);
-}
-
 .child-card:hover {
   transform: scale(1.02);
   background: #2a2a2a;
-}
-
-.gruppe-rot {
-  color: #ff4d4d;
-  font-weight: bold;
-}
-.gruppe-grün {
-  color: #33cc33;
-  font-weight: bold;
-}
-.gruppe-blau {
-  color: #3399ff;
-  font-weight: bold;
-}
-.gruppe-gelb {
-  color: #ffcc00;
-  font-weight: bold;
 }
 
 .error {
@@ -167,14 +120,14 @@
   font-size: 14px;
   margin-left: 5px;
 }
-
+/*
 .clear {
   margin-top: 15px;
   display: inline-block;
   background: var(--btn-red);
   color: #fff;
   font-size: 16px;
-  border-color: var(--box-shadow-color);
+  border: 2px solid var(--box-shadow-color);
   font-weight: 600;
   padding: 14px 28px;
   border-radius: 300px;
@@ -185,4 +138,4 @@
   cursor: pointer;
   background: var(--btn-red-hover);
   transition: var(--transition-fast);
-}
+}*/

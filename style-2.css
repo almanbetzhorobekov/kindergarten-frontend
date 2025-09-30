@@ -14,7 +14,6 @@
   --body-size: 1640px;
 
   --o-transform: translateY(-8px);
-  
 }
 
 * {
@@ -96,7 +95,7 @@ header li a:hover {
 
 /* Haupttext */
 h2, h3 {
-  color: rgb(150, 66, 154);
+  color:white;
   font-weight: 700;
   margin-bottom: var(--spacing);
 }

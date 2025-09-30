@@ -2,7 +2,10 @@
 :root {
     --box-shadow-px: 0 4px 10px;
     --box-shadow-color: oklch(79.444% 0.17083 71.184 / 0.973);
-     --transition-fast: 0.3s ease;
+    --transition-fast: 0.3s ease;
+    --btn-green: #48ac52;
+    --btn-green-hover: #158e21;
+    --transition-fast: 0.3s ease;
 }
 
 .hero {
@@ -43,19 +46,21 @@
 }
 
 .hero-btn {
+    margin-top: 15px;
     display: inline-block;
-    background: #4ca553;
+    background: var(--btn-green);
     color: #fff;
     font-size: 16px;
+    border-radius: 300px;
+    border: 2px solid var(--box-shadow-color);
     font-weight: 600;
     padding: 14px 28px;
-    border-radius: 30px;
-    text-decoration: none;
+    text-decoration: none; 
 }
 
 .hero-btn:hover {
-    background: #158e21;
-    transition: transform 0.3s;
+    background: var(--btn-green-hover);
+    transition: var(--transition-fast);
 }
 
 /* Cards */
