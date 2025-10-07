@@ -1,26 +1,3 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const children = JSON.parse(localStorage.getItem("children")) || [];
-
-    children.forEach(child => {
-        const card = document.createElement("article");
-        card.classList.add("child-card");
-        card.innerHTML = `
-            <h3>${child.vorname} ${child.nachname}</h3>
-            <p>Alter: ${calculateAge(child.geburtsdatum)} Jahre</p>
-        `;
-
-    
-        const groupId = "gruppe-" + child.gruppe.toLowerCase();
-        const groupSection = document.getElementById(groupId);
-
-        if (groupSection) {
-            groupSection.appendChild(card);
-        } else {
-            console.warn("Keine Gruppe gefunden für:" , child.gruppe)
-        }
-    });
-});
-
 function calculateAge(geburtsdatum) {
     const birthDate = new Date(geburtsdatum);
     const today = new Date();
@@ -34,9 +11,31 @@ function calculateAge(geburtsdatum) {
     return age;
 }
 
-/*document.getElementById("clearButton").addEventListener("click", function () {
-    localStorage.removeItem("children");
-    children = [];
-    alert("Alle Kinder gelöscht!");
-});
-*/
+const groupList = document.querySelector(".groups");
+
+async function loadGroups() {
+    try {const response = await fetch('http://localhost:8080/api/groups');
+    const groups = await response.json()
+    console.log(groups);
+
+    groupList.innerHTML = "";
+
+    groups.forEach(group => {
+        const section = document.createElement("section");
+        section.classList.add("group");
+
+        section.dataset.uuid = group.uuid;
+
+        section.innerHTML = `
+        <h2>${group.groupName}</h2>
+        <p>Erzieher: ${group.educatorId ?? "—"}</p>
+    `;
+    groupList.appendChild(section);
+  });
+
+    } catch (error) {
+        console.error("Fehler beim laden der Gruppen: ", error) 
+    }
+}
+
+window.onload = loadGroups;

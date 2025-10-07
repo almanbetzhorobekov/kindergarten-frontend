@@ -62,6 +62,7 @@ form.addEventListener("submit", function(event) {
     let children = JSON.parse(localStorage.getItem("children")) || [];
     children.push(kind);
     localStorage.setItem("children", JSON.stringify(children));
+    console.log(children);
 
     alert("Kind erfolgreich in Gruppe " + kind.gruppe + " gespeichert!");
     form.reset();
