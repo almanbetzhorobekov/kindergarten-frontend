@@ -27,63 +27,35 @@
     </header>
 
     <h1>Erzieher*innen im Kindergarten</h1>
-    <p><em>Hier finden Sie Informationen über unser Erzieher*innenteam.</em></p>
+
 
     <main class="main">
-        <section>
-            <article> <!--Ein in sich geschlossener Inhalt, z. B. ein Artikel, ein Blogeintrag oder ein Infofeld.-->
-                <h2>Beschreibung</h2>
-                <p>
-                    Unsere <strong>Erzieher*innen</strong> sind pädagogisch geschult und begleiten die Kinder liebevoll und professionell durch den Alltag.
-                </p>
-            </article>
-        </section>
-        <!--Section ist ein thematische Abschnitt innerhalb der Seite. Ablauf, Beschreibung usw.-->
-        <section>
-            <article>
-                <h2>Ablauf</h2>
-                <ol>
-                    <li>Bewerbung und Vorstellungsgespräch</li>
-                    <li>Probezeit</li>
-                    <li>Teilnahme an Fortbildungen</li>
-                    <li>Feedbackgespräch</li>
-                </ol>
-            </article>
-        </section>
-        <!--Info-box-->
-        <aside><!--Zusätzliche Information-->
-            <h2>Info</h2>
-            <p><strong>Aktuell:</strong> In unserem Kindergarten sind derzeit <strong>4 Erzieher*innen</strong> tätig.</p>
-        </aside>
+        <h2>
+            Erzieher Liste
+            <section id="educator-list"></section>
+        </h2>
+        
 
-        <section>
+        <h2>Neue Erzieher hinzufügen</h2>
 
-            <h2>Unser Team</h2>
+        <form id="educator-form">
+            <input type="text" id="firstname" placeholder="Vorname" required>
+            <input type="text" id="lastname" placeholder="Nachname" required>
+            <input type="number" id="age" placeholder="Alter" min="18" max="65" required>
 
-            <article>
-                <a href="about-me.html"><h3>Almanbet</h3></a>
-                <img src="/images/Alman.jpg" alt="Almanbet"
-                style="width: 200px; border: 2px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
-            </article>
+            <h3>Adresse</h3>
+            <input type="text" id="street" placeholder="Straße" required>
+            <input type="text" id="plz" placeholder="PLZ" max="5" required>
+            <input type="text" id="houseNumber" placeholder="Hausnummer" required>
 
-            <article>
-                <a href="https://en.wikipedia.org/wiki/Will_Smith_(The_Fresh_Prince_of_Bel-Air)"><h3>Will Smith</h3></a>
-                <img src="/images/Kindergarten.Will_Smith.jfif" alt="Will Smith"
-                    style="width: 200px; border: 2px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
-            </article>
+            <h3>Kontakt</h3>
+            <input type="text" id="email" placeholder="Email" required>
+            <input type="number" id="Telefon" placeholder="Telefonnummer" required>
+            
 
-            <article>
-                <h3>Indiana Jones</h3>
-                <img src="/images/Kindergarten.Indiana_Jones.jfif" alt="Indiana Jones"
-                        style="width: 200px; border: 2px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
-            </article>
+            <button type="submit">Erstellen</button>
+        </form>
 
-            <article>
-                    <h3>Shakira</h3>
-                    <img src="/images/Kindergarten.Shakira.jfif" alt="Shakira"
-                        style="width: 200px; border: 2px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
-            </article>
-        </section>
     </main>
 
     <footer class="footer">

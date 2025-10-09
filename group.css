@@ -13,7 +13,7 @@
 
 .groups {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns:auto;
     gap: var(--spacing);
     padding: var(--spacing);
     max-width: 1600px;
