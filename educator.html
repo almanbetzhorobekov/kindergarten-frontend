@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style-2.css">
     <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="educator.css">
 </head>
 
 <body>
@@ -26,8 +27,6 @@
         </nav>
     </header>
 
-    <h1>Erzieher*innen im Kindergarten</h1>
-
 
     <main class="main">
         <h2>
@@ -35,26 +34,38 @@
             <section id="educator-list"></section>
         </h2>
         
-
         <h2>Neue Erzieher hinzufügen</h2>
-
+    
+    <section class="educators">
         <form id="educator-form">
-            <input type="text" id="firstname" placeholder="Vorname" required>
-            <input type="text" id="lastname" placeholder="Nachname" required>
-            <input type="number" id="age" placeholder="Alter" min="18" max="65" required>
+            <input type="text" id="firstName" name="firstName" placeholder="Vorname" required>
+            <input type="text" id="lastName" name="lastName" placeholder="Nachname" required>
+            <input type="date" id="birthday" name="birthday" placeholder="Geburtsdatum" required>
 
-            <h3>Adresse</h3>
-            <input type="text" id="street" placeholder="Straße" required>
-            <input type="text" id="plz" placeholder="PLZ" max="5" required>
-            <input type="text" id="houseNumber" placeholder="Hausnummer" required>
+            <input type="text" id="street" name="street" placeholder="Straße" required>
+            <input type="text" id="houseNumber" name="houseNumber" placeholder="Hausnummer" required>
+            <input type="text" id="plz" name="plz" placeholder="PLZ" required>
 
-            <h3>Kontakt</h3>
-            <input type="text" id="email" placeholder="Email" required>
-            <input type="number" id="Telefon" placeholder="Telefonnummer" required>
-            
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Telefonnummer" required>
+
+            <select id="kindergartenSelect" name="kindergartenSelect" required>
+                <option value="">Wähle Kindergarten</option>
+            </select>
+
+            <select id="groupSelect" name="groupSelect" class="gruppe" required>
+                <option value="">Bitte die Gruppe auswählen...</option>
+            </select>
 
             <button type="submit">Erstellen</button>
         </form>
+    </section>
+
+    <h2>
+        Erzieher Liste
+        <section id="educator-list"></section>
+    </h2>
+    
 
     </main>
 
@@ -67,6 +78,7 @@
             </ul>
         </nav>
     </footer>
+    <script src="educator.js"></script>
 
 </body>
 </html>

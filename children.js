@@ -1,89 +1,134 @@
 const form = document.getElementById("childForm");
-const vorname = document.getElementById("vorname");
-const nachname = document.getElementById("nachname");
-const telefon = document.getElementById("telefon");
-const geburtsdatum = document.getElementById("geburtsdatum");
-const gruppe = document.getElementById("gruppe");
+const firstName = document.getElementById("firstName");
+const lastName = document.getElementById("lastName");
+const birthday = document.getElementById("birthday");
+const kindergartenSelect = document.getElementById("kindergartenSelect");
+const groupSelect = document.getElementById("groupSelect");
+const clearButton = document.getElementById("clearButton");
 
-let children = JSON.parse(localStorage.getItem("children")) || [];
+const apiKindergartens = "http://localhost:8080/api/kindergartens";
+const apiGroups = "http://localhost:8080/api/groups";
+const apiChildren = "http://localhost:8080/api/children";
 
+async function loadKindergartens() {
+    try {
+        const response = await fetch(apiKindergartens);
+        if (!response.ok) throw new Error("Error loading kindergartens!");
+
+        const kindergartens = await response.json();
+        kindergartenSelect.innerHTML = '<option value="">--Kindergarten auswählen --</option>';
+
+        kindergartens.forEach(kita => {
+            const option = document.createElement("option");
+            option.value = kita.uuid;
+            option.textContent = kita.kindergartenName;
+            kindergartenSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Error loading kindergartens:", error);
+        alert("Could not load kindergartens!");
+    }
+}
+
+kindergartenSelect.addEventListener("change", function() {
+    const kindergartenId = this.value;
+    groupSelect.innerHTML = "<option value=''>Please select a group...</option>";
+
+    if (!kindergartenId) return;
+
+    fetch(`${apiGroups}/by-kindergarten/${kindergartenId}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Error loading groups!");
+            return res.json();
+        })
+        .then(groups => {
+            console.log("Groups loaded from backend:", groups);
+            groupSelect.innerHTML = "<option value=''>Please select a group...</option>";
+            groups.forEach(g => {
+                const option = document.createElement("option");
+                option.value = g.uuid;
+                option.textContent = g.groupName;
+                groupSelect.appendChild(option);
+            });
+        })
+        .catch(err => console.error(err.message));
+});
+
+// send Child
 form.addEventListener("submit", function(event) {
     event.preventDefault();
     clearErrors();
 
-    let isValid = true;
+    if (!validateForm()) return;
 
-    if (vorname.value.trim() === "") {
-        showError(vorname, "Bitte Vorname eingeben!");
-        isValid = false;
-    }
-
-    if (nachname.value.trim() === "") {
-        showError(nachname, "Bitte Nachname eingeben!");
-        isValid = false;
-    }
-
-    const germanPhoneNumberRegex = /^\+49[1-9][0-9]{1,14}$/;
-    if (!germanPhoneNumberRegex.test(telefon.value.trim())) {
-        showError(telefon, "Bitte gültige Telefonnummer eingeben!");
-        isValid = false;  
-    }
-
-    const geburtsDatumValue = new Date(geburtsdatum.value);
-    const today = new Date();
-    const age = today.getFullYear() - geburtsDatumValue.getFullYear();
-
-    if (geburtsdatum.value === "" || geburtsDatumValue >= today) {
-        showError(geburtsdatum, "Geburtsdatum muss in der Vergangenheit liegen!");
-        isValid = false;
-    } else if (age < 1) {
-        showError(geburtsdatum, "Kind muss mindestens 1 Jahr alt sein!");
-        isValid = false;
-    } else if (age > 7) {
-        showError(geburtsdatum, "Kind darf nicht älter als 7 Jahre sein!");
-        isValid = false;
-    }
-
-    if (gruppe.value === "") {
-        showError(gruppe, "Bitte eine Gruppe auswählen!");
-        isValid = false;
-    }
-
-    if (!isValid) return;
-
-    const kind = {
-        vorname: vorname.value,
-        nachname: nachname.value,
-        telefon: telefon.value,
-        geburtsdatum: geburtsdatum.value,
-        gruppe: gruppe.value
+    const child = {
+        firstName: firstName.value.trim(),
+        lastName: lastName.value.trim(),
+        birthday: birthday.value,
+        groupId: groupSelect.value
     };
 
-    let children = JSON.parse(localStorage.getItem("children")) || [];
-    children.push(kind);
-    localStorage.setItem("children", JSON.stringify(children));
-    console.log(children);
+    console.log("Send child: ", child);
 
-    alert("Kind erfolgreich in Gruppe " + kind.gruppe + " gespeichert!");
-    form.reset();
+    fetch(apiChildren, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(child)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Error saving child!");
+        return res.json();
+    })
+    .then(data => {
+        alert(`Child "${data.firstName} ${data.lastName}" was successfully registered!`);
+        form.reset();
+    })
+    .catch(err => alert(err.message));
 });
+
+function validateForm() {
+    let isValid = true;
+    if (firstName.value.trim() === "") {
+        showError(firstName, "Bitte Vorname eingeben!");
+        isValid = false;
+    }
+    if (lastName.value.trim() === "") {
+        showError(lastName, "Bitte Nachname eingeben!");
+        isValid = false;
+    }
+    const birthdayValue = new Date(birthday.value);
+    const today = new Date();
+    const age = today.getFullYear() - birthdayValue.getFullYear();
+    if (birthday.value === "" || birthdayValue >= today) {
+        showError(birthday, "Geburtsdatum muss in der Vergangenheit liegen!");
+        isValid = false;
+    } else if (age < 1 || age > 6) {
+        showError(birthday, "Kind muss zwischen 1 und 6 Jahre alt sein!");
+        isValid = false;
+    }
+    if (groupSelect.value === "") {
+        showError(groupSelect, "Bitte eine Gruppe auswählen!");
+        isValid = false;
+    }
+    return isValid;
+}
 
 function showError(input, message) {
     const errorSpan = input.nextElementSibling;
-    errorSpan.textContent = message;
+    if (errorSpan) errorSpan.textContent = message;
 }
 
 function clearErrors() {
-    document.querySelectorAll(".error").forEach(span => {
-        span.textContent = "";
-    });
+    document.querySelectorAll(".error").forEach(span => span.textContent = "");
 }
 
-document.getElementById("clearButton").addEventListener("click", function () {
-    localStorage.removeItem("children");
-    children = [];
-    alert("Alle Kinder gelöscht!");
+clearButton.addEventListener("click", () => {
+    alert("Diese Funktion löscht keine Daten vom Server.");
 });
+
+window.onload = () => {
+    loadKindergartens();
+};
 
 
 

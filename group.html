@@ -43,11 +43,18 @@
 
     <form id="group-form">
         <input type="text" id="group-name" placeholder="Gruppenname" required>
+        <label for="kindergarten-select">Kindergarten wählen:</label>
+        <select name="" id="kindergarten-select" required>
+            <option value="">--Wähle Kindergarten--</option>
+        </select>
+        
         <button type="submit">Erstellen</button>
     </form>
 
-    <div class="groups"></div>
-    <button type="submit" id="clearButton" class="clear">Alle Kinder löschen</button>
+    <div class="groups" id="load-groups"></div>
+
+    <button type="submit" id="clearButton" class="clear">Alle Gruppen löschen</button>
+    <button id="load-kindergartens">Alle Gruppen laden</button>
 
     </main>
     

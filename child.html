@@ -5,6 +5,7 @@
     <title>Kinder</title>
     <link rel="icon" type="image/x-icon" href="/images/logos-backgrounds/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="style-3.css">
     <link rel="stylesheet" href="responsive.css">
     <link rel="stylesheet" href="child.css">
@@ -28,42 +29,44 @@
     </header>
 
     <main>
-    <h1>Unsere kleinen Entdecker</h1>
 
-    <p>
-        In unserem Kindergarten wachsen die Kinder in einem liebevollen und sicheren Umfeld auf.
-        Hier findest du eine Übersicht über unsere Kinder und ihre individuellen Talente.
-    </p>
+    <section class="intro">
+            <h1>Unsere kleinen Entdecker</h1>
+            <p>
+                In unserem Kindergarten wachsen die Kinder in einem liebevollen und sicheren Umfeld auf.
+                Hier findest du eine Übersicht über unsere Kinder und ihre individuellen Talente.
+            </p>
+    </section>
 
-    <div class="childs">
+    <section class="childs">
         <form id="childForm">
-        <input type="text" id="vorname" placeholder="Vorname">
-        <span class="error" aria-live="polite"></span>
-   
-        <input type="text" id="nachname" placeholder="Nachname">
-        <span class="error" aria-live="polite"></span>
 
-        <input type="tel" id="telefon" placeholder="Telefon Nummer">
-        <span class="error" aria-live="polite"></span>
+            <input type="text" id="firstName" name="firstName" placeholder="Vorname" required>
+            <span class="error" aria-live="polite"></span>
 
-        <input type="date" id="geburtsdatum">
-        <span class="error" aria-live="polite"></span>
-        
-        <select class="gruppe" id="gruppe" required>
-            <option value="">Bitte die Gruppe auswählen...</option>
-            <option value="Rot">Rot</option>
-            <option value="Grün">Grün</option>
-            <option value="Blau">Blau</option>
-            <option value="Gelb">Gelb</option>
-        </select>
-        <span class="error" aria-live="polite"></span>
-        <button type="submit">Anmelden</button>
-    </form>
-    </div>
+            <input type="text" id="lastName" name="lastName" placeholder="Nachname" required>
+            <span class="error" aria-live="polite"></span>
 
-    </ul>
-    <button type="submit" id="clearButton" class="clear">Alle Kinder löschen</button>
+            <input type="date" id="birthday" name="birthday" placeholder="Geburtsdatum" required>
+            <span class="error" aria-live="polite"></span>
 
+            <select id="kindergartenSelect" name="kindergartenSelect" required>
+                <option value="">Wähle Kindergarten</option>
+            </select>
+
+            <select id="groupSelect" name="groupSelect" class="gruppe" required>
+                <option value="">Bitte die Gruppe auswählen...</option>
+            </select>
+
+            <span class="error" aria-live="polite"></span>
+
+            <button type="submit">Anmelden</button>
+        </form>
+    </section>
+
+    <section class="clear-section">
+        <button type="button" id="clearButton" class="clear">Alle Kinder löschen</button>
+    </section>
     </main>
 
     <footer class="footer">

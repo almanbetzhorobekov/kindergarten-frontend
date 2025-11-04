@@ -1,14 +1,14 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>Kindergarten</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/images/logos-backgrounds/favicon.png">
     <link rel="stylesheet" href="style-2.css">
-    <link rel="stylesheet" href="responsive.css">
     <link rel="stylesheet" href="kindergarten.css">
+     <link rel="stylesheet" href="responsive.css">
 </head>
 
 <body>
@@ -142,6 +142,28 @@
         </div>
 
     </section>
+
+    <section class="newKindergarten">
+
+        <h2>Neuen Kindergarten erstellen</h2>
+
+        <form id="kindergarten-form">
+
+        <input type="text" id="name" placeholder="Kindergartenname" required/>
+        <input type="text" id="street"  placeholder="Straße" required/>
+        <input type="text" id="houseNumber" placeholder="Housnummer" required>
+        <input type="text" id="plz" placeholder="PLZ" required>
+
+        <button type="submit">Erstellen</button>
+
+        </form>
+    </section>
+
+    <button id="load-kindergartens">Alle Kindergärten laden</button>
+
+    <div id="kindergarten-list"></div>
+
+
     </main>
 
     <footer class="footer">
@@ -153,5 +175,7 @@
             </ul>
         </nav>
     </footer>
+
+    <script src="kindergarten.js"></script>
 
 </body>
