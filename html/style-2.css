@@ -78,7 +78,7 @@ header ul {
 }
 
 header ul li a {
-  color: white;/*List z.B. Startseite, Kinder usw.*/
+  color: rgb(24, 24, 24);/*List z.B. Startseite, Kinder usw.*/
   text-decoration: none;/*Ohne decaration*/
   font-weight: bold;/**/
   padding: 8px 15px;
