@@ -1,19 +1,20 @@
-import React from "react";
-import './Header.css';
+import { Link } from 'react-router-dom';
+import '../styles/Header.css';
 
 export default function Header() {
     return (
         <header>
-            <a className="logo" href="index.html">Wunderkind</a>
+            <Link to="/" className="logo-link">Wunderkind</Link>
             <nav>
                 <ul>
-                    <li><a href="index.html">Startseite</a></li>
-                    <li><a href="about-kindergarten.html">Kindergarten</a></li>
-                    <li><a href="group.html">Gruppen</a></li>
-                    <li><a href="child.html">Kindern</a></li>
-                    <li><a href="parents.html">Eltern</a></li>
-                    <li><a href="educator.html">Erzieher*innen</a></li>
-                    <li><a href="about.me.html">Über mich</a></li>
+                    <li><Link to="/">Startseite</Link></li>
+                    <li><Link to="/kindergarten">Kindergarten</Link></li>
+                    <li><Link to="/group">Gruppen</Link></li>
+                    <li><Link to="/child">Kindern</Link></li>
+                    <li><Link to="/parents">Eltern</Link></li>
+                    <li><Link to="/educator">Team</Link></li>
+                    <li><Link to="/contact">Kontakt</Link></li>
+                    <li><Link to="/abaut-me">Über mich</Link></li>
                 </ul>
             </nav>
         </header>

@@ -1,0 +1,46 @@
+@import "style-2.css";
+:root {
+    --box-shadow-px: 0 4px 10px;
+    --box-shadow-color: oklch(79.444% 0.17083 71.184 / 0.973);
+     --transition-fast: 0.3s ease;
+}
+/* Cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 30px;
+    max-width: 1600px;
+    margin: 50px 0;
+}
+
+.card {
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+    overflow: hidden;
+    text-align: center;
+    transition: var(--transition-fast);
+}
+
+.card img {
+    border-radius: 10px;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card h3 {
+    font-size: 20px;
+    margin: 15px 0 10px;
+}
+
+.card p {
+    padding: 0 15px 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+}
