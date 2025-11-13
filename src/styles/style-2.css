@@ -12,7 +12,8 @@
   --font-size-lg: 1.25rem;/*Größe schrifgröße z.B. Absätze*/
   --font-size-xl: 2.5rem;/*Hauptüberschriften z.B. Willkommen usw.*/
   --body-size: 1640px;
-
+  --btn-green:  #48ac52;
+  --btn-green-hover: #158e21;
   --o-transform: translateY(-8px);
   
 }
@@ -54,39 +55,6 @@ body {
 
 }
 
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  backdrop-filter:var(--backdrop-filter-blur);
-  width: 100%;
-  margin-top: 15px;
-  padding: 15px;/*Innerabstand*/
-  border-radius: var(--border-radius-forAll);/*abgerundetes Menü*/
-  opacity: 0.9;
-  border: var(--all-border);
-  background: var(--backgound-glass);
-}
-
-
-header ul {
-  list-style: none; /*Listenpunkte enfernen*/
-  display: flex;/*Flexbox für horizontale Anordnung*/
-  justify-content: flex-end;/*Nach rechts ausrichten*/
-  gap: 30px;/*Abstand zwischen den Elementen*/
-}
-
-header ul li a {
-  color: white;/*List z.B. Startseite, Kinder usw.*/
-  text-decoration: none;/*Ohne decaration*/
-  font-weight: bold;/**/
-  padding: 8px 15px;
-  border-radius: 6px;
-  display: inline-block; 
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
 header li a:hover {
   color: var(--secondary-color); 
   transform: var(--o-transform);
@@ -95,6 +63,7 @@ header li a:hover {
 
 /* Haupttext */
 h2, h3 {
+
   color: rgb(150, 66, 154);
   font-weight: 700;
   margin-bottom: var(--spacing);

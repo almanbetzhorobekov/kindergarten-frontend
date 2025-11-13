@@ -1,0 +1,163 @@
+@import "./style-2.css";
+:root {
+  --box-shadow-px: 0 4px 10px;
+  --box-shadow-color: oklch(79.444% 0.17083 71.184 / 0.973);
+  --transition-fast: 0.6s ease;
+  --btn-green: #34a853;
+  --btn-green-hover: #2e8b47;
+  --border-radius-forAll: 20px;
+  --backdrop-filter-blur: blur(6px);
+}
+.gallery {
+  display: flex;
+  overflow-x: auto;                /* горизонтальная прокрутка */
+  scroll-snap-type: x mandatory;  /* привязка к слайду */
+  gap: 70px;
+  padding: 20px;
+}
+
+.gallery-item {
+  backdrop-filter: var(--backdrop-filter-blur);
+  flex: 0 0 100%;
+  border-radius: 16px;
+  scroll-snap-align: center; /* привязка к слайду */
+  box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+  text-align: center;
+}
+
+.gallery-item img {
+  margin-top: 20px;
+   box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+  margin-left: -10px;
+  max-width: 500px;
+  margin-right: -40px;
+  height: 300px;
+  object-fit:cover;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.gallery-item p {
+  text-align: center;
+  font-size: 1rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin-top: 10px;
+  width: fit-content;      /* текст по ширине */
+  margin-left: auto;       /* центрирование */
+  margin-right: auto;      /* центрирование */
+}
+
+.kindergartens {
+
+  list-style: none;      
+  padding: var(--main-radius) 35px 35px 35px;
+  margin: 35px auto;        
+  border-radius: var(--border-radius-forAll);
+  box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+  backdrop-filter: var(--backdrop-filter-blur);
+}
+
+.kindergartens-title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.kindergartens ul {
+  list-style: none; 
+  padding: 0;
+}
+
+.kindergartens input,
+.kindergartens select {
+  margin: 10px;
+  width: 99%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--box-shadow-color);
+  color: black;
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s ease;
+  appearance: none;
+}
+
+.kindergartens button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  display: inline-block;
+  background: var(--btn-green);
+  color: #e4d9d9;
+  font-size: 16px;
+  border: 1px solid var(--box-shadow-color);
+  font-weight: 800;
+  padding: 8px 20px;
+  border-radius: 35px;
+  text-decoration: none;
+}
+
+.button-kindergartens {
+  background: var(--btn-green);
+  color: #e4d9d9;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 8px 20px;
+  border-radius: 35px;
+  border: 1px solid var(--box-shadow-color);
+  cursor: pointer;
+  margin: 10px;
+}
+.button-kindergartens:hover {
+  background: var(--btn-green-hover);
+}
+
+.kindergartens button:hover {
+  cursor: pointer;
+  background: var(--btn-green-hover);
+  transition: var(--transition-fast);
+}
+
+.kindergartens-list {
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* расстояние между элементами */
+  margin: 20px 10px; /* вертикальный и горизонтальный отступ */
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  backdrop-filter: blur(6px);
+}
+
+/* Каждая карточка */
+.kita-card {
+
+  background: #fff;
+  padding: 14px 18px;
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: 0.3s ease;
+}
+
+.kita-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* Текст внутри карточки */
+.kita-card p {
+  margin: 0;
+  font-size: 16px;
+  color: #222;
+  text-align: center;
+}
+
+.kita-card strong {
+  color: var(--btn-green, #34a853);
+}

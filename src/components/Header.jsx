@@ -14,7 +14,7 @@ export default function Header() {
                     <li><Link to="/parents">Eltern</Link></li>
                     <li><Link to="/educator">Team</Link></li>
                     <li><Link to="/contact">Kontakt</Link></li>
-                    <li><Link to="/abaut-me">Über mich</Link></li>
+                    <li><Link to="/about-me">Über mich</Link></li>
                 </ul>
             </nav>
         </header>

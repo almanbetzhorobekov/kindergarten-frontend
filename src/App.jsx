@@ -13,10 +13,10 @@ import EducatorPage from "./pages/EducatorPage";
 import ContactPage from "./pages/ContactPage";
 import AboutMePage from "./pages/AboutMePage";
 
-import "./styles/Header.css";
+import "./styles/Header-3.css";
 import "./styles/Hero.css";
 import "./styles/Cards.css";
-import "./styles/Footer.css";
+import "./styles/Footer-2.css";
 
 export default function App() {
 
@@ -43,5 +43,6 @@ export default function App() {
   );
 
 }
+
 
 

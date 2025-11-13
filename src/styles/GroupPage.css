@@ -1,0 +1,166 @@
+:root {
+  --main-radius: 20px;
+  --main-text-color: white;
+  --box-shadow-px: 0 4px 10px;
+  --box-shadow-color: oklch(79.444% 0.17083 71.184 / 0.973);
+  --transition-fast: 0.3s ease;
+  --backdrop-filter-blur: blur(10px);
+  --spacing: 20px;
+  --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 2.5rem;
+}
+
+/* Контейнер всей секции */
+.groups-container {
+  padding: var(--spacing);
+  max-width: 1600px;
+  margin: auto;
+}
+
+/* === Сетка для колонок === */
+.groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing);
+}
+
+/* === Каждая колонка для отдельного садика === */
+.group-column {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: var(--backdrop-filter-blur);
+  border-radius: var(--main-radius);
+  box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+  padding: var(--spacing);
+  transition: var(--transition-fast);
+}
+
+.group-column:hover {
+  transform: translateY(-6px);
+}
+
+.group-column h2 {
+  text-align: center;
+  margin-bottom: var(--spacing);
+  font-size: var(--font-size-lg);
+  color: var(--main-text-color);
+}
+
+/* === Карточки групп внутри колонки === */
+.group-card {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.group-card:hover {
+  transform: translateY(-4px);
+}
+
+/* === Кнопки под сеткой === */
+.group-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.group-buttons button {
+  background: #34a853;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid var(--box-shadow-color);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.group-buttons button:hover {
+  background: #2e8b47;
+  transform: translateY(-2px);
+}
+
+.group-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--main-radius);
+  backdrop-filter: var(--backdrop-filter-blur);
+  box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+  transition: var(--transition-fast);
+}
+
+.group-form:hover {
+  transform: translateY(-4px);
+}
+
+.group-form h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--main-text-color);
+  font-size: var(--font-size-lg);
+}
+
+.group-form input,
+.group-form select {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--box-shadow-color);
+  font-size: 16px;
+  outline: none;
+  transition: 0.3s ease;
+  color: #222;
+  border-color: oklch(79.444% 0.17083 71.184);
+  box-shadow: 0 0 8px oklch(79.444% 0.17083 71.184 / 0.8);
+}
+
+.group-form button {
+  background: #34a853;
+  color: var(--main-text-color);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid var(--box-shadow-color);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+
+.group-form button:hover {
+  background: #2e8b47;
+  transform: translateY(-2px);
+}
+
+.group-form label {
+  font-size: 1rem;
+  color: var(--main-text-color);
+  text-align: left;
+}
+
+.clear-btn {
+  background: #e53935 !important;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.clear-btn:hover {
+  background: #c62828; /* Более тёмный красный при наведении */
+  transform: translateY(-2px);
+}
+

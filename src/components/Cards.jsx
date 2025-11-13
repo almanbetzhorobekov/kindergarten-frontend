@@ -1,5 +1,8 @@
-export default function Cards() {
+import { Link } from "react-router-dom";
 
+import "../styles/Cards.css";
+
+export default function Cards() {
   const cards = [
     {
       link: "/kindergarten",
@@ -48,7 +51,7 @@ export default function Cards() {
   return (
     <section className="cards container">
       {cards.map((card, index) => (
-        <a key={index} href={card.link} className="card-link">
+        <Link key={index} to={card.link} className="card-link">
           <div className="card">
             <img src={card.img} alt={card.alt} />
             <div>
@@ -56,8 +59,9 @@ export default function Cards() {
               <p>{card.description}</p>
             </div>
           </div>
-        </a>
+        </Link>
       ))}
     </section>
   );
 }
+
