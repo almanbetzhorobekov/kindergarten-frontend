@@ -72,17 +72,27 @@
 }
 
 .kindergartens input,
-.kindergartens select {
-  margin: 10px;
-  width: 99%;
+.kindergartens select,
+.kindergartens fieldset input {
+  margin: 5px 0;
+  width: 100%;
   padding: 12px 16px;
   border-radius: 12px;
   border: 1px solid var(--box-shadow-color);
+  background: white;
   color: black;
   font-size: 16px;
   outline: none;
-  transition: 0.3s ease;
+  transition: var(--transition-fast);
   appearance: none;
+}
+
+.kindergartens fieldset {
+  border: none;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+
 }
 
 .kindergartens button {

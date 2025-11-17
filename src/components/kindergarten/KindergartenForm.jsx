@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createKindergarten } from "../../services/kindergartenService";
 
 export default function KindergartenForm() {
   const [kindergartens, setKindergartens] = useState([]);
@@ -25,11 +26,29 @@ export default function KindergartenForm() {
     <section className="kindergartens">
       <h2 className="kindergartens-title">Neuen Kindergarten erstellen</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit }>
         <input type="text" name="name" placeholder="Kindergartenname" required />
-        <input type="text" name="street" placeholder="Straße" required />
-        <input type="text" name="houseNumber" placeholder="Hausnummer" required />
-        <input type="text" name="plz" placeholder="PLZ" required />
+        <fieldset>
+          <input
+            type="text"
+            name="street"
+            placeholder="Straße"
+            required
+          />
+          <input 
+            type="text" 
+            name="houseNumber"
+            placeholder="Hausnummer"
+            required
+          />
+          <input
+            type="text"
+            name="plz"
+            placeholder="PLZ"
+            required
+          />
+        </fieldset>
+        
         <button type="submit">Erstellen</button>
       </form>
 

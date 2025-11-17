@@ -1,0 +1,107 @@
+@import "style-2.css";
+
+:root {
+  --main-radius: 20px;
+  --hover-radius: 40px;
+  --main-text-color: white;
+  --box-shadow-px: 0 4px 10px;
+  --box-shadow-color: oklch(79.444% 0.17083 71.184 / 0.973);
+  --btn-green: #48ac52;
+  --btn-green-hover: #158e21;
+  --transition-fast: 0.3s ease;
+  --text-list-color: white;
+  --backdrop-filter-blur: blur(10px);
+  --btn-red: #d63a26;
+  --btn-red-hover: #a63021;
+}
+
+
+.parents,
+.parents-list {
+  list-style: none;
+  padding: var(--main-radius) 25px 25px 25px;
+  margin: 25px auto;
+  border-radius: var(--main-radius);
+  box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+  backdrop-filter: var(--backdrop-filter-blur);
+}
+
+
+.parents input,
+.parents select,
+.parents fieldset input {
+  margin: 5px 0;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--box-shadow-color);
+  color: black;
+  font-size: 16px;
+  outline: none;
+  transition: var(--transition-fast);
+  appearance: none;
+  background: white;
+}
+
+.parents fieldset {
+  border: none;
+  padding: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.parents fieldset input {
+  flex: 1;
+}
+
+
+.parents button,
+.parents-list button {
+  margin-top: 15px;
+  display: inline-block;
+  background: var(--btn-green);
+  color: white;
+  font-size: 16px;
+  border-color: var(--box-shadow-color);
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.parents button:hover,
+.parents-list button:hover {
+  cursor: pointer;
+  background: var(--btn-green-hover);
+}
+
+
+.parents-list ul {
+  padding: 0;
+  margin: 15px 0 0;
+  list-style: none;
+}
+
+.parents-list li {
+  font-size: 18px;
+  padding: 12px;
+  border-bottom: 1px solid #3d3636;
+  color: var(--main-text-color);
+  transition: var(--transition-fast);
+}
+
+.parents-list li:hover {
+  transform: scale(1.04);
+  border-radius: var(--hover-radius);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+
+.error {
+  color: #ff4d4d;
+  font-size: 14px;
+  margin-top: -5px;
+  margin-bottom: 5px;
+  display: block;
+}
