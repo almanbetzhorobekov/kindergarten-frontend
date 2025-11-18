@@ -5,7 +5,11 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="hero-image">
-        <img src="/images/campus/Kindergarten-main.jpg" alt="Kindergarten Hauptbild" />
+        <img src="/images/campus/Kindergarten-main.jpg"
+            alt="Kindergarten Hauptbild">
+           
+        </img>
+              
       </div>
 
       <div className="hero-content">

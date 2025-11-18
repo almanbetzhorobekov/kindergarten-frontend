@@ -2,12 +2,12 @@ import { useState } from "react";
 import { createKindergarten } from "../../services/kindergartenService";
 
 export default function KindergartenForm() {
-  const [kindergartens, setKindergartens] = useState([]);
+  const [kindergartens, setKindergartens] = useState([]);//useState Hook um den Zustand der Kindergärten zu verwalten
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const newKindergarten = Object.fromEntries(formData.entries());
+  const handleSubmit = (event) => { //Verarbeitet das Formular
+    event.preventDefault();//Verhindert das Standardverhalten des Formulars
+    const formData = new FormData(event.target);//Sammelt die Formulardaten
+    const newKindergarten = Object.fromEntries(formData.entries());//Erstellt einfaches Objekt aus den Formulardaten
     console.log("Neuer Kindergarten:", newKindergarten);
 
     setKindergartens((prev) => [...prev, newKindergarten]);

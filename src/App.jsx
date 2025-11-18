@@ -17,7 +17,7 @@ import "./styles/Header-3.css";
 import "./styles/Hero.css";
 import "./styles/Cards.css";
 import "./styles/Footer-2.css";
-
+// Komponen App das ist der Haupstruktur der Anwendung
 export default function App() {
 
   return (
@@ -32,7 +32,7 @@ export default function App() {
           <Route path="/child" element={<ChildPage/>} />
           <Route path="/parents" element={<ParentsPage/>} />
           <Route path="/educator" element={<EducatorPage/>} />
-          <Route path="/abaut-me" element={<AboutMePage/>} />
+          <Route path="/about-me" element={<AboutMePage/>} />
           <Route path="/contact" element={<ContactPage/>} />
         </Routes>
       </main>
