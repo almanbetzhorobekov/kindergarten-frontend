@@ -1,0 +1,64 @@
+@import "../../../styles/style-2.css";
+:root {
+    --box-shadow-px: 0 4px 10px;
+    --box-shadow-color: oklch(79.444% 0.17083 71.184 / 0.973);
+    --transition-fast: 0.3s ease;
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 40px;
+    border-radius: 30px;
+    padding: 60px 40px;
+    backdrop-filter: var(--backdrop-filter-blur);
+    box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+}
+
+.hero-image img {
+    width: 600px;
+    height: 300px;
+    border-radius: 16px;
+    box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+    object-fit: cover;
+}
+
+.hero-content {
+    color: #333;
+    text-align: left;
+}
+
+.hero-content h1 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #3c4da2;
+}
+
+.hero-content p {
+    font-size: 18px;
+    margin-bottom: 40px;
+    color: #eee7e7;
+    line-height: 1.6;
+}
+
+.hero-btn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  display: inline-block;
+  background: var(--btn-green);
+  color: #e4d9d9;
+  font-size: 16px;
+  border: 1px solid var(--box-shadow-color);
+  font-weight: 800;
+  padding: 8px 20px;
+  border-radius: 35px;
+  text-decoration: none;
+}
+
+.hero-btn:hover {
+  cursor: pointer;
+  background: var(--btn-green-hover);
+  transition: var(--transition-fast);
+}

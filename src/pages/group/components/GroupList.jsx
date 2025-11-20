@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../styles/GroupPage.css";
+import "../styles/GroupPage.css";
 
 export default function GroupList() {
   const [groups, setGroups] = useState([

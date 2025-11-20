@@ -1,4 +1,4 @@
-@import "style-2.css";
+@import "../../../styles/style-2.css";
 :root {
   --main-radius: 20px;
   --hover-radius: 40px;
@@ -120,22 +120,3 @@
   font-size: 14px;
   margin-left: 5px;
 }
-/*
-.clear {
-  margin-top: 15px;
-  display: inline-block;
-  background: var(--btn-red);
-  color: #fff;
-  font-size: 16px;
-  border: 2px solid var(--box-shadow-color);
-  font-weight: 600;
-  padding: 14px 28px;
-  border-radius: 300px;
-  text-decoration: none;
-}
-
-.clear:hover {
-  cursor: pointer;
-  background: var(--btn-red-hover);
-  transition: var(--transition-fast);
-}*/

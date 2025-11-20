@@ -1,7 +1,7 @@
 import { useState } from "react";
-import ParentsForm from "../components/parents/ParentsForm.jsx";
-import ParentsList from "../components/parents/ParentsList.jsx";
-import "../styles/ParentsPage.css";
+import ParentsForm from "./components/ParentsForm.jsx";
+import ParentsList from "./components/ParentsList.jsx";
+import "./styles/ParentsPage.css";
 
 export default function ParentsPage() {
   const [parents, setParents] = useState([]);

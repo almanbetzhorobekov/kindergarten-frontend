@@ -1,0 +1,105 @@
+:root {
+  --primary-color: #e4eaec;
+  --secondary-color: #d49007;
+  --text-color: white;
+  --after-befor-color: #10f0d6;
+  --background-glass: rgba(255, 255, 255, 0.15);
+  --backdrop-filter-blur: blur(10px);
+  --all-border: 1px solid rgba(255, 255, 255, 0.4);
+  --border-radius-forAll: 20px;
+  --spacing: 20px;
+  --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 2.5rem;
+  --body-size: 1640px;
+  --o-transform: translateY(-8px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* --- HEADER --- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: var(--backdrop-filter-blur);
+  width: 100%;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: var(--border-radius-forAll);
+  border: var(--all-border);
+  background: var(--background-glass);
+  opacity: 0.95;
+}
+
+/* --- МЕНЮ --- */
+header ul {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  gap: 30px;
+}
+
+/* --- ССЫЛКИ --- */
+header ul li a {
+  position: relative;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: block;
+  color: var(--secondary-color);
+  font-weight: 600;
+  font-size: 18px;
+  padding: 10px 20px;
+  transition: 0.3s ease;
+  z-index: 1;
+}
+
+/* --- ЭФФЕКТЫ ПРИ HOVER --- */
+header ul li a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-top: 2px solid var(--after-befor-color);
+    border-bottom: 2px solid var(--after-befor-color);
+    transform: scaleY(2);
+    transition: 0.5s;
+    opacity: 0;
+}
+header ul li a::after {
+  content: '';
+    position: absolute;
+    top: 2px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-top: 2px solid var(--after-befor-color);
+    border-bottom: 2px solid var(--after-befor-color);
+    transform: scaleY(0);/*EFFECT*/
+    transition: 0.5s;
+    opacity: 0;
+    z-index: -1;
+}
+
+
+header ul li a:hover {
+  color: #fff;
+  
+}
+
+/* Появление рамок при наведении */
+header ul li a:hover::before {
+  transform: scaleY(1);
+  opacity: 1;
+}
+
+header ul li a:hover::after {
+  transform: scaleY(1);
+  opacity: 1;
+}

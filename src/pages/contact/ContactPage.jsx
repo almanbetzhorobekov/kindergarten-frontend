@@ -1,5 +1,5 @@
-import ContactList from "../components/contact/ContactCard.jsx";
-import "../styles/ContactPage.css";
+import ContactList from "./components/ContactList.jsx";
+import "./styles/ContactPage.css";
 
 export default function ContactPage() {
   return (
