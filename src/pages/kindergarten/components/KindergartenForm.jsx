@@ -1,66 +1,55 @@
-import { useState } from "react";
-import { createKindergarten } from "../../../services/kindergartenService";
+import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import Button from "../../../components/Button";
+import { fetchKindergartens, createKindergarten } from "../../../api/kindergartenService";
 
 export default function KindergartenForm() {
-  const [kindergartens, setKindergartens] = useState([]);//useState Hook um den Zustand der Kindergärten zu verwalten
+  const queryClient = useQueryClient();
+  //GET
+  const { data: kindergartens = [], isLoading, error } = useQuery({
+    queryKey: ["kindergartens"],
+    queryFn: fetchKindergartens,
+  });
+  //POST
+  const mutation = useMutation({
+    mutationFn: createKindergarten,
+    onSuccess: () => {
+      // обновляем кеш, чтобы новые данные появились сразу
+      queryClient.invalidateQueries(["kindergartens"]);
+    },
+  });
 
-  const handleSubmit = (event) => { //Verarbeitet das Formular
-    event.preventDefault();//Verhindert das Standardverhalten des Formulars
-    const formData = new FormData(event.target);//Sammelt die Formulardaten
-    const newKindergarten = Object.fromEntries(formData.entries());//Erstellt einfaches Objekt aus den Formulardaten
-    console.log("Neuer Kindergarten:", newKindergarten);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const newKindergarten = Object.fromEntries(formData.entries());
 
-    setKindergartens((prev) => [...prev, newKindergarten]);
+    mutation.mutate(newKindergarten);
     event.target.reset();
   };
 
-  const handleLoad = () => {
-    console.log("Alle Kindergärten lade...");
-    setKindergartens([
-      { name: "Wunderkind", street: "Blumenweg", houseNumber: "5", plz: "12345" },
-      { name: "Sonnenschein", street: "Hauptstraße", houseNumber: "10", plz: "67890" },
-    ]);
-  };
-
+  if (isLoading) return <p>Lädt...</p>;
+  if (error) return <p>Fehler beim Laden der Kindergärten</p>;
   return (
     <section className="kindergartens">
       <h2 className="kindergartens-title">Neuen Kindergarten erstellen</h2>
 
-      <form onSubmit={handleSubmit }>
+      <form onSubmit={handleSubmit}>
         <input type="text" name="name" placeholder="Kindergartenname" required />
         <fieldset>
-          <input
-            type="text"
-            name="street"
-            placeholder="Straße"
-            required
-          />
-          <input 
-            type="text" 
-            name="houseNumber"
-            placeholder="Hausnummer"
-            required
-          />
-          <input
-            type="text"
-            name="plz"
-            placeholder="PLZ"
-            required
-          />
+          <input type="text" name="street" placeholder="Straße" required />
+          <input type="text" name="houseNumber" placeholder="Hausnummer" required />
+          <input type="text" name="plz" placeholder="PLZ" required />
         </fieldset>
-        
-        <button type="submit">Erstellen</button>
-      </form>
 
-      <button onClick={handleLoad} className="button-kindergartens">
-        Anschauen
-      </button>
+        <Button type="submit">Erstellen</Button>
+      
+      </form>
 
       <div className="kindergartens-list">
         {kindergartens.map((kita, i) => (
           <div key={i} className="kita-card">
             <p>
-              <strong>{kita.name}</strong> — {kita.street} {kita.houseNumber}, {kita.plz}
+              <strong>{kita.name}</strong> — {kita.street} {kita.strNumber}, {kita.plz}
             </p>
           </div>
         ))}

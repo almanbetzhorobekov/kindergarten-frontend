@@ -1,47 +1,68 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import Button from "../../../components/Button";
+import { fetchGroups } from "../../../api/groupService";
 import "../styles/GroupPage.css";
 
 export default function GroupList() {
-  const [groups, setGroups] = useState([
-    { id: 1, name: "Sonnenblumen", kindergarten: "Wunderkind Alsdorf" },  
-    { id: 2, name: "Regenbogen", kindergarten: "Wunderkind Herzogenrath" },
-    { id: 3, name: "Sternchen", kindergarten: "Wunderkind Aachen" },
-  ]);
+  // 1. Загружаем группы из базы
+  const {
+    data: groups = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["groups"],
+    queryFn: fetchGroups,
+  });
 
-  const clearAll = () => {
-    setGroups([]);
-  };
+  if (isLoading) return <p>Lädt Gruppen...</p>;
+  if (error) return <p>Fehler beim Laden der Gruppen!</p>;
 
-  const loadGroups = () => {
-    alert("Hier könnte ein Request an die Datenbank kommen :)");
-  };
-
+  // 2. Группировка по Kindergarten
   const groupedByKindergarten = groups.reduce((acc, group) => {
-    if (!acc[group.kindergarten]) acc[group.kindergarten] = [];
-    acc[group.kindergarten].push(group);
+    const kitaName = group.kindergartenName || "Unbekannt";
+
+    if (!acc[kitaName]) acc[kitaName] = [];
+    acc[kitaName].push(group);
+
     return acc;
   }, {});
 
   return (
     <section className="groups-container">
+
+      {/* Grid — колонки по детсадам */}
       <div className="groups-grid">
-        {Object.entries(groupedByKindergarten).map(([kindergarten, groupList]) => (
-          <div key={kindergarten} className="group-column">
-            <h2>{kindergarten}</h2>
-            {groupList.map((group) => (
-              <div key={group.id} className="group-card">
-                <h3>{group.name}</h3>
-              </div>
-            ))}
-          </div>
-        ))}
+        {Object.entries(groupedByKindergarten).map(
+          ([kindergarten, groupList]) => (
+            <div key={kindergarten} className="group-column">
+              <h2>{kindergarten}</h2>
+
+              {groupList.map((group) => (
+                <div key={group.id} className="group-card">
+                  <h3>{group.name}</h3>
+                </div>
+              ))}
+            </div>
+          )
+        )}
       </div>
 
+      {/* Buttons */}
       <div className="group-buttons">
-        <button onClick={loadGroups}>Alle Gruppen laden</button>
-        <button onClick={clearAll} className="clear-btn">Alle Gruppen löschen</button>
+        <Button onClick={() => refetch()}>
+          Gruppen neu laden
+        </Button>
+
+        <Button
+          className="btn-red"
+          onClick={() => alert("Nur Backend kann Gruppen löschen :)")}
+        >
+          Alle Gruppen löschen
+        </Button>
       </div>
-      
+
     </section>
   );
 }
+

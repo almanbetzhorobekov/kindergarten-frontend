@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "../styles/Hero.css";
+import Button from "../../../components/Button.jsx";
 
 export default function Hero() {
   return (
@@ -18,8 +19,8 @@ export default function Hero() {
           „Wir fördern die Talente Ihres Kindes, begleiten es auf dem Weg zur
           Selbstentfaltung und bereiten es optimal auf die Zukunft vor.“
         </p>
-        <Link to="/kindergarten" className="hero-btn">
-          Weiterlesen
+        <Link to="/kindergarten">
+          <Button>Weiterlesen</Button>
         </Link>
       </div>
     </section>

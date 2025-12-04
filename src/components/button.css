@@ -1,0 +1,61 @@
+
+:root {
+  --primary-color: #e4eaec; 
+  --secondary-color: #d49007;; 
+  --text-color: white;
+  --backgound-glass: rgba(255, 255, 255, 0.15);
+  --backdrop-filter-blur: blur(10px);
+  --all-border: 1px solid rgba(255, 255, 255, 0.4);
+  --border-radius-forAll: 20px; /*Korner*/
+  --spacing: 20px; /*Abstand zwischen Kontainer*/
+
+  --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;/*Hauptschrift*/
+  --font-size-lg: 1.25rem;/*Größe schrifgröße z.B. Absätze*/
+  --font-size-xl: 2.5rem;/*Hauptüberschriften z.B. Willkommen usw.*/
+  --body-size: 1640px;
+  --btn-green:  #48ac52;
+  --btn-green-hover: #158e21;
+  --o-transform: translateY(-8px);
+  --btn-red: #e53935;
+  --btn-red-hover: #c62828;
+
+  --box-shadow-px: 0 4px 10px;
+  --box-shadow-color: oklch(79.444% 0.17083 71.184 / 0.973);
+  --transition-fast: 0.3s ease;
+  
+}
+
+.btn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  display: inline-block;
+  background: var(--btn-green);
+  color: white;
+  font-size: 16px;
+  border: 1px solid var(--box-shadow-color);
+  box-shadow: var(--box-shadow-px) var(--box-shadow-color);
+  font-weight: 800;
+  padding: 8px 20px;
+  border-radius: 35px;
+  text-decoration: none;
+  border-color: var(--box-shadow-color);
+}
+
+.btn:hover {
+  background: var(--btn-green-hover);
+}
+
+.btn-red {
+  background: var(--btn-red);
+}
+
+.btn-red:hover {
+  background: var(--btn-red-hover);
+}
+
+.btn:hover {
+  cursor: pointer;
+  background: var(--btn-green-hover);
+  transition: var(--transition-fast);
+}
