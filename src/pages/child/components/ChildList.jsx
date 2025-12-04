@@ -1,16 +1,25 @@
-import { useState } from "react";
-export default function ChildList({ childrenList }) {
+import { useQuery } from "@tanstack/react-query";
+import { childAPI } from "../../../api/childService";
+
+export default function ChildList() {
+  const { data: children = [], isLoading, error } = useQuery({
+    queryKey: ["children"],
+    queryFn: childAPI.getAll,
+  });
+
+  if (isLoading) return <p>Lädt...</p>;
+  if (error) return <p>Fehler beim Laden der Kinder</p>;
+
   return (
     <section className="childs">
       <h2>Kinder Liste</h2>
-
-      {childrenList.length === 0 ? (
+      {children.length === 0 ? (
         <p>Keine Kinder hinzugefügt.</p>
       ) : (
         <ul>
-          {childrenList.map((child, index) => (
-            <li key={index}>
-              {child.firstName} {child.lastName} – {child.groupSelect}
+          {children.map((child) => (
+            <li key={child.uuid}>
+              {child.firstName} {child.lastName} – Gruppe: {child.group?.name || "-"}
             </li>
           ))}
         </ul>

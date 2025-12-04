@@ -1,20 +1,9 @@
-import { useState } from "react";
 import ChildForm from "./components/ChildForm.jsx";
 import ChildList from "./components/ChildList.jsx";
-import ChildClearButton from "./components/ChildClearButton.jsx";
 import "./styles/ChildPage.css";
 
 export default function ChildPage() {
-  const [children, setChildren] = useState([]);
-
-  const addChild = (child) => {
-    setChildren((prev) => [...prev, child]);
-  };
-
-  const clearChildren = () => {
-    setChildren([]);
-  };
-
+  
   return (
     <>
       <section className="intro">
@@ -25,11 +14,8 @@ export default function ChildPage() {
         </p>
       </section>
 
-      <ChildForm onAddChild={addChild} />
-
-      <ChildClearButton onClear={clearChildren} />
-
-      <ChildList childrenList={children} />
+      <ChildForm/>
+      <ChildList/>
     </>
   );
 }

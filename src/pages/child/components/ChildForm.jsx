@@ -1,89 +1,115 @@
-import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
+
+import Button from "../../../components/Button";
+import FormSelect from "../../../components/FormSelect";
+import FormInput from "../../../components/FormInput";
+
+import { kindergartenAPI, groupAPI, childAPI } from "../../../api/childService";
 
 export default function ChildForm({ onAddChild }) {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    birthday: "",
-    kindergartenSelect: "",
-    groupSelect: "",
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  // --- Fetch Kindergartens ---
+  const { data: kindergartens = [] } = useQuery({
+    queryKey: ["kindergartens"],
+    queryFn: kindergartenAPI.getAll,
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // --- Fetch Groups ---
+  const { data: groups = [] } = useQuery({
+    queryKey: ["groups"],
+    queryFn: groupAPI.getAll,
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onAddChild(formData);
+  // --- Convert to {value, label} arrays ---
+  const kindergartenOptions = kindergartens.map((k) => ({
+    value: k.uuid,
+    label: k.name,
+  }));
 
-    setFormData({
-      firstName: "",
-      lastName: "",
-      birthday: "",
-      kindergartenSelect: "",
-      groupSelect: "",
-    });
+  const groupOptions = groups.map((g) => ({
+    value: g.uuid,
+    label: g.name,
+  }));
+
+  // --- Submit Handler ---
+  const onSubmit = async (data) => {
+    try {
+      await childAPI.create(data); // POST через универсальную функцию
+      onAddChild(data); // отправляем данные наверх
+      reset(); // очищаем форму
+    } catch (err) {
+      console.error("Fehler beim Erstellen des Kindes:", err);
+    }
   };
 
   return (
     <section className="childs">
-      <form id="childForm" onSubmit={handleSubmit}>
-
-        <input
-          type="text"
-          name="firstName"
-          placeholder="Vorname"
-          value={formData.firstName}
-          onChange={handleChange}
-          required
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* Vorname */}
+        <FormInput
+          label="Vorname"
+          {...register("firstName", { required: "Vorname ist erforderlich" })}
+          error={errors.firstName?.message}
         />
 
-        <input
-          type="text"
-          name="lastName"
-          placeholder="Nachname"
-          value={formData.lastName}
-          onChange={handleChange}
-          required
+        {/* Nachname */}
+        <FormInput
+          label="Nachname"
+          {...register("lastName", { required: "Nachname ist erforderlich" })}
+          error={errors.lastName?.message}
         />
 
-        <input
+        {/* Geburtsdatum */}
+        <FormInput
           type="date"
-          name="birthday"
-          value={formData.birthday}
-          onChange={handleChange}
-          required
+          label="Geburtsdatum"
+          {...register("birthday", { required: "Geburtsdatum ist erforderlich" })}
+          error={errors.birthday?.message}
         />
 
-        <select
-          name="kindergartenSelect"
-          value={formData.kindergartenSelect}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Wähle Kindergarten</option>
-          <option value="Wunderkind Alsdorf">Wunderkind Alsdorf</option>
-          <option value="Wunderkind Herzogenrath">Wunderkind Herzogenrath</option>
-          <option value="Wunderkind Aachen">Wunderkind Aachen</option>
-        </select>
+        {/* Kindergarten Select */}
+        <Controller
+          name="kindergartenId"
+          control={control}
+          rules={{ required: "Kindergarten auswählen" }}
+          render={({ field }) => (
+            <FormSelect
+              label="Kindergarten"
+              options={kindergartenOptions}
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.kindergartenId?.message}
+            />
+          )}
+        />
 
-        <select
-          className="gruppe"
-          name="groupSelect"
-          value={formData.groupSelect}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Bitte die Gruppe auswählen...</option>
-          <option value="Sonnenschein">Sonnenschein</option>
-          <option value="Regenbogen">Regenbogen</option>
-          <option value="Sterntaler">Sterntaler</option>
-        </select>
+        {/* Group Select */}
+        <Controller
+          name="groupId"
+          control={control}
+          rules={{ required: "Gruppe auswählen" }}
+          render={({ field }) => (
+            <FormSelect
+              label="Gruppe"
+              options={groupOptions}
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.groupId?.message}
+            />
+          )}
+        />
 
-        <button type="submit">Anmelden</button>
+        <Button type="submit">Anmelden</Button>
       </form>
     </section>
   );
 }
+

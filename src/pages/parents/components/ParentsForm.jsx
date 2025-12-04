@@ -1,93 +1,80 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addParent } from "../../../api/parentsService";
 
-export default function ParentsForm({ onAddParent }) {
+export default function ParentsForm() {
+  const queryClient = useQueryClient();
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    birthday: "",
-    street: "",
-    houseNumber: "",
-    plz: "",
-    childSelect: "",
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const mutation = useMutation({
+    mutationFn: addParent,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["parents"]); // обновляем список
+      reset();
+    },
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    onAddParent(formData);   // передаём наверх
-
-    // очищаем форму
-    setFormData({
-      firstName: "",
-      lastName: "",
-      phoneNumber: "",
-      birthday: "",
-      street: "",
-      houseNumber: "",
-      plz: "",
-      childSelect: "",
-    });
+  const onSubmit = (data) => {
+    mutation.mutate(data);
   };
 
   return (
     <section className="parents">
-      <form id="parents-form" onSubmit={handleSubmit}>
-        <input
-            name="firstName"
-            placeholder="Vorname"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-        />
+      <form id="parents-form" onSubmit={handleSubmit(onSubmit)}>
 
-        <input 
-            name="lastName"
-            placeholder="Nachname"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
+        <input
+          {...register("firstName", { required: true })}
+          placeholder="Vorname"
+        />
+        {errors.firstName && <p>Vorname ist erforderlich</p>}
+
+        <input
+          {...register("lastName", { required: true })}
+          placeholder="Nachname"
         />
 
         <input
-            name="phoneNumber"
-            placeholder="Telefonnummer"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            required
+          {...register("phoneNumber", { required: true })}
+          placeholder="Telefonnummer"
         />
 
         <input
-            type="date" name="birthday"
-            value={formData.birthday}
-            onChange={handleChange}
-            required
+          type="date"
+          {...register("birthday", { required: true })}
         />
 
         <fieldset>
-          <input name="street" placeholder="Straße"
-                 value={formData.street} onChange={handleChange} required />
+          <input
+            {...register("street", { required: true })}
+            placeholder="Straße"
+          />
 
-          <input name="houseNumber" placeholder="Hausnummer"
-                 value={formData.houseNumber} onChange={handleChange} required />
+          <input
+            {...register("houseNumber", { required: true })}
+            placeholder="Hausnummer"
+          />
 
-          <input name="plz" placeholder="PLZ"
-                 value={formData.plz} onChange={handleChange} required />
+          <input
+            {...register("plz", { required: true })}
+            placeholder="PLZ"
+          />
         </fieldset>
 
-        <select name="childSelect" value={formData.childSelect} onChange={handleChange}>
+        <select {...register("childSelect")}>
           <option value="">-- Wähle ein Kind --</option>
           <option value="Kind 1">Kind 1</option>
           <option value="Kind 2">Kind 2</option>
         </select>
 
-        <button type="submit">Anmelden</button>
+        <button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending ? "Speichern..." : "Anmelden"}
+        </button>
       </form>
     </section>
   );

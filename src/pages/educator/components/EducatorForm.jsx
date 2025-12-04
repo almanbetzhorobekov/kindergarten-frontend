@@ -1,117 +1,42 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addEducator } from "../../../api/educatorService";
 
-export default function EducatorForm({ onAddEducator }) {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    birthday: "",
-    street: "",
-    houseNumber: "",
-    plz: "",
-    phoneNumber: "",
-    kindergartenSelect: "",
-    groupSelect: "",
+export default function EducatorForm() {
+  const queryClient = useQueryClient();
+
+  const { register, handleSubmit, reset } = useForm();
+
+  const mutation = useMutation({
+    mutationFn: addEducator,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["educators"]);
+      reset();
+    },
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onAddEducator(formData);
-
-    setFormData({
-      firstName: "",
-      lastName: "",
-      birthday: "",
-      street: "",
-      houseNumber: "",
-      plz: "",
-      phoneNumber: "",
-      kindergartenSelect: "",
-      groupSelect: "",
-    });
-  };
+  const onSubmit = (data) => mutation.mutate(data);
 
   return (
     <section className="educators">
       <h2>Neuen Erzieher erstellen</h2>
 
-      <form className="educator-form" onSubmit={handleSubmit}>
-        <input
-          className="educators-item"
-          type="text"
-          name="firstName"
-          placeholder="Vorname"
-          value={formData.firstName}
-          onChange={handleChange}
-        />
+      <form className="educator-form" onSubmit={handleSubmit(onSubmit)}>
 
-        <input
-          className="educators-item"
-          type="text"
-          name="lastName"
-          placeholder="Nachname"
-          value={formData.lastName}
-          onChange={handleChange}
-        />
-
-        <input
-          className="educators-item"
-          type="date"
-          name="birthday"
-          placeholder="Geburtsdatum"
-          value={formData.birthday}
-          onChange={handleChange}
-        />
+        <input {...register("firstName", { required: true })} placeholder="Vorname" />
+        <input {...register("lastName", { required: true })} placeholder="Nachname" />
+        <input type="date" {...register("birthday", { required: true })} />
 
         <fieldset>
-          <input
-          className="educators-item"
-          type="text"
-          name="street"
-          placeholder="Straße"
-          value={formData.street}
-          onChange={handleChange}
-          />
-
-          <input
-            className="educators-item"
-            type="text"
-            name="houseNumber"
-            placeholder="Hausnummer"
-            value={formData.houseNumber}
-            onChange={handleChange}
-          />
-
-          <input
-            className="educators-item"
-            type="text"
-            name="plz"
-            placeholder="PLZ"
-            value={formData.plz}
-            onChange={handleChange}
-          />
+          <input {...register("street")} placeholder="Straße" />
+          <input {...register("houseNumber")} placeholder="Hausnummer" />
+          <input {...register("plz")} placeholder="PLZ" />
         </fieldset>
-   
-        <input
-          className="educators-item"
-          type="text"
-          name="phoneNumber"
-          placeholder="Telefonnummer"
-          value={formData.phoneNumber}
-          onChange={handleChange}
-        />
+
+        <input {...register("phoneNumber")} placeholder="Telefonnummer" />
 
         <label>Gruppe wählen</label>
-        <select
-          className="gruppe"
-          name="groupSelect"
-          value={formData.groupSelect}
-          onChange={handleChange}
-        >
+        <select {...register("groupSelect")}>
           <option value="">--Wähle Gruppe--</option>
           <option value="Sonnenschein">Sonnenschein</option>
           <option value="Regenbogen">Regenbogen</option>
@@ -119,20 +44,18 @@ export default function EducatorForm({ onAddEducator }) {
         </select>
 
         <label>Kindergarten wählen</label>
-        <select
-          className="gruppe"
-          name="kindergartenSelect"
-          value={formData.kindergartenSelect}
-          onChange={handleChange}
-        >
+        <select {...register("kindergartenSelect")}>
           <option value="">--Wähle Kindergarten--</option>
           <option value="Wunderkind Alsdorf">Wunderkind Alsdorf</option>
           <option value="Wunderkind Herzogenrath">Wunderkind Herzogenrath</option>
           <option value="Wunderkind Aachen">Wunderkind Aachen</option>
         </select>
 
-        <button type="submit">Erstellen</button>
+        <button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending ? "Speichern..." : "Erstellen"}
+        </button>
       </form>
     </section>
   );
 }
+

@@ -37,26 +37,6 @@
   appearance: none;
 }
 
-.childs button {
-  margin-top: 15px;
-  display: inline-block;
-  background: var(--btn-green);
-  color: #fff;
-  font-size: 16px;
-  border-color: var(--box-shadow-color);
-  font-weight: 600;
-  padding: 14px 28px;
-  border-radius: 30px;
-  text-decoration: none;
-}
-
-
-.childs button:hover {
-  cursor: pointer;
-  background: var(--btn-green-hover);
-  transition: var(--transition-fast);
-}
-
 .childs ul {
   margin-top: 15px;
   list-style: none;

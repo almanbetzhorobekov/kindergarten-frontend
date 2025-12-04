@@ -58,8 +58,8 @@ export default function GroupForm() {
       <select {...register("kindergartenId", { required: true })}>
         <option value="">--Wähle Kindergarten--</option>
         {kindergartens.map((kita) => (
-          <option key={kita.id} value={kita.id}>
-            {kita.name} ({kita.street} {kita.houseNumber})
+          <option key={kita.uuid} value={kita.uuid}>
+            {kita.name || " "} ({kita.street || " "} {kita.houseNumber || " "})
           </option>
         ))}
       </select>

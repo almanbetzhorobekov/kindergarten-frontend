@@ -7,9 +7,11 @@ import "./styles/KindergartenPage.css";
 export default function KindergartenPage() {
   return (
     <>
+    <main> 
       <KindergartenIntro />
       <KindergartenGallery />
       <KindergartenForm />
+    </main>
     </>
   );
 }
