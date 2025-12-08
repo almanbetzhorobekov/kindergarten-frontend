@@ -19,13 +19,21 @@ export default function KindergartenForm() {
   });
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const newKindergarten = Object.fromEntries(formData.entries());
+  event.preventDefault();
+  const formData = new FormData(event.target);
 
-    mutation.mutate(newKindergarten);
-    event.target.reset();
+  const newKindergarten = {
+    kindergartenName: formData.get("kindergartenName"),
+    address: {
+      street: formData.get("street"),
+      houseNumber: formData.get("houseNumber"),
+      plz: formData.get("plz"),
+    },
   };
+
+  mutation.mutate(newKindergarten);
+  event.target.reset();
+};
 
   if (isLoading) return <p>Lädt...</p>;
   if (error) return <p>Fehler beim Laden der Kindergärten</p>;
@@ -34,7 +42,7 @@ export default function KindergartenForm() {
       <h2 className="kindergartens-title">Neuen Kindergarten erstellen</h2>
 
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Kindergartenname" required />
+        <input type="text" name="kindergartenName" placeholder="Kindergartenname" required />
         <fieldset>
           <input type="text" name="street" placeholder="Straße" required />
           <input type="text" name="houseNumber" placeholder="Hausnummer" required />

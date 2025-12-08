@@ -26,11 +26,10 @@ export default function GroupList() {
 
     return acc;
   }, {});
-
+  console.log(groups);
   return (
     <section className="groups-container">
 
-      {/* вот она — ГРИД! */}
       <div className="groups-grid">
         {Object.entries(groupedByKindergarten).map(
           ([kindergarten, groupList]) => (
@@ -42,7 +41,7 @@ export default function GroupList() {
 
               {groupList.map((group) => (
                 <div key={group.uuid} className="group-card">
-                  <h3>{group.name}</h3>
+                  <h3>{group.groupName}</h3>
                 </div>
               ))}
             </div>
@@ -53,15 +52,6 @@ export default function GroupList() {
       {/* Buttons */}
       <div>
         <Button onClick={() => refetch()}>Gruppen neu laden</Button>
-
-        <Button
-          className="btn-red"
-          onClick={() =>
-            alert("Nur Backend kann Gruppen löschen :)")
-          }
-        >
-          Alle Gruppen löschen
-        </Button>
       </div>
     </section>
   );

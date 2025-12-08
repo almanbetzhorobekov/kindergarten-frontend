@@ -1,19 +1,14 @@
-const API_BASE = "http://localhost:8080/api/kindergartens";
+import { fetchService } from "./fetchService";
 
-// GET
-export const fetchKindergartens = async () => {
-  const res = await fetch(API_BASE + "/mini");
-  if (!res.ok) throw new Error("Fehler beim Laden");
-  return res.json();
+const API_BASE = "/api/kindergartens";
+
+export const fetchKindergartens = () => {
+  return fetchService(API_BASE + "/mini");
 };
 
-// POST
-export const createKindergarten = async (newKita) => {
-  const res = await fetch(API_BASE, {
+export const createKindergarten = (newKita) => {
+  return fetchService(API_BASE, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(newKita),
+    body: newKita,
   });
-  if (!res.ok) throw new Error("Fehler beim Erstellen");
-  return res.json();
 };

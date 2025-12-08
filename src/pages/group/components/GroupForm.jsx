@@ -16,7 +16,7 @@ export default function GroupForm() {
     formState: { errors },
   } = useForm();
 
-  // Загружаем список садиков из базы
+  // GET
   const {
     data: kindergartens = [],
     isLoading,
@@ -26,11 +26,11 @@ export default function GroupForm() {
     queryFn: fetchKindergartens,
   });
 
-  // POST запрос — создание группы
+  // POST
   const mutation = useMutation({
     mutationFn: createGroup,
     onSuccess: () => {
-      queryClient.invalidateQueries(["groups"]); // обновляем список групп
+      queryClient.invalidateQueries(["groups"]); // reset
       reset();
     },
   });
@@ -45,15 +45,14 @@ export default function GroupForm() {
   return (
     <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
 
-      {/* Название группы */}
       <input
         type="text"
         placeholder="Gruppenname"
-        {...register("name", { required: "Name ist erforderlich" })}
+        {...register("groupName", { required: "Name ist erforderlich" })}
       />
       {errors.name && <p className="error-text">{errors.name.message}</p>}
 
-      {/* Выбор детсада */}
+      
       <label>Kindergarten wählen:</label>
       <select {...register("kindergartenId", { required: true })}>
         <option value="">--Wähle Kindergarten--</option>

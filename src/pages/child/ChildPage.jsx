@@ -14,8 +14,15 @@ export default function ChildPage() {
         </p>
       </section>
 
-      <ChildForm/>
-      <ChildList/>
+      <main>
+        <ChildForm
+          onAddChild={(child) => {
+          console.log("Neues Kind hinzugefügt:", child);
+        // здесь можешь обновить state или рефетчить запрос
+      }}/>
+        <ChildList/>
+      </main>
+
     </>
   );
 }

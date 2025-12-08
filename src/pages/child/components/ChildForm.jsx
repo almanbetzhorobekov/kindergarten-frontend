@@ -1,5 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Button from "../../../components/Button";
 import FormSelect from "../../../components/FormSelect";
@@ -13,8 +13,11 @@ export default function ChildForm({ onAddChild }) {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm();
+
+  const queryClient = useQueryClient();
 
   // --- Fetch Kindergartens ---
   const { data: kindergartens = [] } = useQuery({
@@ -28,46 +31,52 @@ export default function ChildForm({ onAddChild }) {
     queryFn: groupAPI.getAll,
   });
 
-  // --- Convert to {value, label} arrays ---
+  // --- Selected kindergarten ---
+  const selectedKindergartenId = watch("kindergartenId");
+
+  // --- Options ---
   const kindergartenOptions = kindergartens.map((k) => ({
     value: k.uuid,
-    label: k.name,
+    label: k.kindergartenName,
   }));
 
-  const groupOptions = groups.map((g) => ({
-    value: g.uuid,
-    label: g.name,
-  }));
+  const filteredGroupOptions = groups
+    .filter((g) => g.kindergartenId === selectedKindergartenId)
+    .map((g) => ({
+      value: g.uuid,
+      label: g.groupName,
+    }));
 
-  // --- Submit Handler ---
-  const onSubmit = async (data) => {
-    try {
-      await childAPI.create(data); // POST через универсальную функцию
-      onAddChild(data); // отправляем данные наверх
-      reset(); // очищаем форму
-    } catch (err) {
-      console.error("Fehler beim Erstellen des Kindes:", err);
-    }
+  // ✅ TanStack Mutation for creating child
+  const mutation = useMutation({
+    mutationFn: childAPI.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["children"]); // обновляем список детей
+      reset();
+    },
+  });
+
+  // --- Submit handler ---
+  const onSubmit = (data) => {
+    mutation.mutate(data);
+    if (onAddChild) onAddChild(data);
   };
 
   return (
     <section className="childs">
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* Vorname */}
         <FormInput
           label="Vorname"
           {...register("firstName", { required: "Vorname ist erforderlich" })}
           error={errors.firstName?.message}
         />
 
-        {/* Nachname */}
         <FormInput
           label="Nachname"
           {...register("lastName", { required: "Nachname ist erforderlich" })}
           error={errors.lastName?.message}
         />
 
-        {/* Geburtsdatum */}
         <FormInput
           type="date"
           label="Geburtsdatum"
@@ -75,7 +84,6 @@ export default function ChildForm({ onAddChild }) {
           error={errors.birthday?.message}
         />
 
-        {/* Kindergarten Select */}
         <Controller
           name="kindergartenId"
           control={control}
@@ -91,7 +99,6 @@ export default function ChildForm({ onAddChild }) {
           )}
         />
 
-        {/* Group Select */}
         <Controller
           name="groupId"
           control={control}
@@ -99,15 +106,22 @@ export default function ChildForm({ onAddChild }) {
           render={({ field }) => (
             <FormSelect
               label="Gruppe"
-              options={groupOptions}
+              options={filteredGroupOptions}
               value={field.value}
               onChange={field.onChange}
+              disabled={!selectedKindergartenId}
               error={errors.groupId?.message}
             />
           )}
         />
 
-        <Button type="submit">Anmelden</Button>
+        <Button type="submit" disabled={mutation.isLoading}>
+          {mutation.isLoading ? "Speichern..." : "Anmelden"}
+        </Button>
+
+        {mutation.isError && (
+          <p style={{ color: "red" }}>Fehler beim Speichern</p>
+        )}
       </form>
     </section>
   );
