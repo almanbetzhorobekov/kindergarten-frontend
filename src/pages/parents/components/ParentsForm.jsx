@@ -1,81 +1,135 @@
-import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addParent } from "../../../api/parentsService";
+import { useForm, Controller } from "react-hook-form";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function ParentsForm() {
-  const queryClient = useQueryClient();
+import Button from "../../../components/Button";
+import FormSelect from "../../../components/FormSelect";
+import FormInput from "../../../components/FormInput";
 
+import { parentsAPI, childAPI } from "../../../api/parentsService";
+
+export default function ParentsForm({ onAddParent }) {
   const {
+    control,
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm();
 
+  const queryClient = useQueryClient();
+
+  // ✅ Загружаем детей
+  const { data: children = [] } = useQuery({
+    queryKey: ["children"],
+    queryFn: childAPI.getAll,
+  });
+
+  // ✅ options для селекта
+  const childOptions = children.map((c) => ({
+    value: c.uuid ?? c.id,
+    label: `${c.firstName} ${c.lastName}`,
+  }));
+
   const mutation = useMutation({
-    mutationFn: addParent,
+    mutationFn: parentsAPI.create,
     onSuccess: () => {
-      queryClient.invalidateQueries(["parents"]); // обновляем список
+      queryClient.invalidateQueries(["parents"]);
       reset();
     },
   });
 
   const onSubmit = (data) => {
     mutation.mutate(data);
+    if (onAddParent) {
+      onAddParent(data);
+    }
   };
 
   return (
-    <section className="parents">
-      <form id="parents-form" onSubmit={handleSubmit(onSubmit)}>
+    <section className="parents-form">
+      <form className="parents-form-inner" onSubmit={handleSubmit(onSubmit)}>
 
-        <input
-          {...register("firstName", { required: true })}
+        <FormInput
           placeholder="Vorname"
+          {...register("firstName", { required: "Vorname ist erforderlich" })}
+          error={errors.firstName?.message}
         />
-        {errors.firstName && <p>Vorname ist erforderlich</p>}
 
-        <input
-          {...register("lastName", { required: true })}
+        <FormInput
           placeholder="Nachname"
+          {...register("lastName", { required: "Nachname ist erforderlich" })}
+          error={errors.lastName?.message}
         />
 
-        <input
-          {...register("phoneNumber", { required: true })}
-          placeholder="Telefonnummer"
-        />
-
-        <input
+        <FormInput
+          placeholder="Geburtsdatum"
           type="date"
-          {...register("birthday", { required: true })}
+          {...register("birthday", {
+            required: "Geburtsdatum ist erforderlich",
+          })}
+          error={errors.birthday?.message}
         />
 
         <fieldset>
-          <input
-            {...register("street", { required: true })}
+          <FormInput
             placeholder="Straße"
+            {...register("street", {
+              required: "Straße ist erforderlich",
+            })}
+            error={errors.street?.message}
           />
 
-          <input
-            {...register("houseNumber", { required: true })}
+          <FormInput
             placeholder="Hausnummer"
+            {...register("houseNumber", {
+              required: "Hausnummer ist erforderlich",
+            })}
+            error={errors.houseNumber?.message}
           />
 
-          <input
-            {...register("plz", { required: true })}
+          <FormInput
             placeholder="PLZ"
+            {...register("plz", {
+              required: "PLZ ist erforderlich",
+            })}
+            error={errors.plz?.message}
           />
         </fieldset>
 
-        <select {...register("childSelect")}>
-          <option value="">-- Wähle ein Kind --</option>
-          <option value="Kind 1">Kind 1</option>
-          <option value="Kind 2">Kind 2</option>
-        </select>
+        <FormInput
+          placeholder="Telefonnummer"
+          {...register("phoneNumber", {
+            required: "Telefonnummer ist erforderlich",
+          })}
+          error={errors.phoneNumber?.message}
+        />
 
-        <button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending ? "Speichern..." : "Anmelden"}
-        </button>
+        {/* ✅ Выбор ребёнка через Controller */}
+        <Controller
+          name="childId"
+          control={control}
+          rules={{ required: "Kind auswählen" }}
+          render={({ field }) => (
+            <FormSelect
+              placeholder="Kind auswählen"
+              options={childOptions}
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.childId?.message}
+            />
+          )}
+        />
+
+        <Button type="submit" disabled={mutation.isLoading}>
+          {mutation.isLoading ? "Speichern..." : "Eltern speichern"}
+        </Button>
+
+        {mutation.isError && (
+          <p style={{ color: "red" }}>Fehler beim Speichern</p>
+        )}
       </form>
     </section>
   );
 }
+

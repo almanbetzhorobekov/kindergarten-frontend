@@ -66,22 +66,34 @@ export default function ChildForm({ onAddChild }) {
     <section className="childs">
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput
-          label="Vorname"
-          {...register("firstName", { required: "Vorname ist erforderlich" })}
-          error={errors.firstName?.message}
+          placeholder="Vorname"
+          {...register("firstName", { 
+            required: "Vorname ist erforderlich" 
+          })}
+          error={
+            errors.firstName?.message
+          }
         />
 
         <FormInput
-          label="Nachname"
-          {...register("lastName", { required: "Nachname ist erforderlich" })}
-          error={errors.lastName?.message}
+          placeholder="Nachname"
+          {...register("lastName", { 
+            required: "Nachname ist erforderlich"
+           })}
+          error={
+            errors.lastName?.message
+          }
         />
 
         <FormInput
           type="date"
-          label="Geburtsdatum"
-          {...register("birthday", { required: "Geburtsdatum ist erforderlich" })}
-          error={errors.birthday?.message}
+          placeholder="Geburtsdatum"
+          {...register("birthday", { 
+            required: "Geburtsdatum ist erforderlich"
+           })}
+          error={
+            errors.birthday?.message
+          }
         />
 
         <Controller
@@ -90,7 +102,7 @@ export default function ChildForm({ onAddChild }) {
           rules={{ required: "Kindergarten auswählen" }}
           render={({ field }) => (
             <FormSelect
-              label="Kindergarten"
+              placeholder="Kindergarten"
               options={kindergartenOptions}
               value={field.value}
               onChange={field.onChange}
@@ -105,7 +117,7 @@ export default function ChildForm({ onAddChild }) {
           rules={{ required: "Gruppe auswählen" }}
           render={({ field }) => (
             <FormSelect
-              label="Gruppe"
+              placeholder="Gruppe"
               options={filteredGroupOptions}
               value={field.value}
               onChange={field.onChange}

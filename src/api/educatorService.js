@@ -1,36 +1,17 @@
-export async function addEducator(data) {
-  const res = await fetch("http://localhost:8080/api/educators", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+import { fetchService } from "./fetchService";
 
-  if (!res.ok) throw new Error("Fehler beim Speichern");
+export const educatorAPI = {
+  getAll: () => fetchService("/api/educators"),
+  create: (data) => fetchService("/api/educators", {
+     method: "POST", 
+     body: data 
+    }),
+};
 
-  return res.json();
-}
+export const kindergartenAPI = {
+  getAll: () => fetchService("/api/kindergartens"),
+};
 
-export async function fetchEducators() {
-  const res = await fetch("http://localhost:8080/api/educators");
-
-  if (!res.ok) throw new Error("Fehler beim Laden");
-
-  return res.json();
-}
-
-export async function fetchService(endpoint, requestOptions) {
-    
-    const res = await fetch("http://localhost:8080" + endpoint, {
-    method: requestOptions?.method || "GET",
-    headers: { "Content-Type": "application/json" },
-    body: requestOptions?.body ? JSON.stringify(requestOptions.body) : null,
-
-  });
-
-  if (!res.ok) throw new Error("Fehler bei Kommunikation mit dem Server");
-
-  return res.json();
-
-}
-fetchService("/api/kindergartens", { method: "GET"});
-fetchService("/api/educators");
+export const groupAPI = {
+  getAll: () => fetchService("/api/groups"),
+};

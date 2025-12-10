@@ -8,14 +8,14 @@ export default function FormSelect({ label, options = [], error, ...props }) {
           -- auswählen --
         </option>
 
-        {options.map((o) => (
-          <option 
-            key={String(o.value)} 
-            value={o.value}
-          >
-            {o.label}
-          </option>
-        ))}
+        {options.map((o, index) => (
+          <option
+            key={o.value ?? `option-${index}`}
+            value={o.value ?? ""}
+        > 
+          {o.label}
+        </option>
+   ))}
       </select>
 
       {error && <p className="error">{error}</p>}

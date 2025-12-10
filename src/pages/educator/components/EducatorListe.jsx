@@ -1,31 +1,38 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchEducators } from "../../../api/educatorService";
+import { educatorAPI, groupAPI } from "../../../api/educatorService";
 
 export default function EducatorListe() {
-  const { data: educators = [], isLoading } = useQuery({
+  const { data: educators = [], isLoading, error } = useQuery({
     queryKey: ["educators"],
-    queryFn: () => fetchService("/api/kindergartens"),
+    queryFn: educatorAPI.getAll,
   });
 
-  if (isLoading) return <p>Laden...</p>;
-console.log(educators);
-  return (
-    <>
-      <h2>Erzieher Liste</h2>
+  const { data: groups = [] } = useQuery({
+    queryKey: ["groups"],
+    queryFn: groupAPI.getAll,
+  });
 
-      <section className="educators">
-        {educators.length === 0 ? (
-          <p>Keine Erzieher hinzugefügt.</p>
-        ) : (
-          <ul>
-            {educators.map((e) => (
-              <li key={e.id}>
-                {e.firstName} {e.lastName} – {e.phoneNumber}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-    </>
+  const getGroupName = (groupId) => {
+    const group = groups.find((g) => g.uuid === groupId);
+    return group?.groupName || "-";
+  };
+  if (isLoading) return <p>Laden...</p>;
+  if (error) return <p>Fehler beim Laden der Erzieher</p>;
+  console.log(educators);
+  return (
+    <section className="educators">
+      <h2>Erzieher Liste</h2>
+      {educators.length === 0 ? (
+        <p>Keine Erzieher hinzugefügt.</p>
+      ) : (
+        <ul>
+          {educators.map((educator, index) => (
+            <li key={educator.uuid ?? index}>
+              {educator.firstName} {educator.lastName}
+            </li>
+          ))}
+        </ul> 
+      )}
+    </section>
   );
 }

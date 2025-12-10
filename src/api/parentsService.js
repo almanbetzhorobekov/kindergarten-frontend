@@ -1,14 +1,13 @@
-export async function fetchParents() {
-    const res = await fetch("http://localhost:8080/api/parents");
-    if (!res.ok) throw new Error("Fehler beim Laden");
-    return res.json(); 
-}
+import { fetchService } from "./fetchService.js";
 
-export async function addParent(data) {
-    const res = await fetch("http://localhost:8080/api/parents", {
+export const parentsAPI = {
+    getAll: () => fetchService("/api/parents"),
+    create: (data) => fetchService("/api/parents", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-    });
-    return res.json();
-}
+        body: data
+    }),
+};
+
+export const childAPI = {
+    getAll: () => fetchService("/api/children"),
+};
