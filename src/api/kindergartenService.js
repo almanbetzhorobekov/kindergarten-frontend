@@ -12,3 +12,7 @@ export const createKindergarten = (newKita) => {
     body: newKita,
   });
 };
+function createMultipleKindergartens(newKitas) {
+  // Ich muss ---- 
+}
+createMultipleKindergartens(newKitas) 

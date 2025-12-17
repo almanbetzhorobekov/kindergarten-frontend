@@ -16,8 +16,10 @@ export default function EducatorListe() {
     const group = groups.find((g) => g.uuid === groupId);
     return group?.groupName || "-";
   };
+
   if (isLoading) return <p>Laden...</p>;
   if (error) return <p>Fehler beim Laden der Erzieher</p>;
+  
   console.log(educators);
   return (
     <section className="educators">

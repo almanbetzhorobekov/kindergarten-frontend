@@ -35,14 +35,14 @@ export default function ParentsList() {
               </strong>
               <div>{parent.phoneNumber}</div>
 
-              {/* Версия 1: если приходит объект child */}
+              
               {parent.child && (
                 <div>
                   Kind: {parent.child.firstName} {parent.child.lastName}
                 </div>
               )}
 
-              {/* Версия 2: если приходит только childId */}
+              
               {!parent.child && parent.childUuid && (
                 <div>Kind: {getChildName(parent.childId)}</div>
               )}

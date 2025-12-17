@@ -19,13 +19,13 @@ export default function ParentsForm({ onAddParent }) {
 
   const queryClient = useQueryClient();
 
-  // ✅ Загружаем детей
+ 
   const { data: children = [] } = useQuery({
     queryKey: ["children"],
     queryFn: childAPI.getAll,
   });
 
-  // ✅ options для селекта
+ 
   const childOptions = children.map((c) => ({
     value: c.uuid ?? c.id,
     label: `${c.firstName} ${c.lastName}`,
@@ -105,7 +105,7 @@ export default function ParentsForm({ onAddParent }) {
           error={errors.phoneNumber?.message}
         />
 
-        {/* ✅ Выбор ребёнка через Controller */}
+        
         <Controller
           name="childId"
           control={control}
