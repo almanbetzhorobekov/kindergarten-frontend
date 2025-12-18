@@ -1,11 +1,11 @@
-export default function FormInput({ label, error, ...props }) {
+import { Box, TextField, Typography } from "@mui/material";
+
+export default function FormInput({ error, ...props }) {
   return (
-    <div className="form-field">
-      {label && <label>{label}</label>}
+    <Box>
+      <TextField {...props} />
 
-      <input className="child-item" {...props} />
-
-      {error && <p className="error">{error}</p>}
-    </div>
+      {error && <Typography>{error}</Typography>}
+    </Box>
   );
 }

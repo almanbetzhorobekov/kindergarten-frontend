@@ -1,24 +1,29 @@
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
+
 export default function FormSelect({ label, options = [], error, ...props }) {
   return (
-    <div className="form-field">
-      {label && <label>{label}</label>}
+    <FormControl>
+      <InputLabel> {label} </InputLabel>
 
-      <select className="child-item" {...props}>
-        <option key="default" value="">
+      <Select {...props}>
+        <MenuItem key="default" value="">
           -- auswählen --
-        </option>
+        </MenuItem>
 
         {options.map((o, index) => (
-          <option
-            key={o.value ?? `option-${index}`}
-            value={o.value ?? ""}
-        > 
-          {o.label}
-        </option>
-   ))}
-      </select>
+          <MenuItem key={o.value ?? `option-${index}`} value={o.value ?? ""}>
+            {o.label}
+          </MenuItem>
+        ))}
+      </Select>
 
-      {error && <p className="error">{error}</p>}
-    </div>
+      {error && <Typography>{error}</Typography>}
+    </FormControl>
   );
 }

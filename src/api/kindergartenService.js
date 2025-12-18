@@ -15,4 +15,3 @@ export const createKindergarten = (newKita) => {
 function createMultipleKindergartens(newKitas) {
   // Ich muss ---- 
 }
-createMultipleKindergartens(newKitas) 

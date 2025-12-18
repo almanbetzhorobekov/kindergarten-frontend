@@ -1,11 +1,11 @@
 import { useForm, Controller } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import Button from "../../../components/Button";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 
 import { kindergartenAPI, groupAPI, childAPI } from "../../../api/childService";
+import { Box, Button, Typography } from "@mui/material";
 
 export default function ChildForm({ onAddChild }) {
   const {
@@ -47,7 +47,7 @@ export default function ChildForm({ onAddChild }) {
       label: g.groupName,
     }));
 
-  // ✅ TanStack Mutation for creating child
+  //  TanStack Mutation for creating child
   const mutation = useMutation({
     mutationFn: childAPI.create,
     onSuccess: () => {
@@ -63,37 +63,31 @@ export default function ChildForm({ onAddChild }) {
   };
 
   return (
-    <section className="childs">
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Box component={"section"}>
+      <Box component={"form"} onSubmit={handleSubmit(onSubmit)}>
         <FormInput
-          placeholder="Vorname"
-          {...register("firstName", { 
-            required: "Vorname ist erforderlich" 
+          label="Vorname"
+          {...register("firstName", {
+            required: "Vorname ist erforderlich",
           })}
-          error={
-            errors.firstName?.message
-          }
+          error={errors.firstName?.message}
         />
 
         <FormInput
-          placeholder="Nachname"
-          {...register("lastName", { 
-            required: "Nachname ist erforderlich"
-           })}
-          error={
-            errors.lastName?.message
-          }
+          label="Nachname"
+          {...register("lastName", {
+            required: "Nachname ist erforderlich",
+          })}
+          error={errors.lastName?.message}
         />
 
         <FormInput
           type="date"
-          placeholder="Geburtsdatum"
-          {...register("birthday", { 
-            required: "Geburtsdatum ist erforderlich"
-           })}
-          error={
-            errors.birthday?.message
-          }
+          label="Geburtsdatum"
+          {...register("birthday", {
+            required: "Geburtsdatum ist erforderlich",
+          })}
+          error={errors.birthday?.message}
         />
 
         <Controller
@@ -102,7 +96,7 @@ export default function ChildForm({ onAddChild }) {
           rules={{ required: "Kindergarten auswählen" }}
           render={({ field }) => (
             <FormSelect
-              placeholder="Kindergarten"
+              label="Kindergarten"
               options={kindergartenOptions}
               value={field.value}
               onChange={field.onChange}
@@ -117,7 +111,7 @@ export default function ChildForm({ onAddChild }) {
           rules={{ required: "Gruppe auswählen" }}
           render={({ field }) => (
             <FormSelect
-              placeholder="Gruppe"
+              label="Gruppe"
               options={filteredGroupOptions}
               value={field.value}
               onChange={field.onChange}
@@ -132,10 +126,9 @@ export default function ChildForm({ onAddChild }) {
         </Button>
 
         {mutation.isError && (
-          <p style={{ color: "red" }}>Fehler beim Speichern</p>
+          <Typography sx={{ color: "red" }}>Fehler beim Speichern</Typography>
         )}
-      </form>
-    </section>
+      </Box>
+    </Box>
   );
 }
-

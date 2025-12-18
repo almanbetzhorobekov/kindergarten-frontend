@@ -1,39 +1,45 @@
 import { useQuery } from "@tanstack/react-query";
 import { childAPI, groupAPI } from "../../../api/childService";
+import { Box, Typography, List, ListItem } from "@mui/material";
 
 export default function ChildList() {
-  const { data: children = [], isLoading, error } = useQuery({
+  const {
+    data: children = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["children"],
     queryFn: childAPI.getAll,
   });
 
   const { data: groups = [] } = useQuery({
-  queryKey: ["groups"],
-  queryFn: groupAPI.getAll,
+    queryKey: ["groups"],
+    queryFn: groupAPI.getAll,
   });
 
   const getGroupName = (groupId) => {
-  const group = groups.find((g) => g.uuid === groupId);
+    const group = groups.find((g) => g.uuid === groupId);
     return group?.groupName || "-";
   };
 
-  if (isLoading) return <p>Lädt...</p>;
-  if (error) return <p>Fehler beim Laden der Kinder</p>;
+  if (isLoading) return <Typography>Lädt...</Typography>;
+  if (error) return <Typography>Fehler beim Laden der Kinder</Typography>;
   console.log(children);
   return (
-    <section className="childs">
-      <h2>Kinder Liste</h2>
-      {children.length === 0 ? (
-        <p>Keine Kinder hinzugefügt.</p>
+    <Box component={"section"}>
+      <Typography variant="h2">Kinder Liste</Typography>
+      {children.content.length === 0 ? (
+        <Typography>Keine Kinder hinzugefügt.</Typography>
       ) : (
-        <ul>
-          {children.map((child, index) => (
-            <li key={child.uuid ?? index}>
-              {child.firstName} {child.lastName} --- "Gruppe: {getGroupName(child.groupId)}"
-            </li>
+        <List>
+          {children.content.map((child, index) => (
+            <ListItem key={child.uuid ?? index}>
+              {child.firstName} {child.lastName} --- "Gruppe:{" "}
+              {getGroupName(child.groupId)}"
+            </ListItem>
           ))}
-        </ul>
+        </List>
       )}
-    </section>
+    </Box>
   );
 }
