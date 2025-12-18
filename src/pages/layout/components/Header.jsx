@@ -1,39 +1,49 @@
+import { AppBar, Box, MenuItem, Toolbar, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function Header() {
   return (
-    <header>
-      <Link to="/" className="logo-link">
-        Wunderkind
-      </Link>
-      <nav>
-        <ul>
-          <li>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography
+          variant="h6"
+          component={Link}
+          to="/"
+          sx={{
+            textDecoration: "none",
+            color: "inherit",
+            mr: 4,
+          }}
+        >
+          Wunderkind
+        </Typography>
+        <Box>
+          <MenuItem>
             <Link to="/">Startseite</Link>
-          </li>
-          <li>
+          </MenuItem>
+          <MenuItem>
             <Link to="/kindergarten">Kindergarten</Link>
-          </li>
-          <li>
+          </MenuItem>
+          <MenuItem>
             <Link to="/group">Gruppen</Link>
-          </li>
-          <li>
+          </MenuItem>
+          <MenuItem>
             <Link to="/child">Kindern</Link>
-          </li>
-          <li>
+          </MenuItem>
+          <MenuItem>
             <Link to="/parents">Eltern</Link>
-          </li>
-          <li>
+          </MenuItem>
+          <MenuItem>
             <Link to="/educator">Team</Link>
-          </li>
-          <li>
+          </MenuItem>
+          <MenuItem>
             <Link to="/contact">Kontakt</Link>
-          </li>
-          <li>
+          </MenuItem>
+          <MenuItem>
             <Link to="/about-me">Über mich</Link>
-          </li>
-        </ul>
-      </nav>
-    </header>
+          </MenuItem>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
