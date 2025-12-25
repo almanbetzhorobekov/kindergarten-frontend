@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import Button from "../../../components/Button";
 import { createGroup } from "../../../api/groupService";
 import { fetchKindergartens } from "../../../api/kindergartenService"; // список садиков
-import "../styles/GroupPage.css";
+import { Typography, Button, Box } from "@mui/material";
+import FormInput from "../../../components/FormInput";
 
 export default function GroupForm() {
   const queryClient = useQueryClient();
@@ -39,20 +39,18 @@ export default function GroupForm() {
     mutation.mutate(data);
   };
 
-  if (isLoading) return <p>Lädt Kindergärten...</p>;
-  if (error) return <p>Fehler beim Laden!</p>;
+  if (isLoading) return <Typography>Lädt Kindergärten...</Typography>;
+  if (error) return <Typography>Fehler beim Laden!</Typography>;
 
   return (
-    <form className="group-form" onSubmit={handleSubmit(onSubmit)}>
-
+    <FormInput onSubmit={handleSubmit(onSubmit)}>
       <input
         type="text"
-        placeholder="Gruppenname"
+        label="Gruppenname"
         {...register("groupName", { required: "Name ist erforderlich" })}
       />
-      {errors.name && <p className="error-text">{errors.name.message}</p>}
+      {errors.name && <Typography>{errors.name.message}</Typography>}
 
-      
       <label>Kindergarten wählen:</label>
       <select {...register("kindergartenId", { required: true })}>
         <option value="">--Wähle Kindergarten--</option>
@@ -63,10 +61,10 @@ export default function GroupForm() {
         ))}
       </select>
       {errors.kindergartenId && (
-        <p className="error-text">Bitte Kindergarten auswählen</p>
+        <Typography>Bitte Kindergarten auswählen</Typography>
       )}
 
       <Button type="submit">Erstellen</Button>
-    </form>
+    </FormInput>
   );
 }

@@ -1,11 +1,11 @@
 import { useForm, Controller } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import Button from "../../../components/Button";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 
 import { parentsAPI, childAPI } from "../../../api/parentsService";
+import { Box, TextField, Button, Typography } from "@mui/material";
 
 export default function ParentsForm({ onAddParent }) {
   const {
@@ -19,13 +19,11 @@ export default function ParentsForm({ onAddParent }) {
 
   const queryClient = useQueryClient();
 
- 
   const { data: children = [] } = useQuery({
     queryKey: ["children"],
     queryFn: childAPI.getAll,
   });
 
- 
   const childOptions = children.map((c) => ({
     value: c.uuid ?? c.id,
     label: `${c.firstName} ${c.lastName}`,
@@ -47,23 +45,22 @@ export default function ParentsForm({ onAddParent }) {
   };
 
   return (
-    <section className="parents-form">
-      <form className="parents-form-inner" onSubmit={handleSubmit(onSubmit)}>
-
+    <Box component={"section"}>
+      <Box component={"form"} onSubmit={handleSubmit(onSubmit)}>
         <FormInput
-          placeholder="Vorname"
+          label="Vorname"
           {...register("firstName", { required: "Vorname ist erforderlich" })}
           error={errors.firstName?.message}
         />
 
         <FormInput
-          placeholder="Nachname"
+          label="Nachname"
           {...register("lastName", { required: "Nachname ist erforderlich" })}
           error={errors.lastName?.message}
         />
 
         <FormInput
-          placeholder="Geburtsdatum"
+          label="Geburtsdatum"
           type="date"
           {...register("birthday", {
             required: "Geburtsdatum ist erforderlich",
@@ -71,9 +68,9 @@ export default function ParentsForm({ onAddParent }) {
           error={errors.birthday?.message}
         />
 
-        <fieldset>
+        <TextField>
           <FormInput
-            placeholder="Straße"
+            label="Straße"
             {...register("street", {
               required: "Straße ist erforderlich",
             })}
@@ -81,7 +78,7 @@ export default function ParentsForm({ onAddParent }) {
           />
 
           <FormInput
-            placeholder="Hausnummer"
+            label="Hausnummer"
             {...register("houseNumber", {
               required: "Hausnummer ist erforderlich",
             })}
@@ -95,24 +92,23 @@ export default function ParentsForm({ onAddParent }) {
             })}
             error={errors.plz?.message}
           />
-        </fieldset>
+        </TextField>
 
         <FormInput
-          placeholder="Telefonnummer"
+          label="Telefonnummer"
           {...register("phoneNumber", {
             required: "Telefonnummer ist erforderlich",
           })}
           error={errors.phoneNumber?.message}
         />
 
-        
         <Controller
           name="childId"
           control={control}
           rules={{ required: "Kind auswählen" }}
           render={({ field }) => (
             <FormSelect
-              placeholder="Kind auswählen"
+              label="Kind auswählen"
               options={childOptions}
               value={field.value}
               onChange={field.onChange}
@@ -126,10 +122,11 @@ export default function ParentsForm({ onAddParent }) {
         </Button>
 
         {mutation.isError && (
-          <p style={{ color: "red" }}>Fehler beim Speichern</p>
+          <Typography style={{ color: "red" }}>
+            Fehler beim Speichern
+          </Typography>
         )}
-      </form>
-    </section>
+      </Box>
+    </Box>
   );
 }
-

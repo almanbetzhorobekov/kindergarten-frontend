@@ -1,8 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { parentsAPI, childAPI } from "../../../api/parentsService";
+import { Box, List, ListItem, Typography } from "@mui/material";
 
 export default function ParentsList() {
-  const { data: parents = [], isLoading, error } = useQuery({
+  const {
+    data: parents = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["parents"],
     queryFn: parentsAPI.getAll,
   });
@@ -17,40 +22,37 @@ export default function ParentsList() {
     return child ? `${child.firstName} ${child.lastName}` : "-";
   };
 
-  if (isLoading) return <p>Laden...</p>;
-  if (error) return <p>Fehler beim Laden der Eltern</p>;
- console.log(parents);
+  if (isLoading) return <Typography>Laden...</Typography>;
+  if (error) return <Typography>Fehler beim Laden der Eltern</Typography>;
+  console.log(parents);
   return (
-    <section className="parents-list">
-      <h2>Eltern Liste</h2>
+    <Box component={"section"}>
+      <Typography variant="h2">Eltern Liste</Typography>
 
       {parents.length === 0 ? (
-        <p>Keine Eltern hinzugefügt.</p>
+        <Typography>Keine Eltern hinzugefügt.</Typography>
       ) : (
-        <ul>
+        <List>
           {parents.map((parent, index) => (
-            <li key={parent.uuid ?? index}>
+            <ListItem key={parent.uuid ?? index}>
               <strong>
                 {parent.firstName} {parent.lastName}
               </strong>
-              <div>{parent.phoneNumber}</div>
+              <Box>{parent.phoneNumber}</Box>
 
-              
               {parent.child && (
-                <div>
+                <Box>
                   Kind: {parent.child.firstName} {parent.child.lastName}
-                </div>
+                </Box>
               )}
 
-              
               {!parent.child && parent.childUuid && (
-                <div>Kind: {getChildName(parent.childId)}</div>
+                <Box>Kind: {getChildName(parent.childId)}</Box>
               )}
-            </li>
+            </ListItem>
           ))}
-        </ul>
+        </List>
       )}
-    </section>
+    </Box>
   );
 }
-

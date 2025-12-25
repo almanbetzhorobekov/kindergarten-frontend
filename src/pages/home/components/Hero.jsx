@@ -1,28 +1,28 @@
 import { Link } from "react-router-dom";
-import "../styles/Hero.css";
-import Button from "../../../components/Button.jsx";
+import { Button, Typography, Box } from "@mui/material";
 
 export default function Hero() {
   return (
-    <section className="hero">
-      <div className="hero-image">
-        <img src="/images/campus/Kindergarten-main.jpg"
-            alt="Kindergarten Hauptbild">
-           
-        </img>
-              
-      </div>
+    <Box component={"section"}>
+      <Box>
+        <img
+          src="/images/campus/Kindergarten-main.jpg"
+          alt="Kindergarten Hauptbild"
+        ></img>
+      </Box>
 
-      <div className="hero-content">
-        <h1>Willkommen in der Welt der begabten Kinder</h1>
-        <p>
+      <Box>
+        <Typography variant="h1">
+          Willkommen in der Welt der begabten Kinder
+        </Typography>
+        <Typography>
           „Wir fördern die Talente Ihres Kindes, begleiten es auf dem Weg zur
           Selbstentfaltung und bereiten es optimal auf die Zukunft vor.“
-        </p>
+        </Typography>
         <Link to="/kindergarten">
           <Button>Weiterlesen</Button>
         </Link>
-      </div>
-    </section>
+      </Box>
+    </Box>
   );
 }

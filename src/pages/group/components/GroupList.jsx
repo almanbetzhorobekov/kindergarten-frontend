@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import Button from "../../../components/Button";
 import { fetchGroups } from "../../../api/groupService";
-import "../styles/GroupPage.css";
+import { Button, Typography, Box } from "@mui/material";
 
 export default function GroupList() {
   const {
@@ -14,8 +13,8 @@ export default function GroupList() {
     queryFn: fetchGroups,
   });
 
-  if (isLoading) return <p>Lädt Gruppen...</p>;
-  if (error) return <p>Fehler beim Laden der Gruppen!</p>;
+  if (isLoading) return <Typography>Lädt Gruppen...</Typography>;
+  if (error) return <Typography>Fehler beim Laden der Gruppen!</Typography>;
 
   // Gruppierung
   const groupedByKindergarten = groups.reduce((acc, group) => {
@@ -28,32 +27,27 @@ export default function GroupList() {
   }, {});
   console.log(groups);
   return (
-    <section className="groups-container">
-
-      <div className="groups-grid">
+    <Box component={"section"}>
+      <Box>
         {Object.entries(groupedByKindergarten).map(
           ([kindergarten, groupList]) => (
-            <div
-              key={groupList[0]?.kindergartenId || kindergarten}
-              className="group-column"
-            >
-              <h2>{kindergarten}</h2>
+            <Box key={groupList[0]?.kindergartenId || kindergarten}>
+              <Typography variant="h2">{kindergarten}</Typography>
 
               {groupList.map((group) => (
-                <div key={group.uuid} className="group-card">
-                  <h3>{group.groupName}</h3>
-                </div>
+                <Box key={group.uuid}>
+                  <Typography variant="h3">{group.groupName}</Typography>
+                </Box>
               ))}
-            </div>
+            </Box>
           )
         )}
-      </div>
+      </Box>
 
       {/* Buttons */}
-      <div>
+      <Box>
         <Button onClick={() => refetch()}>Gruppen neu laden</Button>
-      </div>
-    </section>
+      </Box>
+    </Box>
   );
 }
-

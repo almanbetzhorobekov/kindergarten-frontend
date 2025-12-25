@@ -1,8 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { educatorAPI, groupAPI } from "../../../api/educatorService";
+import { Box, List, ListItem, Typography } from "@mui/material";
 
 export default function EducatorListe() {
-  const { data: educators = [], isLoading, error } = useQuery({
+  const {
+    data: educators = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["educators"],
     queryFn: educatorAPI.getAll,
   });
@@ -17,24 +22,24 @@ export default function EducatorListe() {
     return group?.groupName || "-";
   };
 
-  if (isLoading) return <p>Laden...</p>;
-  if (error) return <p>Fehler beim Laden der Erzieher</p>;
-  
+  if (isLoading) return <Typography>Laden...</Typography>;
+  if (error) return <Typography>Fehler beim Laden der Erzieher</Typography>;
+
   console.log(educators);
   return (
-    <section className="educators">
-      <h2>Erzieher Liste</h2>
+    <Box component={"section"}>
+      <Typography variant="h3">Erzieher Liste</Typography>
       {educators.length === 0 ? (
-        <p>Keine Erzieher hinzugefügt.</p>
+        <Typography>Keine Erzieher hinzugefügt.</Typography>
       ) : (
-        <ul>
+        <List>
           {educators.map((educator, index) => (
-            <li key={educator.uuid ?? index}>
+            <ListItem key={educator.uuid ?? index}>
               {educator.firstName} {educator.lastName}
-            </li>
+            </ListItem>
           ))}
-        </ul> 
+        </List>
       )}
-    </section>
+    </Box>
   );
 }

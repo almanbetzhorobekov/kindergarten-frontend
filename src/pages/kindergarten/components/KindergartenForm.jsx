@@ -1,11 +1,19 @@
-import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
-import Button from "../../../components/Button";
-import { fetchKindergartens, createKindergarten } from "../../../api/kindergartenService";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  fetchKindergartens,
+  createKindergarten,
+} from "../../../api/kindergartenService";
+import { Box, Button, Typography } from "@mui/material";
+import FormInput from "../../../components/FormInput";
 
 export default function KindergartenForm() {
   const queryClient = useQueryClient();
   //GET
-  const { data: kindergartens = [], isLoading, error } = useQuery({
+  const {
+    data: kindergartens = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["kindergartens"],
     queryFn: fetchKindergartens,
   });
@@ -19,49 +27,59 @@ export default function KindergartenForm() {
   });
 
   const handleSubmit = (event) => {
-  event.preventDefault();
-  const formData = new FormData(event.target);
+    event.preventDefault();
+    const formData = new FormData(event.target);
 
-  const newKindergarten = {
-    kindergartenName: formData.get("kindergartenName"),
-    address: {
-      street: formData.get("street"),
-      houseNumber: formData.get("houseNumber"),
-      plz: formData.get("plz"),
-    },
+    const newKindergarten = {
+      kindergartenName: formData.get("kindergartenName"),
+      address: {
+        street: formData.get("street"),
+        houseNumber: formData.get("houseNumber"),
+        plz: formData.get("plz"),
+      },
+    };
+
+    mutation.mutate(newKindergarten);
+    event.target.reset();
   };
 
-  mutation.mutate(newKindergarten);
-  event.target.reset();
-};
-
-  if (isLoading) return <p>Lädt...</p>;
-  if (error) return <p>Fehler beim Laden der Kindergärten</p>;
+  if (isLoading) return <Typography>Lädt...</Typography>;
+  if (error) return <Typography>Fehler beim Laden der Kindergärten</Typography>;
   return (
-    <section className="kindergartens">
-      <h2 className="kindergartens-title">Neuen Kindergarten erstellen</h2>
+    <Box component={"section"}>
+      <Typography variant="h2">Neuen Kindergarten erstellen</Typography>
 
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="kindergartenName" placeholder="Kindergartenname" required />
+      <Box component={"form"} onSubmit={handleSubmit}>
+        <FormInput
+          type="text"
+          name="kindergartenName"
+          label="Kindergartenname"
+          required
+        />
         <fieldset>
-          <input type="text" name="street" placeholder="Straße" required />
-          <input type="text" name="houseNumber" placeholder="Hausnummer" required />
-          <input type="text" name="plz" placeholder="PLZ" required />
+          <FormInput type="text" name="street" label="Straße" required />
+          <FormInput
+            type="text"
+            name="houseNumber"
+            label="Hausnummer"
+            required
+          />
+          <FormInput type="text" name="plz" placeholder="PLZ" required />
         </fieldset>
 
         <Button type="submit">Erstellen</Button>
-      
-      </form>
+      </Box>
 
-      <div className="kindergartens-list">
+      <Box>
         {kindergartens.map((kita, i) => (
-          <div key={i} className="kita-card">
-            <p>
-              <strong>{kita.name}</strong> — {kita.street} {kita.strNumber}, {kita.plz}
-            </p>
-          </div>
+          <Box key={i}>
+            <Typography>
+              <strong>{kita.name}</strong> — {kita.street} {kita.strNumber},{" "}
+              {kita.plz}
+            </Typography>
+          </Box>
         ))}
-      </div>
-    </section>
+      </Box>
+    </Box>
   );
 }

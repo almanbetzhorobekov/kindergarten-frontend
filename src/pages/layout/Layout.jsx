@@ -1,7 +1,7 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Outlet } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 
 export default function Layout() {
   return (
@@ -23,7 +23,7 @@ export default function Layout() {
           py: 4,
         }}
       >
-        <Container maxWidth="lg">
+        <Container maxWidth="md">
           <Outlet />
         </Container>
       </Box>

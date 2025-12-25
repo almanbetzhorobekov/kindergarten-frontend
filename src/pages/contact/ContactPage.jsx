@@ -1,15 +1,15 @@
+import { Box, Typography } from "@mui/material";
 import ContactList from "./components/ContactList.jsx";
-import "./styles/ContactPage.css";
 
 export default function ContactPage() {
   return (
     <main>
-      <div className="contact-page">
-      <h1>Kontakt</h1>
-      <p>Hier finden Sie alle wichtigen Ansprechpartner.</p>
+      <Box>
+        <Typography variant="h1">Kontakt</Typography>
+        <Typography>Hier finden Sie alle wichtigen Ansprechpartner.</Typography>
 
-      <ContactList />
-    </div>
+        <ContactList />
+      </Box>
     </main>
   );
 }
