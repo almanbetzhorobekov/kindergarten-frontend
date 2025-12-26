@@ -1,0 +1,40 @@
+.gallery {
+  display: flex;
+  overflow-x: auto;                /* горизонтальная прокрутка */
+  scroll-snap-type: x mandatory;  /* привязка к слайду */
+  gap: 70px;
+  padding: 20px;
+}
+
+.gallery-item {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  position: relative;
+  text-align: center;
+}
+
+.gallery-item img {
+  margin-left: -10px;
+  max-width: 350px;
+  margin-right: -40px;
+  width: 100%;
+  height: auto;
+  object-fit:cover;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.gallery-item p {
+  position: relative;
+  bottom: 10px;
+  left: 54%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 10px -20px 0px;
+}
+
