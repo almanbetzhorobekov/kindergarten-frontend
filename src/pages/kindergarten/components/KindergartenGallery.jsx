@@ -35,11 +35,7 @@ export default function KindergartenGallery() {
         <Box key={index}>
           <img src={item.src} alt={item.alt} />
           <Typography>{item.title}</Typography>
-          <Box>
-            <span></span>
-            <span></span>
-            <span></span>
-          </Box>
+          <Box></Box>
         </Box>
       ))}
     </Box>

@@ -1,15 +1,25 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createGroup } from "../../../api/groupService";
 import { fetchKindergartens } from "../../../api/kindergartenService"; // список садиков
-import { Typography, Button, Box } from "@mui/material";
-import FormInput from "../../../components/FormInput";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+} from "@mui/material";
 
 export default function GroupForm() {
   const queryClient = useQueryClient();
 
   // React Hook Form
   const {
+    control,
     register,
     handleSubmit,
     reset,
@@ -40,31 +50,64 @@ export default function GroupForm() {
   };
 
   if (isLoading) return <Typography>Lädt Kindergärten...</Typography>;
-  if (error) return <Typography>Fehler beim Laden!</Typography>;
+  if (error) return <Typography color="error">Fehler beim Laden!</Typography>;
 
   return (
-    <FormInput onSubmit={handleSubmit(onSubmit)}>
-      <input
-        type="text"
+    <Box
+      component={"form"}
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{ maxWidth: 400 }}
+    >
+      <Typography variant="h6" mb={2}>
+        Gruppe erstellen
+      </Typography>
+      <TextField
+        fullWidth
         label="Gruppenname"
-        {...register("groupName", { required: "Name ist erforderlich" })}
+        margin="normal"
+        {...register("groupName", {
+          required: "Name ist erforderlich",
+        })}
+        error={!!errors.groupName}
+        helperText={errors.groupName?.message}
       />
-      {errors.name && <Typography>{errors.name.message}</Typography>}
+      {/*errors.name && <Typography>{errors.name.message}</Typography>*/}
 
-      <label>Kindergarten wählen:</label>
-      <select {...register("kindergartenId", { required: true })}>
-        <option value="">--Wähle Kindergarten--</option>
-        {kindergartens.map((kita) => (
-          <option key={kita.uuid} value={kita.uuid}>
-            {kita.name || " "} ({kita.street || " "} {kita.houseNumber || " "})
-          </option>
-        ))}
-      </select>
-      {errors.kindergartenId && (
-        <Typography>Bitte Kindergarten auswählen</Typography>
+      <FormControl fullWidth margin="normal" error={!!errors.kindergartenId}>
+        <InputLabel>Kindergarten</InputLabel>
+
+        <Controller
+          name="kindergartenId"
+          control={control}
+          rules={{ required: "Bitte Kindergarten auswählen" }}
+          render={({ field }) => (
+            <Select {...field} label="Kindergarten">
+              {kindergartens.map((kita) => (
+                <MenuItem key={kita.uuid} value={kita.uuid}>
+                  {kita.name} ({kita.street} {kita.houseNumber})
+                </MenuItem>
+              ))}
+            </Select>
+          )}
+        />
+
+        <FormHelperText>{errors.kindergartenId?.message}</FormHelperText>
+      </FormControl>
+
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{ mt: 2 }}
+        disabled={mutation.isLoading}
+      >
+        {mutation.isLoading ? "Speichern..." : "Erstellen"}
+      </Button>
+
+      {mutation.isError && (
+        <Typography color="error" mt={2}>
+          Fehler beim Speichern
+        </Typography>
       )}
-
-      <Button type="submit">Erstellen</Button>
-    </FormInput>
+    </Box>
   );
 }

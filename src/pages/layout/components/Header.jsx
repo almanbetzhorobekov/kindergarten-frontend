@@ -1,5 +1,5 @@
-import { AppBar, Box, MenuItem, Toolbar, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { AppBar, Box, Toolbar, Typography, Button } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 export default function Header() {
   return (
@@ -7,41 +7,43 @@ export default function Header() {
       <Toolbar>
         <Typography
           variant="h6"
-          component={Link}
+          component={RouterLink}
           to="/"
           sx={{
             textDecoration: "none",
             color: "inherit",
             mr: 4,
+            fontWeight: "bold",
           }}
         >
           Wunderkind
         </Typography>
-        <Box>
-          <MenuItem>
-            <Link to="/">Startseite</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/kindergarten">Kindergarten</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/group">Gruppen</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/child">Kindern</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/parents">Eltern</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/educator">Team</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/contact">Kontakt</Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/about-me">Über mich</Link>
-          </MenuItem>
+
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Button color="inherit" component={RouterLink} to="/">
+            Startseite
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/kindergarten">
+            Kindergarten
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/group">
+            Gruppen
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/child">
+            Kinder
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/parents">
+            Eltern
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/educator">
+            Team
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/contact">
+            Kontakt
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/about-me">
+            Über mich
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>

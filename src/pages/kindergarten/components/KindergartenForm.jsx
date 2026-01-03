@@ -3,7 +3,15 @@ import {
   fetchKindergartens,
   createKindergarten,
 } from "../../../api/kindergartenService";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  Stack,
+  Divider,
+} from "@mui/material";
 import FormInput from "../../../components/FormInput";
 
 export default function KindergartenForm() {
@@ -46,40 +54,57 @@ export default function KindergartenForm() {
   if (isLoading) return <Typography>Lädt...</Typography>;
   if (error) return <Typography>Fehler beim Laden der Kindergärten</Typography>;
   return (
-    <Box component={"section"}>
-      <Typography variant="h2">Neuen Kindergarten erstellen</Typography>
+    <Box component="section">
+      <Typography variant="h6" gutterBottom>
+        Neuen Kindergarten erstellen
+      </Typography>
 
-      <Box component={"form"} onSubmit={handleSubmit}>
-        <FormInput
-          type="text"
-          name="kindergartenName"
-          label="Kindergartenname"
-          required
-        />
-        <fieldset>
-          <FormInput type="text" name="street" label="Straße" required />
-          <FormInput
-            type="text"
-            name="houseNumber"
-            label="Hausnummer"
-            required
-          />
-          <FormInput type="text" name="plz" placeholder="PLZ" required />
-        </fieldset>
+      <Card>
+        <CardContent>
+          <Box component="form" onSubmit={handleSubmit}>
+            <Stack spacing={3}>
+              <FormInput
+                type="text"
+                name="kindergartenName"
+                label="Kindergartenname"
+                required
+              />
 
-        <Button type="submit">Erstellen</Button>
-      </Box>
+              <Divider />
 
-      <Box>
-        {kindergartens.map((kita, i) => (
-          <Box key={i}>
-            <Typography>
-              <strong>{kita.name}</strong> — {kita.street} {kita.strNumber},{" "}
-              {kita.plz}
-            </Typography>
+              <Stack spacing={2}>
+                <FormInput type="text" name="street" label="Straße" required />
+                <FormInput
+                  type="text"
+                  name="houseNumber"
+                  label="Hausnummer"
+                  required
+                />
+                <FormInput type="text" name="plz" label="PLZ" required />
+              </Stack>
+
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{ alignSelf: "flex-start" }}
+              >
+                Erstellen
+              </Button>
+            </Stack>
           </Box>
+        </CardContent>
+      </Card>
+
+      <Stack spacing={1} mt={4}>
+        {kindergartens.map((kita) => (
+          <Typography key={kita.id} variant="body2">
+            <Box component="span" sx={{ fontWeight: 600 }}>
+              {kita.name}
+            </Box>{" "}
+            — {kita.street} {kita.strNumber}, {kita.plz}
+          </Typography>
         ))}
-      </Box>
+      </Stack>
     </Box>
   );
 }

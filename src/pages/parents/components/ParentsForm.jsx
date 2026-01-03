@@ -19,10 +19,12 @@ export default function ParentsForm({ onAddParent }) {
 
   const queryClient = useQueryClient();
 
-  const { data: children = [] } = useQuery({
+  const { data } = useQuery({
     queryKey: ["children"],
     queryFn: childAPI.getAll,
   });
+
+  const children = data?.content ?? [];
 
   const childOptions = children.map((c) => ({
     value: c.uuid ?? c.id,
@@ -86,7 +88,7 @@ export default function ParentsForm({ onAddParent }) {
           />
 
           <FormInput
-            placeholder="PLZ"
+            label="PLZ"
             {...register("plz", {
               required: "PLZ ist erforderlich",
             })}

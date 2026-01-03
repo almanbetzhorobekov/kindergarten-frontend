@@ -1,15 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { childAPI, groupAPI } from "../../../api/childService";
-import { Box, Typography, List, ListItem } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Stack,
+  Card,
+  CardContent,
+  Pagination,
+} from "@mui/material";
+
+const ITEMS_PER_PAGE = 5;
 
 export default function ChildList() {
+  const [page, setPage] = useState(1);
+
   const {
-    data: children = [],
+    data: children = { content: [], totalElements: 0 },
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["children"],
-    queryFn: childAPI.getAll,
+    queryKey: ["children", page],
+    queryFn: () => childAPI.getAll(page - 1, ITEMS_PER_PAGE),
   });
 
   const { data: groups = [] } = useQuery({
@@ -17,28 +29,50 @@ export default function ChildList() {
     queryFn: groupAPI.getAll,
   });
 
-  const getGroupName = (groupId) => {
-    const group = groups.find((g) => g.uuid === groupId);
-    return group?.groupName || "-";
-  };
+  const getGroupName = (groupId) =>
+    groups.find((g) => g.uuid === groupId)?.groupName || "-";
 
   if (isLoading) return <Typography>Lädt...</Typography>;
   if (error) return <Typography>Fehler beim Laden der Kinder</Typography>;
-  console.log(children);
+
+  const pageCount = Math.ceil(children.totalElements / ITEMS_PER_PAGE);
+
   return (
-    <Box component={"section"}>
-      <Typography variant="h2">Kinder Liste</Typography>
+    <Box component="section">
+      <Typography variant="h6" gutterBottom>
+        Kinder Liste
+      </Typography>
+
       {children.content.length === 0 ? (
         <Typography>Keine Kinder hinzugefügt.</Typography>
       ) : (
-        <List>
-          {children.content.map((child, index) => (
-            <ListItem key={child.uuid ?? index}>
-              {child.firstName} {child.lastName} --- "Gruppe:{" "}
-              {getGroupName(child.groupId)}"
-            </ListItem>
+        <Stack spacing={2}>
+          {children.content.map((child) => (
+            <Card key={child.uuid}>
+              <CardContent
+                sx={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <Typography>
+                  {child.firstName} {child.lastName}
+                </Typography>
+                <Typography color="text.secondary">
+                  Gruppe: {getGroupName(child.groupId)}
+                </Typography>
+              </CardContent>
+            </Card>
           ))}
-        </List>
+        </Stack>
+      )}
+
+      {pageCount > 1 && (
+        <Box display="flex" justifyContent="flex-end" mt={2}>
+          <Pagination
+            count={pageCount}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+            color="primary"
+          />
+        </Box>
       )}
     </Box>
   );

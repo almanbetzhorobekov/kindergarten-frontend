@@ -5,7 +5,14 @@ import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 
 import { kindergartenAPI, groupAPI, childAPI } from "../../../api/childService";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Stack,
+  Card,
+  CardContent,
+} from "@mui/material";
 
 export default function ChildForm({ onAddChild }) {
   const {
@@ -63,72 +70,89 @@ export default function ChildForm({ onAddChild }) {
   };
 
   return (
-    <Box component={"section"}>
-      <Box component={"form"} onSubmit={handleSubmit(onSubmit)}>
-        <FormInput
-          label="Vorname"
-          {...register("firstName", {
-            required: "Vorname ist erforderlich",
-          })}
-          error={errors.firstName?.message}
-        />
+    <Box component="section">
+      <Typography variant="h6" gutterBottom>
+        Neuen Kinder anmelden
+      </Typography>
 
-        <FormInput
-          label="Nachname"
-          {...register("lastName", {
-            required: "Nachname ist erforderlich",
-          })}
-          error={errors.lastName?.message}
-        />
+      <Card sx={{ mb: 4 }}>
+        <CardContent>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={3}>
+              <FormInput
+                label="Vorname"
+                {...register("firstName", {
+                  required: "Vorname ist erforderlich",
+                })}
+                error={errors.firstName?.message}
+              />
 
-        <FormInput
-          type="date"
-          label="Geburtsdatum"
-          {...register("birthday", {
-            required: "Geburtsdatum ist erforderlich",
-          })}
-          error={errors.birthday?.message}
-        />
+              <FormInput
+                label="Nachname"
+                {...register("lastName", {
+                  required: "Nachname ist erforderlich",
+                })}
+                error={errors.lastName?.message}
+              />
 
-        <Controller
-          name="kindergartenId"
-          control={control}
-          rules={{ required: "Kindergarten auswählen" }}
-          render={({ field }) => (
-            <FormSelect
-              label="Kindergarten"
-              options={kindergartenOptions}
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.kindergartenId?.message}
-            />
-          )}
-        />
+              <FormInput
+                type="date"
+                {...register("birthday", {
+                  required: "Geburtsdatum ist erforderlich",
+                })}
+                error={errors.birthday?.message}
+              />
 
-        <Controller
-          name="groupId"
-          control={control}
-          rules={{ required: "Gruppe auswählen" }}
-          render={({ field }) => (
-            <FormSelect
-              label="Gruppe"
-              options={filteredGroupOptions}
-              value={field.value}
-              onChange={field.onChange}
-              disabled={!selectedKindergartenId}
-              error={errors.groupId?.message}
-            />
-          )}
-        />
+              <Controller
+                name="kindergartenId"
+                control={control}
+                rules={{ required: "Kindergarten auswählen" }}
+                render={({ field }) => (
+                  <FormSelect
+                    label="Kindergarten"
+                    options={kindergartenOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.kindergartenId?.message}
+                  />
+                )}
+              />
 
-        <Button type="submit" disabled={mutation.isLoading}>
-          {mutation.isLoading ? "Speichern..." : "Anmelden"}
-        </Button>
+              <Controller
+                name="groupId"
+                control={control}
+                rules={{ required: "Gruppe auswählen" }}
+                render={({ field }) => (
+                  <FormSelect
+                    label="Gruppe"
+                    options={filteredGroupOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                    disabled={!selectedKindergartenId}
+                    error={errors.groupId?.message}
+                  />
+                )}
+              />
 
-        {mutation.isError && (
-          <Typography sx={{ color: "red" }}>Fehler beim Speichern</Typography>
-        )}
-      </Box>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={mutation.isLoading}
+                sx={{ alignSelf: "flex-start" }}
+              >
+                {mutation.isLoading ? "Speichern..." : "Anmelden"}
+              </Button>
+
+              {/* Error */}
+              {mutation.isError && (
+                <Typography sx={{ color: "red" }}>
+                  Fehler beim Speichern
+                </Typography>
+              )}
+            </Stack>
+          </Box>
+        </CardContent>
+      </Card>
     </Box>
   );
 }
