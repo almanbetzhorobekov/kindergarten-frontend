@@ -1,22 +1,33 @@
+import { useForm, Controller } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { createGroup } from "../../../api/groupService";
+import { fetchKindergartens } from "../../../api/kindergartenService"; // список садиков
 import {
-  fetchKindergartens,
-  createKindergarten,
-} from "../../../api/kindergartenService";
-import {
+  Card,
   Box,
   Button,
   Typography,
-  Card,
-  CardContent,
-  Stack,
-  Divider,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText,
 } from "@mui/material";
-import FormInput from "../../../components/FormInput";
 
-export default function KindergartenForm() {
+export default function GroupForm() {
   const queryClient = useQueryClient();
-  //GET
+
+  // React Hook Form
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  // GET
   const {
     data: kindergartens = [],
     isLoading,
@@ -25,86 +36,82 @@ export default function KindergartenForm() {
     queryKey: ["kindergartens"],
     queryFn: fetchKindergartens,
   });
-  //POST
+
+  // POST
   const mutation = useMutation({
-    mutationFn: createKindergarten,
+    mutationFn: createGroup,
     onSuccess: () => {
-      // обновляем кеш, чтобы новые данные появились сразу
-      queryClient.invalidateQueries(["kindergartens"]);
+      queryClient.invalidateQueries(["groups"]); // reset
+      reset();
     },
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-
-    const newKindergarten = {
-      kindergartenName: formData.get("kindergartenName"),
-      address: {
-        street: formData.get("street"),
-        houseNumber: formData.get("houseNumber"),
-        plz: formData.get("plz"),
-      },
-    };
-
-    mutation.mutate(newKindergarten);
-    event.target.reset();
+  const onSubmit = (data) => {
+    mutation.mutate(data);
   };
 
-  if (isLoading) return <Typography>Lädt...</Typography>;
-  if (error) return <Typography>Fehler beim Laden der Kindergärten</Typography>;
+  if (isLoading) return <Typography>Lädt Kindergärten...</Typography>;
+  if (error) return <Typography color="error">Fehler beim Laden!</Typography>;
+
   return (
-    <Box component="section">
+    <Box
+      component={"section"}
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{ maxWidth: 400 }}
+    >
       <Typography variant="h6" gutterBottom>
-        Neuen Kindergarten erstellen
+        Gruppe erstellen
       </Typography>
-
-      <Card>
-        <CardContent>
-          <Box component="form" onSubmit={handleSubmit}>
-            <Stack spacing={3}>
-              <FormInput
-                type="text"
-                name="kindergartenName"
-                label="Kindergartenname"
-                required
-              />
-
-              <Divider />
-
-              <Stack spacing={2}>
-                <FormInput type="text" name="street" label="Straße" required />
-                <FormInput
-                  type="text"
-                  name="houseNumber"
-                  label="Hausnummer"
-                  required
-                />
-                <FormInput type="text" name="plz" label="PLZ" required />
-              </Stack>
-
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ alignSelf: "flex-start" }}
-              >
-                Erstellen
-              </Button>
-            </Stack>
-          </Box>
-        </CardContent>
+      <Card elevation={5}>
+        <Box component="form" onSubmit={handleSubmit}></Box>
       </Card>
+      <TextField
+        fullWidth
+        label="Gruppenname"
+        margin="normal"
+        {...register("groupName", {
+          required: "Name ist erforderlich",
+        })}
+        error={!!errors.groupName}
+        helperText={errors.groupName?.message}
+      />
+      {/*errors.name && <Typography>{errors.name.message}</Typography>*/}
 
-      <Stack spacing={1} mt={4}>
-        {kindergartens.map((kita) => (
-          <Typography key={kita.id} variant="body2">
-            <Box component="span" sx={{ fontWeight: 600 }}>
-              {kita.name}
-            </Box>{" "}
-            — {kita.street} {kita.strNumber}, {kita.plz}
-          </Typography>
-        ))}
-      </Stack>
+      <FormControl fullWidth margin="normal" error={!!errors.kindergartenId}>
+        <InputLabel>Kindergarten</InputLabel>
+
+        <Controller
+          name="kindergartenId"
+          control={control}
+          rules={{ required: "Bitte Kindergarten auswählen" }}
+          render={({ field }) => (
+            <Select {...field} label="Kindergarten">
+              {kindergartens.map((kita) => (
+                <MenuItem key={kita.uuid} value={kita.uuid}>
+                  {kita.name} ({kita.street} {kita.houseNumber})
+                </MenuItem>
+              ))}
+            </Select>
+          )}
+        />
+
+        <FormHelperText>{errors.kindergartenId?.message}</FormHelperText>
+      </FormControl>
+
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{ mt: 2 }}
+        disabled={mutation.isLoading}
+      >
+        {mutation.isLoading ? "Speichern..." : "Erstellen"}
+      </Button>
+
+      {mutation.isError && (
+        <Typography color="error" mt={2}>
+          Fehler beim Speichern
+        </Typography>
+      )}
     </Box>
   );
 }

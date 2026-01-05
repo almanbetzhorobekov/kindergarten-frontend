@@ -1,13 +1,19 @@
-import Hero from "./components/Hero";
-import Cards from "./components/Cards";
+import DashboardCards from "./components/DashboardCards";
+import { Box, Container, Typography } from "@mui/material";
 
 export default function HomePage() {
   return (
-    <>
-      <main>
-        <Hero />
-        <Cards />
-      </main>
-    </>
+    <Box
+      component="main"
+      sx={{
+        backgroundColor: "background.default",
+        minHeight: "100vh",
+        py: 4,
+      }}
+    >
+      <Container maxWidth="lg">
+        <DashboardCards />
+      </Container>
+    </Box>
   );
 }

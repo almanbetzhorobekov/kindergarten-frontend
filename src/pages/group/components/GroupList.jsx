@@ -27,11 +27,11 @@ export default function GroupList() {
   if (isLoading) return <Typography>Lädt Gruppen...</Typography>;
   if (error) return <Typography color="error">Fehler beim Laden!</Typography>;
 
-  // 🔹 Pagination (frontend)
+  // Pagination (frontend)
   const totalPages = Math.ceil(groups.length / pageSize);
   const paginatedGroups = groups.slice((page - 1) * pageSize, page * pageSize);
 
-  // 🔹 Gruppировка
+  // Gruppировка
   const groupedByKindergarten = paginatedGroups.reduce((acc, group) => {
     const kitaName = group.kindergartenName || "Unbekannt";
 
@@ -71,6 +71,7 @@ export default function GroupList() {
           sx={{ mt: 3 }}
           page={page}
           count={totalPages}
+          color="primary"
           onChange={(e, value) => setPage(value)}
         />
       )}

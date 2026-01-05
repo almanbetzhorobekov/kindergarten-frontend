@@ -14,7 +14,6 @@ export default function GroupPage() {
     >
       <Container maxWidth="lg">
         <Stack spacing={4}>
-          <Typography variant="h6">Gruppenübersicht</Typography>
           <GroupForm />
           <GroupList />
         </Stack>

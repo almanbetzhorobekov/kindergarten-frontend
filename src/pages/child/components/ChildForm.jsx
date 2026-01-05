@@ -75,7 +75,7 @@ export default function ChildForm({ onAddChild }) {
         Neuen Kinder anmelden
       </Typography>
 
-      <Card sx={{ mb: 4 }}>
+      <Card sx={{ mb: 4 }} elevation={5}>
         <CardContent>
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={3}>

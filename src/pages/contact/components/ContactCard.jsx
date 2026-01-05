@@ -1,4 +1,11 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Avatar,
+  Typography,
+  Box,
+  Divider,
+} from "@mui/material";
 
 export default function ContactCard({
   firstName,
@@ -9,29 +16,48 @@ export default function ContactCard({
   workTime,
 }) {
   return (
-    <Box>
-      <img
-        src={"/images/educator/our-educator.jpg"}
-        alt={`${firstName} ${lastName}`}
-      />
+    <Card
+      sx={{
+        width: 320,
+        borderRadius: 3,
+        boxShadow: 3,
+        textAlign: "center",
+      }}
+    >
+      <CardContent>
+        <Avatar
+          src="/images/educator/our-educator.jpg"
+          alt={`${firstName} ${lastName}`}
+          sx={{
+            width: 96,
+            height: 96,
+            mx: "auto",
+            mb: 2,
+          }}
+        />
 
-      <Box>
-        <Typography variant="h2">
+        <Typography variant="h6" fontWeight="bold">
           {firstName} {lastName}
         </Typography>
-        <Typography>
-          <strong>Position:</strong> {role}
+
+        <Typography variant="body2" color="text.secondary" mb={2}>
+          {role}
         </Typography>
-        <Typography>
-          <strong>Email:</strong> {email}
-        </Typography>
-        <Typography>
-          <strong>Telefon:</strong> {phone}
-        </Typography>
-        <Typography>
-          <strong>Arbeitszeit:</strong> {workTime}
-        </Typography>
-      </Box>
-    </Box>
+
+        <Divider sx={{ mb: 2 }} />
+
+        <Box sx={{ textAlign: "left" }}>
+          <Typography variant="body2">
+            <strong>Email:</strong> {email}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Telefon:</strong> {phone}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Arbeitszeit:</strong> {workTime}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
