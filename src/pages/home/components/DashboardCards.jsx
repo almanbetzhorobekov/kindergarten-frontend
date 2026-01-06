@@ -8,31 +8,30 @@ import {
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
-export default function DashboardCards() {
-  const cards = [
-    {
-      title: "Anmeldung",
-      description: "Anmeldungen wie Kinder, Eltern",
-      link: "/child",
-    },
-    {
-      title: "News",
-      description:
-        "Aktuelle Informationen und Neuigkeiten aus dem Kindergarten.",
-      link: "/news",
-    },
-    {
-      title: "Kontaktpersonen",
-      description: "Wichtige Ansprechpartner und Notfallkontakte.",
-      link: "/contact",
-    },
-    {
-      title: "Media",
-      description: "Wichtige Ansprechpartner und Notfallkontakte.",
-      link: "/contact",
-    },
-  ];
+const cards = [
+  {
+    title: "Anmeldung",
+    description: "Anmeldungen wie Kinder, Eltern",
+    link: "/child",
+  },
+  {
+    title: "News",
+    description: "Aktuelle Informationen und Neuigkeiten aus dem Kindergarten.",
+    link: "/news",
+  },
+  {
+    title: "Kontaktpersonen",
+    description: "Wichtige Ansprechpartner und Notfallkontakte.",
+    link: "/contact",
+  },
+  {
+    title: "Media",
+    description: "Wichtige Ansprechpartner und Notfallkontakte.",
+    link: "/contact",
+  },
+];
 
+export default function DashboardCards() {
   return (
     <Box
       sx={{

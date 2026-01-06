@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 
-import { kindergartenAPI, groupAPI, childAPI } from "../../../api/childService";
 import {
   Box,
   Button,
@@ -13,6 +12,7 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
+import { useChildApi } from "../api/childApi";
 
 export default function ChildForm({ onAddChild }) {
   const {
@@ -24,19 +24,7 @@ export default function ChildForm({ onAddChild }) {
     formState: { errors },
   } = useForm();
 
-  const queryClient = useQueryClient();
-
-  // --- Fetch Kindergartens ---
-  const { data: kindergartens = [] } = useQuery({
-    queryKey: ["kindergartens"],
-    queryFn: kindergartenAPI.getAll,
-  });
-
-  // --- Fetch Groups ---
-  const { data: groups = [] } = useQuery({
-    queryKey: ["groups"],
-    queryFn: groupAPI.getAll,
-  });
+  const { kindergartens, groups, mutation } = useChildApi({ reset });
 
   // --- Selected kindergarten ---
   const selectedKindergartenId = watch("kindergartenId");
@@ -53,15 +41,6 @@ export default function ChildForm({ onAddChild }) {
       value: g.uuid,
       label: g.groupName,
     }));
-
-  //  TanStack Mutation for creating child
-  const mutation = useMutation({
-    mutationFn: childAPI.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["children"]); // обновляем список детей
-      reset();
-    },
-  });
 
   // --- Submit handler ---
   const onSubmit = (data) => {

@@ -3,18 +3,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
-
-import {
-  educatorAPI,
-  groupAPI,
-  kindergartenAPI,
-} from "../../../api/educatorService";
+import { educatorAPI } from "../../../api/educatorService";
+import { groupAPI } from "../../../api/groupService";
 
 import {
   Box,
   Button,
   CardContent,
-  TextField,
   Typography,
   Card,
   Stack,

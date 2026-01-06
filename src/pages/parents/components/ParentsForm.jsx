@@ -4,7 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 
-import { parentsAPI, childAPI } from "../../../api/parentsService";
+import { parentsAPI } from "../../../api/parentsService";
+import { childAPI } from "../../../api/childService";
 import {
   Box,
   Card,
@@ -20,7 +21,6 @@ export default function ParentsForm({ onAddParent }) {
     register,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm();
 

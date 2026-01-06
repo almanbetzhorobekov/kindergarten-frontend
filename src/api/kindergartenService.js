@@ -1,17 +1,28 @@
 import { fetchService } from "./fetchService";
 
-const API_BASE = "/api/kindergartens";
+const KINDERGARTENS_URL = "/api/kindergartens";
 
-export const fetchKindergartens = () => {
-  return fetchService(API_BASE + "/mini");
-};
+export const kindergartenAPI = {
+  getAll: () => fetchService(KINDERGARTENS_URL),
+  //nur Kindergarten ohne verbundende Objecten
+  getMini: () => fetchService(`${KINDERGARTENS_URL}/mini`),
 
-export const createKindergarten = (newKita) => {
-  return fetchService(API_BASE, {
-    method: "POST",
-    body: newKita,
-  });
+  getById: (id) => fetchService(`${KINDERGARTENS_URL}/${id}`),
+
+  create: (data) =>
+    fetchService(KINDERGARTENS_URL, {
+      method: "POST",
+      body: data,
+    }),
+
+  update: (id, data) =>
+    fetchService(`${KINDERGARTENS_URL}/${id}`, {
+      method: "PUT",
+      body: data,
+    }),
+
+  delete: (id) =>
+    fetchService(`${KINDERGARTENS_URL}/${id}`, {
+      method: "DELETE",
+    }),
 };
-function createMultipleKindergartens(newKitas) {
-  // Ich muss ---- 
-}

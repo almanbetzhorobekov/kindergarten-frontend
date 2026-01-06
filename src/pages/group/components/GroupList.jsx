@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchGroups } from "../../../api/groupService";
+import { groupAPI } from "../../../api/groupService";
 import {
   Box,
   Button,
@@ -10,9 +10,10 @@ import {
   Paper,
 } from "@mui/material";
 
+const pageSize = 6;
+
 export default function GroupList() {
   const [page, setPage] = useState(1);
-  const pageSize = 6;
 
   const {
     data: groups = [],
@@ -21,7 +22,7 @@ export default function GroupList() {
     refetch,
   } = useQuery({
     queryKey: ["groups"],
-    queryFn: fetchGroups,
+    queryFn: groupAPI.getAll,
   });
 
   if (isLoading) return <Typography>Lädt Gruppen...</Typography>;

@@ -1,13 +1,22 @@
 import { fetchService } from "./fetchService.js";
 
-export const parentsAPI = {
-    getAll: () => fetchService("/api/parents"),
-    create: (data) => fetchService("/api/parents", {
-        method: "POST",
-        body: data
-    }),
-};
+const PARENTS_URL = "/api/parents";
 
-export const childAPI = {
-    getAll: () => fetchService("/api/children"),
+export const parentsAPI = {
+  getAll: () => fetchService(PARENTS_URL),
+  getById: (id) => fetchService(`${PARENTS_URL}/${id}`),
+  create: (data) =>
+    fetchService(PARENTS_URL, {
+      method: "POST",
+      body: data,
+    }),
+  update: (id, data) =>
+    fetchService(`${PARENTS_URL}/${id}`, {
+      method: "PUT",
+      body: data,
+    }),
+  delete: (id) =>
+    fetchService(`${PARENTS_URL}/${id}`, {
+      method: "DELETE",
+    }),
 };

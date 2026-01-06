@@ -1,17 +1,22 @@
 import { fetchService } from "./fetchService";
 
+const EDUCATORS_URL = "/api/educators";
+
 export const educatorAPI = {
-  getAll: () => fetchService("/api/educators"),
-  create: (data) => fetchService("/api/educators", {
-     method: "POST", 
-     body: data 
+  getAll: () => fetchService(EDUCATORS_URL),
+  getById: (id) => fetchService(`${EDUCATORS_URL}/${id}`),
+  create: (data) =>
+    fetchService(EDUCATORS_URL, {
+      method: "POST",
+      body: data,
     }),
-};
-
-export const kindergartenAPI = {
-  getAll: () => fetchService("/api/kindergartens"),
-};
-
-export const groupAPI = {
-  getAll: () => fetchService("/api/groups"),
+  update: (id, data) =>
+    fetchService(`${EDUCATORS_URL}/${id}`, {
+      method: "PUT",
+      body: data,
+    }),
+  delete: (id) =>
+    fetchService(`${EDUCATORS_URL}/${id}`, {
+      method: "DELETE",
+    }),
 };

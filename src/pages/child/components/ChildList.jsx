@@ -1,6 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { childAPI, groupAPI } from "../../../api/childService";
+
 import {
   Box,
   Typography,
@@ -10,24 +9,12 @@ import {
   Pagination,
 } from "@mui/material";
 
-const ITEMS_PER_PAGE = 5;
+import { ITEMS_PER_PAGE, useChildApi } from "../api/childApi";
 
 export default function ChildList() {
   const [page, setPage] = useState(1);
 
-  const {
-    data: children = { content: [], totalElements: 0 },
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["children", page],
-    queryFn: () => childAPI.getAll(page - 1, ITEMS_PER_PAGE),
-  });
-
-  const { data: groups = [] } = useQuery({
-    queryKey: ["groups"],
-    queryFn: groupAPI.getAll,
-  });
+  const { children, error, isLoading, groups } = useChildApi({ page });
 
   const getGroupName = (groupId) =>
     groups.find((g) => g.uuid === groupId)?.groupName || "-";

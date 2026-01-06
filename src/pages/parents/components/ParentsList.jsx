@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { parentsAPI, childAPI } from "../../../api/parentsService";
+import { parentsAPI } from "../../../api/parentsService";
 import { Box, List, ListItem, Typography } from "@mui/material";
+import { childAPI } from "../../../api/childService";
 
 export default function ParentsList() {
   const {

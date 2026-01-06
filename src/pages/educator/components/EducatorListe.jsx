@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { educatorAPI, groupAPI } from "../../../api/educatorService";
+import { educatorAPI } from "../../../api/educatorService";
+import { groupAPI } from "../../../api/groupService";
 import { Box, List, ListItem, Typography } from "@mui/material";
 
 export default function EducatorListe() {
