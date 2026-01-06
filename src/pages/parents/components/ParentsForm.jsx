@@ -5,7 +5,14 @@ import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 
 import { parentsAPI, childAPI } from "../../../api/parentsService";
-import { Box, TextField, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Button,
+  Typography,
+  CardContent,
+  Stack,
+} from "@mui/material";
 
 export default function ParentsForm({ onAddParent }) {
   const {
@@ -47,88 +54,115 @@ export default function ParentsForm({ onAddParent }) {
   };
 
   return (
-    <Box component={"section"}>
-      <Box component={"form"} onSubmit={handleSubmit(onSubmit)}>
-        <FormInput
-          label="Vorname"
-          {...register("firstName", { required: "Vorname ist erforderlich" })}
-          error={errors.firstName?.message}
-        />
+    <Box component="section">
+      <Typography variant="h6" gutterBottom>
+        Eltern anmelden
+      </Typography>
 
-        <FormInput
-          label="Nachname"
-          {...register("lastName", { required: "Nachname ist erforderlich" })}
-          error={errors.lastName?.message}
-        />
+      <Card sx={{ mb: 4 }} elevation={5}>
+        <CardContent>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={3}>
+              <FormInput
+                label="Vorname"
+                {...register("firstName", {
+                  required: "Vorname ist erforderlich",
+                })}
+                error={errors.firstName?.message}
+              />
 
-        <FormInput
-          label="Geburtsdatum"
-          type="date"
-          {...register("birthday", {
-            required: "Geburtsdatum ist erforderlich",
-          })}
-          error={errors.birthday?.message}
-        />
+              <FormInput
+                label="Nachname"
+                {...register("lastName", {
+                  required: "Nachname ist erforderlich",
+                })}
+                error={errors.lastName?.message}
+              />
 
-        <TextField>
-          <FormInput
-            label="Straße"
-            {...register("street", {
-              required: "Straße ist erforderlich",
-            })}
-            error={errors.street?.message}
-          />
+              <Typography variant="h7">Geburtsdatum</Typography>
+              <FormInput
+                type="date"
+                {...register("birthday", {
+                  required: "Geburtsdatum ist erforderlich",
+                })}
+                error={errors.birthday?.message}
+              />
 
-          <FormInput
-            label="Hausnummer"
-            {...register("houseNumber", {
-              required: "Hausnummer ist erforderlich",
-            })}
-            error={errors.houseNumber?.message}
-          />
+              <Box spacing={3}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Adresse
+                </Typography>
 
-          <FormInput
-            label="PLZ"
-            {...register("plz", {
-              required: "PLZ ist erforderlich",
-            })}
-            error={errors.plz?.message}
-          />
-        </TextField>
+                <Stack spacing={2} direction="row">
+                  <FormInput
+                    label="Straße"
+                    {...register("street", {
+                      required: "Straße ist erforderlich",
+                    })}
+                    error={errors.street?.message}
+                  />
 
-        <FormInput
-          label="Telefonnummer"
-          {...register("phoneNumber", {
-            required: "Telefonnummer ist erforderlich",
-          })}
-          error={errors.phoneNumber?.message}
-        />
+                  <FormInput
+                    label="Hausnummer"
+                    {...register("houseNumber", {
+                      required: "Hausnummer ist erforderlich",
+                    })}
+                    error={errors.houseNumber?.message}
+                  />
 
-        <Controller
-          name="childId"
-          control={control}
-          rules={{ required: "Kind auswählen" }}
-          render={({ field }) => (
-            <FormSelect
-              label="Kind auswählen"
-              options={childOptions}
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.childId?.message}
-            />
-          )}
-        />
+                  <FormInput
+                    label="PLZ"
+                    {...register("plz", {
+                      required: "PLZ ist erforderlich",
+                    })}
+                    error={errors.plz?.message}
+                  />
+                </Stack>
+              </Box>
 
-        <Button type="submit" disabled={mutation.isLoading}>
-          {mutation.isLoading ? "Speichern..." : "Eltern speichern"}
-        </Button>
+              <FormInput
+                label="Telefonnummer"
+                {...register("phoneNumber", {
+                  required: "Telefonnummer ist erforderlich",
+                })}
+                error={errors.phoneNumber?.message}
+              />
 
-        {mutation.isError && (
-          <Typography style={{ color: "red" }}>
-            Fehler beim Speichern
-          </Typography>
-        )}
-      </Box>
+              {/* Kind auswählen */}
+              <Controller
+                name="childId"
+                control={control}
+                rules={{ required: "Kind auswählen" }}
+                render={({ field }) => (
+                  <FormSelect
+                    label="Kind auswählen"
+                    options={childOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.childId?.message}
+                  />
+                )}
+              />
+
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={mutation.isLoading}
+                sx={{ alignSelf: "flex-start" }}
+              >
+                {mutation.isLoading ? "Speichern..." : "Eltern speichern"}
+              </Button>
+
+              {/* Error */}
+              {mutation.isError && (
+                <Typography sx={{ color: "red" }}>
+                  Fehler beim Speichern
+                </Typography>
+              )}
+            </Stack>
+          </Box>
+        </CardContent>
+      </Card>
     </Box>
   );
 }

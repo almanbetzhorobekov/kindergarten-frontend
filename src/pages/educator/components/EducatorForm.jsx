@@ -4,12 +4,21 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 
-import { Box, Button, TextField, Typography } from "@mui/material";
 import {
   educatorAPI,
   groupAPI,
   kindergartenAPI,
 } from "../../../api/educatorService";
+
+import {
+  Box,
+  Button,
+  CardContent,
+  TextField,
+  Typography,
+  Card,
+  Stack,
+} from "@mui/material";
 
 export default function EducatorForm(onAddEducator) {
   const {
@@ -64,105 +73,121 @@ export default function EducatorForm(onAddEducator) {
 
   return (
     <Box component={"section"}>
-      <Box component={"form"} onSubmit={handleSubmit(onSubmit)}>
-        <FormInput
-          label="Vorname"
-          {...register("firstName", { required: "Vorname ist erforderlich" })}
-          error={errors.fistname?.message}
-        />
+      <Card sx={{ mb: 4 }} elevation={5}>
+        <CardContent>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={3}>
+              <FormInput
+                label="Vorname"
+                {...register("firstName", {
+                  required: "Vorname ist erforderlich",
+                })}
+                error={errors.firstName?.message}
+              />
 
-        <FormInput
-          label="Nachname"
-          {...register("lastName", { required: "Nachname ist erforderlich" })}
-          error={errors.lastname?.message}
-        />
+              <FormInput
+                label="Nachname"
+                {...register("lastName", {
+                  required: "Nachname ist erforderlich",
+                })}
+                error={errors.lastName?.message}
+              />
 
-        <FormInput
-          label="Geburtsdatum"
-          type="date"
-          {...register("birthday", {
-            required: "Geburtsdatum ist erforderlich",
-          })}
-          error={errors.dateOfBirth?.message}
-        />
+              <FormInput
+                type="date"
+                {...register("birthday", {
+                  required: "Geburtsdatum ist erforderlich",
+                })}
+                error={errors.birthday?.message}
+              />
 
-        <TextField>
-          <FormInput
-            label="Straße"
-            {...register("street", {
-              required: "Straße ist erforderlich",
-            })}
-            error={errors.street?.message}
-          />
+              <Box>
+                <Typography variant="subtitle1">Adresse</Typography>
 
-          <FormInput
-            label="Hausnummer"
-            {...register("houseNumber", {
-              required: "Hausnummer ist erforderlich",
-            })}
-            error={errors.houseNumber?.message}
-          />
+                <Stack spacing={2} direction="row">
+                  <FormInput
+                    label="Straße"
+                    {...register("street", {
+                      required: "Straße ist erforderlich",
+                    })}
+                    error={errors.street?.message}
+                  />
 
-          <FormInput
-            label="PLZ"
-            {...register("plz", {
-              required: "PLZ ist erforderlich",
-            })}
-            error={errors.plz?.message}
-          />
-        </TextField>
+                  <FormInput
+                    label="Nr."
+                    {...register("houseNumber", {
+                      required: "Hausnummer ist erforderlich",
+                    })}
+                    error={errors.houseNumber?.message}
+                  />
+                </Stack>
 
-        <FormInput
-          label="Telefonnummer"
-          {...register("phone", {
-            required: "Telefonnummer ist erforderlich",
-          })}
-          error={errors.phone?.message}
-        />
+                <FormInput
+                  label="PLZ"
+                  {...register("plz", { required: "PLZ ist erforderlich" })}
+                  error={errors.plz?.message}
+                />
+              </Box>
 
-        <Controller
-          name="kindergartenId"
-          control={control}
-          rules={{ required: "Kindergarten auswählen" }}
-          render={({ field }) => (
-            <FormSelect
-              label="Kindergarten"
-              options={kindergartenOptions}
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.kindergartenId?.message}
-            />
-          )}
-        />
+              <FormInput
+                label="Telefonnummer"
+                {...register("phone", {
+                  required: "Telefonnummer ist erforderlich",
+                })}
+                error={errors.phone?.message}
+              />
 
-        <Controller
-          name="groupId"
-          control={control}
-          rules={{
-            required: "Gruppe auswählen",
-          }}
-          render={({ field }) => (
-            <FormSelect
-              label="Gruppe"
-              options={filteredGroupOptions}
-              value={field.value}
-              onChange={field.onChange}
-              disabled={!selectedKindergartenId}
-              error={errors.groupId?.message}
-            />
-          )}
-        />
+              <Controller
+                name="kindergartenId"
+                control={control}
+                rules={{ required: "Kindergarten auswählen" }}
+                render={({ field }) => (
+                  <FormSelect
+                    label="Kindergarten"
+                    options={kindergartenOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.kindergartenId?.message}
+                  />
+                )}
+              />
 
-        <Button type="submit" disabled={mutation.isLoading}>
-          {mutation.isLoading ? "Speichern..." : "Anmelden"}
-        </Button>
+              <Controller
+                name="groupId"
+                control={control}
+                rules={{
+                  required: "Gruppe auswählen",
+                }}
+                render={({ field }) => (
+                  <FormSelect
+                    label="Gruppe"
+                    options={filteredGroupOptions}
+                    value={field.value}
+                    onChange={field.onChange}
+                    disabled={!selectedKindergartenId}
+                    error={errors.groupId?.message}
+                  />
+                )}
+              />
 
-        {mutation.isError && (
-          <Typography style={{ color: "red " }}>
-            Fehler beim Speichern
-          </Typography>
-        )}
-      </Box>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={mutation.isLoading}
+                sx={{ alignSelf: "flex-start" }}
+              >
+                {mutation.isLoading ? "Speichern..." : "Anmelden"}
+              </Button>
+
+              {mutation.isError && (
+                <Typography style={{ color: "red " }}>
+                  Fehler beim Speichern
+                </Typography>
+              )}
+            </Stack>
+          </Box>
+        </CardContent>
+      </Card>
     </Box>
   );
 }
