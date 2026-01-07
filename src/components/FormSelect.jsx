@@ -5,13 +5,16 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import { useId } from "react";
 
 export default function FormSelect({ label, options = [], error, ...props }) {
-  return (
-    <FormControl>
-      <InputLabel> {label} </InputLabel>
+  const id = useId();
 
-      <Select {...props}>
+  return (
+    <FormControl fullWidth>
+      <InputLabel id={id}>{label}</InputLabel>
+
+      <Select labelId={id} label={label} {...props}>
         <MenuItem key="default" value="">
           -- auswählen --
         </MenuItem>

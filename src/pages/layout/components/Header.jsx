@@ -42,14 +42,11 @@ export default function Header() {
         </Typography>
         {/**Navi */}
         <Box sx={{ display: "flex", gap: 4, ml: "auto" }}>
-          <Button color="inherit" component={RouterLink} to="/">
+          <Button component={RouterLink} to="/">
             Startseite
           </Button>
           {/**Organisation in MegaMenu */}
-          <Button
-            color="inherit"
-            onClick={(e) => setAnchorOrg(e.currentTarget)}
-          >
+          <Button onClick={(e) => setAnchorOrg(e.currentTarget)}>
             Organisation
           </Button>
 
@@ -76,10 +73,7 @@ export default function Header() {
 
           {/**Personen */}
 
-          <Button
-            color="inherit"
-            onClick={(e) => setAnchorPerson(e.currentTarget)}
-          >
+          <Button onClick={(e) => setAnchorPerson(e.currentTarget)}>
             Personen
           </Button>
 
