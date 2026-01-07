@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Layout from "./pages/layout/Layout.jsx";
 
 import HomePage from "./pages/home/HomePage.jsx";
@@ -9,23 +9,32 @@ import ParentsPage from "./pages/parents/ParentsPage.jsx";
 import EducatorPage from "./pages/educator/EducatorPage.jsx";
 import AboutMePage from "./pages/about-me/AboutMePage.jsx";
 import ContactPage from "./pages/contact/ContactPage.jsx";
-import { ScopedCssBaseline } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import theme from "./styling/theme.js";
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <ScopedCssBaseline>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/kindergarten" element={<KindergartenPage />} />
-          <Route path="/group" element={<GroupPage />} />
-          <Route path="/child" element={<ChildPage />} />
-          <Route path="/parents" element={<ParentsPage />} />
-          <Route path="/educator" element={<EducatorPage />} />
-          <Route path="/about-me" element={<AboutMePage />} />
-          <Route path="/contact" element={<ContactPage />} />
-        </Route>
-      </Routes>
-    </ScopedCssBaseline>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <CssBaseline />
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/kindergarten" element={<KindergartenPage />} />
+              <Route path="/group" element={<GroupPage />} />
+              <Route path="/child" element={<ChildPage />} />
+              <Route path="/parents" element={<ParentsPage />} />
+              <Route path="/educator" element={<EducatorPage />} />
+              <Route path="/about-me" element={<AboutMePage />} />
+              <Route path="/contact" element={<ContactPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
