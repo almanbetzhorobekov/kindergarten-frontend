@@ -6,7 +6,7 @@ export default function ChildPage() {
   return (
     <>
       <Box component={"section"}>
-        <Typography variant="h4">Unsere kleinen Entdecker</Typography>
+        <Typography>Unsere kleinen Entdecker</Typography>
         <Typography>
           In unserem Kindergarten wachsen die Kinder in einem liebevollen und
           sicheren Umfeld auf. Hier findest du eine Übersicht über unsere Kinder

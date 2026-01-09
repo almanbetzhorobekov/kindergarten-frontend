@@ -5,6 +5,7 @@ import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 import { educatorAPI } from "../../../api/educatorService";
 import { groupAPI } from "../../../api/groupService";
+import { kindergartenAPI } from "../../../api/kindergartenService";
 
 import {
   Box,

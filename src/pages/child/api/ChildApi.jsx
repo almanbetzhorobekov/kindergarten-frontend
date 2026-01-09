@@ -40,6 +40,24 @@ export function useChildApi({ reset, page }) {
     queryFn: () => childAPI.getAll(page - 1, ITEMS_PER_PAGE),
   });
 
+  // --- update ---
+  const updateMutation = useMutation({
+    mutationFn: ({ uuid, data }) => childAPI.update(uuid, data),
+    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_CHILDREN]),
+  });
+
+  // --- deactivate ---
+  const deactivateMutation = useMutation({
+    mutationFn: childAPI.deactivate,
+    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_CHILDREN]),
+  });
+
+  // --- change group ---
+  const changeGroupMutation = useMutation({
+    mutationFn: childAPI.changeGroup,
+    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_CHILDREN]),
+  });
+
   return {
     kindergartens,
     groups,

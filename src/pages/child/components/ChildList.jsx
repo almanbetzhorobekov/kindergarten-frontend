@@ -1,4 +1,8 @@
 import { useState } from "react";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import IconButton from "@mui/material/IconButton";
 
 import {
   Box,
