@@ -5,7 +5,10 @@ export async function fetchService(endpoint, requestOptions) {
     body: requestOptions?.body ? JSON.stringify(requestOptions.body) : null,
   });
 
-  if (!res.ok) throw new Error("Fehler bei Kommunikation mit dem Server");
+  if (!res.ok) {
+    throw new Error("Fehler bei Kommunikation mit dem Server");
+  }
 
-  return res.json();
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 }

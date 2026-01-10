@@ -3,7 +3,8 @@ import { fetchService } from "./fetchService";
 const CHILDREN_URL = "/api/children";
 
 export const childAPI = {
-  getAll: () => fetchService(CHILDREN_URL),
+  getAll: (page = 0, size = 5) =>
+    fetchService(`${CHILDREN_URL}?page=${page}&size=${size}`),
 
   getById: (uuid) => fetchService(`${CHILDREN_URL}/${uuid}`),
 
@@ -17,6 +18,11 @@ export const childAPI = {
     fetchService(`${CHILDREN_URL}/${uuid}`, {
       method: "PUT",
       body: data,
+    }),
+
+  delete: (uuid) =>
+    fetchService(`${CHILDREN_URL}/${uuid}`, {
+      method: "DELETE",
     }),
 
   deactivate: (uuid) =>

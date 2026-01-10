@@ -1,5 +1,4 @@
 import { useForm, Controller } from "react-hook-form";
-
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 
@@ -25,10 +24,8 @@ export default function ChildForm({ onAddChild }) {
 
   const { kindergartens, groups, mutation } = useChildApi({ reset });
 
-  // --- Selected kindergarten ---
   const selectedKindergartenId = watch("kindergartenId");
 
-  // --- Options ---
   const kindergartenOptions = kindergartens.map((k) => ({
     value: k.uuid,
     label: k.kindergartenName,
@@ -36,14 +33,10 @@ export default function ChildForm({ onAddChild }) {
 
   const filteredGroupOptions = groups
     .filter((g) => g.kindergartenId === selectedKindergartenId)
-    .map((g) => ({
-      value: g.uuid,
-      label: g.groupName,
-    }));
+    .map((g) => ({ value: g.uuid, label: g.groupName }));
 
-  // --- Submit handler ---
   const onSubmit = (data) => {
-    mutation.mutate(data);
+    mutation.mutate(data); // создание ребенка
     if (onAddChild) onAddChild(data);
   };
 
@@ -115,14 +108,13 @@ export default function ChildForm({ onAddChild }) {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={mutation.isLoading}
+                disabled={mutation?.isLoading}
                 sx={{ alignSelf: "flex-start" }}
               >
-                {mutation.isLoading ? "Speichern..." : "Anmelden"}
+                {mutation?.isLoading ? "Speichern..." : "Anmelden"}
               </Button>
 
-              {/* Error */}
-              {mutation.isError && (
+              {mutation?.isError && (
                 <Typography sx={{ color: "red" }}>
                   Fehler beim Speichern
                 </Typography>
