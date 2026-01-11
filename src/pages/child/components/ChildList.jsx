@@ -37,12 +37,8 @@ export default function ChildList() {
   if (isLoading) return <Typography>Lädt...</Typography>;
   if (error) return <Typography>Fehler beim Laden der Kinder</Typography>;
 
-  const pageCount = Math.ceil(children.totalElements / ITEMS_PER_PAGE);
-
-  const paginatedChildren = children.content.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
-  );
+  const paginatedChildren = children.content ?? [];
+  const pageCount = children?.totalPages ?? 0;
 
   const handleEdit = (child) => {
     setEditChild(child);
