@@ -20,7 +20,12 @@ export default function ChildForm({ onAddChild }) {
     reset,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      kindergartenId: "",
+      groupId: "",
+    },
+  });
 
   const { kindergartens, groups, mutation } = useChildApi({ reset });
 

@@ -66,6 +66,7 @@ export default function ChildList() {
 
   const handleSaveEdit = async (uuid, data) => {
     await updateMutation.mutateAsync({ uuid, data });
+    setEditChild(null);
     setOpenEdit(false);
   };
 

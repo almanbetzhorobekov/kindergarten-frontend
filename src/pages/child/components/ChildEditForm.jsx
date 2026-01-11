@@ -2,6 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { useChildApi } from "../api/childApi";
 
 export default function ChildEditForm({
@@ -16,18 +17,38 @@ export default function ChildEditForm({
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      firstName: child.firstName,
-      lastName: child.lastName,
-      birthday: child.birthday,
-      kindergartenId: child.kindergartenId,
-      groupId: child.groupId,
+      firstName: "", //child.firstName ?? "",
+      lastName: "", //child.lastName ?? "",
+      birthday: "", //child.birthday ?? "",
+      kindergartenId: "", //child.kindergartenId ?? "",
+      groupId: "", //child.groupId ?? "",
     },
   });
 
   const selectedKindergartenId = watch("kindergartenId");
+
+  useEffect(() => {
+    reset((prev) => ({
+      ...prev,
+      groupId: "",
+    }));
+  }, [selectedKindergartenId, reset]);
+
+  useEffect(() => {
+    if (child) {
+      reset({
+        firstName: child.firstName ?? "",
+        lastName: child.lastName ?? "",
+        birthday: child.birthday ?? "",
+        kindergartenId: child.kindergartenId ?? "",
+        groupId: child.groupId ?? "",
+      });
+    }
+  }, [child, reset]);
 
   const filteredGroupOptions = groups
     .filter((g) => g.kindergartenId === selectedKindergartenId)
@@ -39,6 +60,7 @@ export default function ChildEditForm({
   }));
 
   const onSubmit = (data) => {
+    if (!child?.uuid) return;
     onSave(child.uuid, data);
   };
 
