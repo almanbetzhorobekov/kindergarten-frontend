@@ -14,11 +14,7 @@ const cards = [
     description: "Anmeldungen wie Kinder, Eltern",
     link: "/child",
   },
-  {
-    title: "News",
-    description: "Aktuelle Informationen und Neuigkeiten aus dem Kindergarten.",
-    link: "/news",
-  },
+
   {
     title: "Kontaktpersonen",
     description: "Wichtige Ansprechpartner und Notfallkontakte.",

@@ -86,7 +86,7 @@ export default function GroupForm() {
                 <Select {...field} label="Kindergarten">
                   {kindergartens.map((kita) => (
                     <MenuItem key={kita.uuid} value={kita.uuid}>
-                      {kita.name} ({kita.street} {kita.houseNumber})
+                      {kita.kindergartenName}
                     </MenuItem>
                   ))}
                 </Select>

@@ -625,6 +625,7 @@ export const theme = createTheme({
         root: {
           textarea: {
             cursor: "auto",
+            paddingTop: "2px",
             paddingRight: "6px",
           },
           label: typographyOptions.body1,
