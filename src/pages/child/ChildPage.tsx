@@ -1,6 +1,6 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import ChildForm from "./components/ChildForm.jsx";
-import ChildList from "./components/ChildList.jsx";
+import ChildForm from "./components/ChildForm";
+import ChildList from "./components/ChildList";
 
 export default function ChildPage() {
   return (

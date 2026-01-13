@@ -10,9 +10,17 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-import { useChildApi } from "../api/childApi";
+import { useChildApi } from "../api/ChildApi";
+import { ChildDTO } from "api/child.type";
 
-export default function ChildForm({ onAddChild }) {
+type ChildFormProps = {
+  // TODO
+  onAddChild: (child: unknown) => void;
+};
+
+export default function ChildForm(props: ChildFormProps) {
+  const { onAddChild } = props;
+
   const {
     control,
     register,
@@ -27,7 +35,7 @@ export default function ChildForm({ onAddChild }) {
     },
   });
 
-  const { kindergartens, groups, mutation } = useChildApi({ reset });
+  const { kindergartens, groups, createChild } = useChildApi({ reset });
 
   const selectedKindergartenId = watch("kindergartenId");
 
@@ -40,8 +48,8 @@ export default function ChildForm({ onAddChild }) {
     .filter((g) => g.kindergartenId === selectedKindergartenId)
     .map((g) => ({ value: g.uuid, label: g.groupName }));
 
-  const onSubmit = (data) => {
-    mutation.mutate(data); // создание ребенка
+  const onSubmit = (data: ChildDTO) => {
+    createChild.mutate(data); // создание ребенка
     if (onAddChild) onAddChild(data);
   };
 
