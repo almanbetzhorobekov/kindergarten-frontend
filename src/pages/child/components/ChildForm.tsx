@@ -49,7 +49,7 @@ export default function ChildForm(props: ChildFormProps) {
     .map((g) => ({ value: g.uuid, label: g.groupName }));
 
   const onSubmit = (data: ChildDTO) => {
-    createChild.mutate(data); // создание ребенка
+    createChild.mutate(data);
     if (onAddChild) onAddChild(data);
   };
 
@@ -121,13 +121,13 @@ export default function ChildForm(props: ChildFormProps) {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={mutation?.isLoading}
+                disabled={createChild?.isLoading}
                 sx={{ alignSelf: "flex-start" }}
               >
-                {mutation?.isLoading ? "Speichern..." : "Anmelden"}
+                {createChild?.isLoading ? "Speichern..." : "Anmelden"}
               </Button>
 
-              {mutation?.isError && (
+              {createChild?.isError && (
                 <Typography sx={{ color: "red" }}>
                   Fehler beim Speichern
                 </Typography>
