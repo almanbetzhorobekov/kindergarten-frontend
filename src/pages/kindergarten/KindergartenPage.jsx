@@ -1,4 +1,5 @@
 import KindergartenForm from "./components/KindergartenForm.jsx";
+import KindergartenList from "./components/KindergartenList.jsx";
 import { Box, Container, Stack } from "@mui/material";
 
 export default function KindergartenPage() {
@@ -14,6 +15,7 @@ export default function KindergartenPage() {
       <Container maxWidth="lg">
         <Stack spacing={4}>
           <KindergartenForm />
+          <KindergartenList />
         </Stack>
       </Container>
     </Box>

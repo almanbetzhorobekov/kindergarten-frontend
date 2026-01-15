@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { groupAPI } from "../../../api/groupService";
-import {
-  Box,
-  Button,
-  Typography,
-  Pagination,
-  Divider,
-  Paper,
-} from "@mui/material";
+import { Box, Typography, Pagination, Divider, Paper } from "@mui/material";
 
 const pageSize = 6;
 
@@ -19,7 +12,6 @@ export default function GroupList() {
     data: groups = [],
     isLoading,
     error,
-    refetch,
   } = useQuery({
     queryKey: ["groups"],
     queryFn: groupAPI.getAll,
@@ -28,11 +20,9 @@ export default function GroupList() {
   if (isLoading) return <Typography>Lädt Gruppen...</Typography>;
   if (error) return <Typography color="error">Fehler beim Laden!</Typography>;
 
-  // Pagination (frontend)
   const totalPages = Math.ceil(groups.length / pageSize);
   const paginatedGroups = groups.slice((page - 1) * pageSize, page * pageSize);
 
-  // Gruppировка
   const groupedByKindergarten = paginatedGroups.reduce((acc, group) => {
     const kitaName = group.kindergartenName || "Unbekannt";
 
@@ -76,13 +66,6 @@ export default function GroupList() {
           onChange={(e, value) => setPage(value)}
         />
       )}
-
-      {/* Reload */}
-      <Box mt={2}>
-        <Button variant="outlined" onClick={() => refetch()}>
-          Gruppen neu laden
-        </Button>
-      </Box>
     </Box>
   );
 }
