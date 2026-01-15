@@ -1,8 +1,7 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 import { Box, Button, Stack } from "@mui/material";
-import { useEffect, useRef } from "react";
 
 export default function ChildEditForm({
   child,
@@ -11,80 +10,54 @@ export default function ChildEditForm({
   onSave,
   onCancel,
 }) {
+  const kindergartenId = groups.find(
+    (group) => group.uuid === child.groupId
+  )?.kindergartenId;
+
   const {
     control,
     register,
     handleSubmit,
     watch,
-    reset,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      birthday: "",
-      kindergartenId: "",
-      groupId: "",
+      firstName: child.firstName ?? "",
+      lastName: child.lastName ?? "",
+      birthday: child.birthday ?? "",
+      kindergartenId: kindergartenId ?? "",
+      groupId: child.groupId ?? "",
     },
     shouldUnregister: false,
   });
 
-  const selectedKindergartenId = watch("kindergartenId");
-  const isInitializing = useRef(true);
-
-  useEffect(() => {
-    if (!child) return;
-
-    reset({
-      firstName: child.firstName ?? "",
-      lastName: child.lastName ?? "",
-      birthday: child.birthday ?? "",
-      kindergartenId: child.kindergartenId ?? "",
-      groupId: child.groupId ?? "",
-    });
-
-    isInitializing.current = true;
-  }, [child, reset]);
-
-  useEffect(() => {
-    if (isInitializing.current) {
-      isInitializing.current = false;
-      return;
-    }
-
-    setValue("groupId", "");
-  }, [selectedKindergartenId, setValue]);
-
-  const filteredGroupOptions = isInitializing.current
-    ? groups.map((g) => ({
-        value: g.uuid,
-        label: g.groupName,
-      }))
-    : groups
-        .filter((g) => g.kindergartenId === selectedKindergartenId)
-        .map((g) => ({
-          value: g.uuid,
-          label: g.groupName,
-        }));
-
-  const kindergartenOptions = kindergartens.map((k) => ({
-    value: k.uuid,
-    label: k.kindergartenName,
-  }));
+  const watchedKindergartenId = watch("kindergartenId");
 
   const onSubmit = (data) => {
     if (!child?.uuid) return;
     onSave(child.uuid, data);
   };
-  console.log("groupId from child:", child.groupId);
-  console.log(
-    "group options:",
-    groups.map((g) => g.uuid)
-  );
+
+  const kindergartenOptions = kindergartens.map((kg) => ({
+    label: kg.kindergartenName,
+    value: kg.uuid,
+  }));
+
+  const groupOptions = groups
+    .filter((g) => g.kindergartenId === watchedKindergartenId)
+    .map((g) => ({
+      label: g.groupName,
+      value: g.uuid,
+    }));
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{
+        pt: 0.6,
+      }}
+    >
       <Stack spacing={2}>
         <FormInput
           label="Vorname"
@@ -128,10 +101,10 @@ export default function ChildEditForm({
           render={({ field }) => (
             <FormSelect
               label="Gruppe"
-              options={filteredGroupOptions}
+              options={groupOptions}
               value={field.value}
               onChange={field.onChange}
-              disabled={!selectedKindergartenId}
+              disabled={!watchedKindergartenId}
               error={errors.groupId?.message}
             />
           )}

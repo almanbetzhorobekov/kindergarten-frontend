@@ -7,14 +7,27 @@ import {
 } from "@mui/material";
 import { useId } from "react";
 
-export default function FormSelect({ label, options = [], error, ...props }) {
+export default function FormSelect({
+  label,
+  options = [],
+  error,
+  value,
+  onChange,
+  disabled,
+}) {
   const id = useId();
 
   return (
     <FormControl fullWidth>
       <InputLabel id={id}>{label}</InputLabel>
 
-      <Select labelId={id} label={label} {...props}>
+      <Select
+        labelId={id}
+        label={label}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+      >
         <MenuItem key="default" value="">
           -- auswählen --
         </MenuItem>
