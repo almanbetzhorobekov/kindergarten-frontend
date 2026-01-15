@@ -16,7 +16,7 @@ type KindergartenDTO = {
   // TODO address: AddressDTO
   address: unknown;
   // TODO groups: GroupDTO[]
-  groups: unknown[];
+  groups: GroupDTO[];
   // TODO educators: EducatorDTO[]
   educators: unknown[];
 };
@@ -53,29 +53,52 @@ export function useChildApi({ reset, page = 1 }) {
   const createChild = useMutation({
     mutationFn: childAPI.create,
     onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEY_CHILDREN]);
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY_CHILDREN],
+      });
       reset?.();
     },
   });
 
-  const updateMutation = useMutation({
+  type UpdateChildDTO = Partial<Omit<ChildDTO, "uuid">>;
+
+  type UpdateChildParams = {
+    uuid: string;
+    data: UpdateChildDTO;
+  };
+
+  const updateMutation = useMutation<void, Error, UpdateChildParams>({
     mutationFn: ({ uuid, data }) => childAPI.update(uuid, data),
-    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_CHILDREN, page]),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY_CHILDREN],
+      }),
   });
 
-  const deleteMutation = useMutation({
+  type DeleteChildParams = string;
+
+  const deleteMutation = useMutation<void, Error, DeleteChildParams>({
     mutationFn: (uuid) => childAPI.delete(uuid),
-    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_CHILDREN, page]),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY_CHILDREN, page],
+      }),
   });
 
   const deactivateMutation = useMutation({
     mutationFn: (uuid) => childAPI.deactivate(uuid),
-    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_CHILDREN, page]),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY_CHILDREN, page],
+      }),
   });
 
   const changeGroupMutation = useMutation({
     mutationFn: ({ uuid, groupId }) => childAPI.changeGroup(uuid, groupId),
-    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_CHILDREN, page]),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY_CHILDREN, page],
+      }),
   });
 
   return {
