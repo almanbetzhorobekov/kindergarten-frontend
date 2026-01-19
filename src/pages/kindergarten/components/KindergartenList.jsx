@@ -6,8 +6,8 @@ import {
   Typography,
   Pagination,
   Divider,
-  Paper,
   Stack,
+  Button,
 } from "@mui/material";
 
 const pageSize = 6;
@@ -31,26 +31,54 @@ export default function KindergartenList() {
   const visible = kindergartens.slice((page - 1) * pageSize, page * pageSize);
 
   return (
-    <Box mt={4}>
-      <Typography variant="h4" mb={3}>
+    <Box component="section">
+      <Typography variant="h6" gutterBottom>
         Kindergärten Übersicht
       </Typography>
 
       <Stack spacing={2}>
-        {visible.map((kita) => (
-          <Paper key={kita.id ?? kita.uuid} sx={{ p: 2 }}>
-            <Typography variant="h6">
-              Kindergarten: {kita.kindergartenName}
-            </Typography>
+        {visible.map((kindergarten) => (
+          <Card key={kindergarten.uuid} sx={{ p: 2 }}>
+            <CardContent
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Box>
+                <Typography variant="h6">
+                  Kindergarten: {kindergarten.kindergartenName}
+                </Typography>
 
-            <Divider sx={{ my: 1 }} />
+                <Divider sx={{ my: 1 }} />
+                <Typography variant="body2">
+                  Address:
+                  {kindergarten.address?.street}{" "}
+                  {kindergarten.address?.houseNumber},{" "}
+                  {kindergarten.address?.plz} {kindergarten.address?.city}
+                </Typography>
+              </Box>
 
-            <Typography variant="body2">
-              Address:
-              {kita.address?.street} {kita.address?.houseNumber},{" "}
-              {kita.address?.plz} {kita.address?.city}
-            </Typography>
-          </Paper>
+              <Stack direction="row" spacing={1}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => handleEdit(child)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  color="error"
+                  onClick={() => handleDelete(child)}
+                >
+                  Delete
+                </Button>
+              </Stack>
+            </CardContent>
+          </Card>
         ))}
       </Stack>
 
