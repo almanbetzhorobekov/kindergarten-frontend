@@ -1,6 +1,7 @@
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { kindergartenAPI } from "../../../api/kindergartenService";
+import FormInput from "../../../components/FormInput";
 import {
   Box,
   Button,
@@ -9,114 +10,110 @@ import {
   CardContent,
   Stack,
   Divider,
-  Autocomplete,
-  TextField,
-  CircularProgress,
 } from "@mui/material";
-import FormInput from "../../../components/FormInput";
 
-export default function KindergartenForm() {
+export default function KindergartenForm({ onAddKindergarten }) {
   const queryClient = useQueryClient();
-  const [cityQuery, setCityQuery] = useState("");
-  const [plz, setPlz] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      kindergartenName: "",
+      street: "",
+      houseNumber: "",
+      plz: "",
+      city: "",
+    },
+  });
 
   const mutation = useMutation({
-    mutationFn: kindergartenAPI.create,
-    onSuccess: () => {
+    mutationFn: (data) => kindergartenAPI.create(data),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["kindergartens"] });
+      reset();
+      if (onAddKindergarten) onAddKindergarten(data);
     },
   });
 
-  const { data: cities = [], isFetching } = useQuery({
-    queryKey: ["cities", cityQuery, plz],
-    queryFn: async () => {
-      if (!cityQuery && !plz) return [];
-      const param = cityQuery ? `query=${cityQuery}` : `postal_code=${plz}`;
-      const res = await fetch(
-        `http://localhost:8080/api/address/cities?${param}`
-      );
-      const data = await res.json();
-      return data?.cities || [];
-    },
-    enabled: !!cityQuery || !!plz,
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const form = new FormData(e.target);
-
+  const onSubmit = (data) => {
     mutation.mutate({
-      kindergartenName: form.get("kindergartenName"),
+      kindergartenName: data.kindergartenName,
       address: {
-        street: form.get("street"),
-        houseNumber: form.get("houseNumber"),
-        plz: form.get("plz"),
-        city: form.get("city"),
+        street: data.street,
+        houseNumber: data.houseNumber,
+        plz: data.plz,
+        city: data.city,
       },
     });
-
-    e.target.reset();
-    setCityQuery("");
-    setPlz("");
   };
 
   return (
-    <Card elevation={5}>
-      <CardContent>
-        <Typography variant="h5" mb={2}>
-          Neuen Kindergarten erstellen
-        </Typography>
+    <Box component="section">
+      <Typography variant="h6" gutterBottom>
+        Neuen Kindergarten anmelden
+      </Typography>
 
-        <Box component="form" onSubmit={handleSubmit}>
-          <Stack spacing={3}>
-            <FormInput
-              name="kindergartenName"
-              label="Kindergartenname"
-              required
-            />
+      <Card elevation={5}>
+        <CardContent>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={3}>
+              <FormInput
+                label="Kindergartenname"
+                {...register("kindergartenName", {
+                  required: "Name ist erforderlich",
+                })}
+                error={errors.kindergartenName?.message}
+              />
 
-            <Divider />
+              <Divider />
 
-            <FormInput name="street" label="Straße" required />
-            <FormInput name="houseNumber" label="Hausnummer" required />
+              <FormInput
+                label="Straße"
+                {...register("street", { required: "Straße ist erforderlich" })}
+                error={errors.street?.message}
+              />
 
-            <FormInput
-              name="plz"
-              label="PLZ"
-              value={plz}
-              onChange={(e) => setPlz(e.target.value)}
-              required
-            />
+              <FormInput
+                label="Hausnummer"
+                {...register("houseNumber", {
+                  required: "Hausnummer ist erforderlich",
+                })}
+                error={errors.houseNumber?.message}
+              />
 
-            <Autocomplete
-              options={cities.map((c) => c.cityName)}
-              loading={isFetching}
-              onInputChange={(e, value) => setCityQuery(value)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Ort"
-                  name="city"
-                  required
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {isFetching && <CircularProgress size={20} />}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
-                />
+              <FormInput
+                label="PLZ"
+                {...register("plz", { required: "PLZ ist erforderlich" })}
+                error={errors.plz?.message}
+              />
+
+              <FormInput
+                label="Ort"
+                {...register("city", { required: "Ort ist erforderlich" })}
+                error={errors.city?.message}
+              />
+
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={mutation.isLoading}
+              >
+                {mutation.isLoading ? "Speichern..." : "Erstellen"}
+              </Button>
+
+              {mutation.isError && (
+                <Typography sx={{ color: "red" }}>
+                  Fehler beim Speichern
+                </Typography>
               )}
-            />
-
-            <Button type="submit" variant="contained">
-              Erstellen
-            </Button>
-          </Stack>
-        </Box>
-      </CardContent>
-    </Card>
+            </Stack>
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }

@@ -1,4 +1,4 @@
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 import { Box, Button, Stack } from "@mui/material";
@@ -11,7 +11,7 @@ export default function ChildEditForm({
   onCancel,
 }) {
   const kindergartenId = groups.find(
-    (group) => group.uuid === child.groupId
+    (group) => group.uuid === child.groupId,
   )?.kindergartenId;
 
   const {

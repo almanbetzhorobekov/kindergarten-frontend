@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
-import { ITEMS_PER_PAGE, useChildApi } from "../api/childApi";
+import { useChildApi } from "../api/childApi";
 import ChildEditForm from "./ChildEditForm";
 
 export default function ChildList() {
@@ -73,7 +73,7 @@ export default function ChildList() {
   return (
     <Box component="section">
       <Typography variant="h6" gutterBottom>
-        Kinder Liste
+        Kinderliste
       </Typography>
 
       {paginatedChildren.length === 0 ? (

@@ -58,7 +58,6 @@ export default function GroupForm() {
 
       <Card elevation={5} sx={{ p: 3 }}>
         <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-          {/* Gruppenname */}
           <TextField
             fullWidth
             label="Gruppenname"
@@ -70,7 +69,6 @@ export default function GroupForm() {
             helperText={errors.groupName?.message}
           />
 
-          {/* Kindergarten Select */}
           <FormControl
             fullWidth
             margin="normal"
@@ -96,7 +94,6 @@ export default function GroupForm() {
             <FormHelperText>{errors.kindergartenId?.message}</FormHelperText>
           </FormControl>
 
-          {/* Submit */}
           <Button
             type="submit"
             variant="contained"
