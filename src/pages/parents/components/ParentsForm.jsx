@@ -1,9 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
-
 import { parentsAPI } from "../../../api/parentsService";
 import { childAPI } from "../../../api/childService";
 import {
@@ -16,25 +14,38 @@ import {
 } from "@mui/material";
 
 export default function ParentsForm({ onAddParent }) {
+  const queryClient = useQueryClient();
+
   const {
     control,
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      birthday: "",
+      phoneNumber: "",
 
-  const queryClient = useQueryClient();
-
-  const { data } = useQuery({
-    queryKey: ["children"],
-    queryFn: childAPI.getAll,
+      addressDTO: {
+        street: "",
+        houseNumber: "",
+        plz: "",
+        city: "",
+      },
+      childrenId: [],
+    },
   });
 
-  const children = data?.content ?? [];
+  const { data, isLoading: isLoadingChildren } = useQuery({
+    queryKey: ["children", "for-select"],
+    queryFn: () => childAPI.getAll(0, 100),
+  });
 
-  const childOptions = children.map((c) => ({
-    value: c.uuid ?? c.id,
+  const childOptions = (data?.content ?? []).map((c) => ({
+    value: c.uuid,
     label: `${c.firstName} ${c.lastName}`,
   }));
 
@@ -46,11 +57,16 @@ export default function ParentsForm({ onAddParent }) {
     },
   });
 
-  const onSubmit = (data) => {
-    mutation.mutate(data);
-    if (onAddParent) {
-      onAddParent(data);
-    }
+  const onSubmit = (formData) => {
+    const payload = {
+      ...formData,
+      childrenId: Array.isArray(formData.childrenId)
+        ? formData.childrenId
+        : [formData.childrenId].filter(Boolean),
+    };
+
+    mutation.mutate(payload);
+    if (onAddParent) onAddParent(payload);
   };
 
   return (
@@ -58,79 +74,74 @@ export default function ParentsForm({ onAddParent }) {
       <Typography variant="h6" gutterBottom>
         Eltern anmelden
       </Typography>
-
       <Card sx={{ mb: 4 }} elevation={5}>
         <CardContent>
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={3}>
               <FormInput
                 label="Vorname"
-                {...register("firstName", {
-                  required: "Vorname ist erforderlich",
-                })}
+                {...register("firstName", { required: "Pflichtfeld" })}
                 error={errors.firstName?.message}
               />
-
               <FormInput
                 label="Nachname"
-                {...register("lastName", {
-                  required: "Nachname ist erforderlich",
-                })}
+                {...register("lastName", { required: "Pflichtfeld" })}
                 error={errors.lastName?.message}
               />
-
-              <Typography variant="h7">Geburtsdatum</Typography>
               <FormInput
                 type="date"
-                {...register("birthday", {
-                  required: "Geburtsdatum ist erforderlich",
-                })}
+                {...register("birthday", { required: "Pflichtfeld" })}
                 error={errors.birthday?.message}
               />
 
-              <Box spacing={3}>
+              <Box>
                 <Typography variant="subtitle1" gutterBottom>
                   Adresse
                 </Typography>
-
-                <Stack spacing={2} direction="row">
-                  <FormInput
-                    label="Straße"
-                    {...register("street", {
-                      required: "Straße ist erforderlich",
-                    })}
-                    error={errors.street?.message}
-                  />
-
-                  <FormInput
-                    label="Hausnummer"
-                    {...register("houseNumber", {
-                      required: "Hausnummer ist erforderlich",
-                    })}
-                    error={errors.houseNumber?.message}
-                  />
-
-                  <FormInput
-                    label="PLZ"
-                    {...register("plz", {
-                      required: "PLZ ist erforderlich",
-                    })}
-                    error={errors.plz?.message}
-                  />
+                <Stack spacing={2}>
+                  <Stack spacing={2} direction="row">
+                    <FormInput
+                      label="Straße"
+                      {...register("addressDTO.street", {
+                        required: "Pflichtfeld",
+                      })}
+                      error={errors.addressDTO?.street?.message}
+                    />
+                    <FormInput
+                      label="Hausnummer"
+                      {...register("addressDTO.houseNumber", {
+                        required: "Pflichtfeld",
+                      })}
+                      error={errors.addressDTO?.houseNumber?.message}
+                    />
+                  </Stack>
+                  <Stack spacing={2} direction="row">
+                    <FormInput
+                      label="PLZ"
+                      {...register("addressDTO.plz", {
+                        required: "Pflichtfeld",
+                      })}
+                      error={errors.addressDTO?.plz?.message}
+                    />
+                    <FormInput
+                      label="Stadt"
+                      {...register("addressDTO.city", {
+                        required: "Pflichtfeld",
+                      })}
+                      error={errors.addressDTO?.city?.message}
+                    />
+                  </Stack>
                 </Stack>
               </Box>
 
               <FormInput
                 label="Telefonnummer"
-                {...register("phoneNumber", {
-                  required: "Telefonnummer ist erforderlich",
-                })}
+                {...register("phoneNumber", { required: "Pflichtfeld" })}
                 error={errors.phoneNumber?.message}
               />
 
-              {/* Kind auswählen */}
               <Controller
-                name="childId"
+                name="childrenId"
                 control={control}
                 rules={{ required: "Kind auswählen" }}
                 render={({ field }) => (
@@ -139,7 +150,7 @@ export default function ParentsForm({ onAddParent }) {
                     options={childOptions}
                     value={field.value}
                     onChange={field.onChange}
-                    error={errors.childId?.message}
+                    error={errors.childrenId?.message}
                   />
                 )}
               />
@@ -148,17 +159,9 @@ export default function ParentsForm({ onAddParent }) {
                 type="submit"
                 variant="contained"
                 disabled={mutation.isLoading}
-                sx={{ alignSelf: "flex-start" }}
               >
                 {mutation.isLoading ? "Speichern..." : "Eltern speichern"}
               </Button>
-
-              {/* Error */}
-              {mutation.isError && (
-                <Typography sx={{ color: "red" }}>
-                  Fehler beim Speichern
-                </Typography>
-              )}
             </Stack>
           </Box>
         </CardContent>

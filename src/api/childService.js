@@ -3,8 +3,12 @@ import { fetchService } from "./fetchService";
 const CHILDREN_URL = "/api/children";
 
 export const childAPI = {
-  getAll: (page = 0, size = 5) =>
-    fetchService(`${CHILDREN_URL}?page=${page}&size=${size}`),
+  getAll: (page = 0, size = 10) => {
+    const p = typeof page === "number" ? page : 0;
+    const s = typeof size === "number" ? size : 10;
+
+    return fetchService(`${CHILDREN_URL}?page=${p}&size=${s}`);
+  },
 
   getById: (uuid) => fetchService(`${CHILDREN_URL}/${uuid}`),
 

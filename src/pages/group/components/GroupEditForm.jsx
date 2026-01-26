@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Box, Button, Stack } from "@mui/material";
 import FormInput from "../../../components/FormInput";
@@ -9,37 +10,32 @@ export default function GroupEditForm({ group, onSave, onCancel }) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      groupName: group.groupName || "",
+      groupName: group?.groupName || "",
     },
   });
 
   const onSubmit = (data) => {
     if (!group?.uuid) return;
-
-    const payload = {
-      groupName: data.groupName,
-    };
-
-    onSave(group.uuid, payload);
+    onSave(group.uuid, data);
   };
 
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ pt: 1 }}>
       <Stack spacing={2}>
         <FormInput
-          label="Group Name"
+          label="Gruppenname"
           {...register("groupName", {
             required: "Name ist erforderlich",
           })}
           error={errors.groupName?.message}
         />
 
-        <Stack direction="row" spacing={2}>
-          <Button type="submit" variant="contained">
-            Speichern
-          </Button>
+        <Stack direction="row" spacing={2} justifyContent="flex-end">
           <Button variant="outlined" onClick={onCancel}>
             Abbrechen
+          </Button>
+          <Button type="submit" variant="contained" color="primary">
+            Speichern
           </Button>
         </Stack>
       </Stack>

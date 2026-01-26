@@ -9,32 +9,47 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Stack,
+  Button,
 } from "@mui/material";
 
 const pageSize = 6;
 
 export default function GroupList() {
-  const [setEditGroup, editGroup] = useState(null);
+  const [editGroup, setEditGroup] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
   const [page, setPage] = useState(1);
 
   const {
-    data: groups = [],
+    groups = [],
     isLoading,
     error,
     updateMutation,
     deleteMutation,
-  } = useGroupApi({});
+  } = useGroupApi();
 
-  if (isLoading) return <Typography>Lädt Gruppen...</Typography>;
-  if (error) return <Typography color="error">Fehler beim Laden!</Typography>;
+  if (isLoading) return <Typography sx={{ p: 3 }}>Lädt Gruppen...</Typography>;
+  if (error)
+    return (
+      <Typography color="error" sx={{ p: 3 }}>
+        Fehler beim Laden!
+      </Typography>
+    );
 
   const sortedGroups = [...groups].sort((a, b) => {
-    if (a.kindergartenName < b.kindergartenName) return -1;
-    if (a.kindergartenName > b.kindergartenName) return 1;
-    if (a.groupName < b.groupName) return -1;
-    if (a.groupName > b.groupName) return 1;
-    return 0;
+    const kitaA = a.kindergartenName || "";
+    const kitaB = b.kindergartenName || "";
+
+    const kitaComparison = kitaA.localeCompare(kitaB);
+
+    if (kitaComparison !== 0) {
+      return kitaComparison;
+    }
+
+    const groupA = a.groupName || "";
+    const groupB = b.groupName || "";
+
+    return groupA.localeCompare(groupB);
   });
 
   const totalPages = Math.ceil(sortedGroups.length / pageSize);
@@ -49,35 +64,76 @@ export default function GroupList() {
   };
 
   const handleDelete = async (group) => {
-    if (window.confirm(`Group "${group.groupName}" wirklich löschen?`)) {
-      await deleteMutation.mutateAsync(group.uuid);
+    if (window.confirm(`Gruppe "${group.groupName}" wirklich löschen?`)) {
+      try {
+        await deleteMutation.mutateAsync(group.uuid);
+      } catch (e) {
+        console.error("Löschen fehlgeschlagen", e);
+      }
     }
   };
 
-  const handleSaveEdit = async (uuid, data) => {
-    await updateMutation.mutateAsync({ uuid, data });
-    setEditGroup(null);
+  const handleSaveEdit = (uuid, data) => {
+    updateMutation.mutate({ uuid, data });
+
     setOpenEdit(false);
+    setEditGroup(null);
   };
 
   return (
-    <Box component="section">
+    <Box component="section" sx={{ p: 2 }}>
       <Typography variant="h4" mb={3}>
         Gruppenübersicht
       </Typography>
 
-      {paginatedGroups.map((group) => (
-        <Paper key={group.uuid} elevation={1} sx={{ p: 2, mb: 2 }}>
-          <Typography variant="subtitle1">{group.groupName}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {group.kindergartenName || "Unbekannt"}
-          </Typography>
-        </Paper>
-      ))}
+      {paginatedGroups.length > 0 ? (
+        paginatedGroups.map((group) => (
+          <Paper
+            key={group.uuid}
+            elevation={2}
+            sx={{
+              p: 2,
+              mb: 2,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {group.groupName}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {group.kindergartenName || "Kein Kindergarten zugewiesen"}
+              </Typography>
+            </Box>
+
+            <Stack direction="row" spacing={1}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => handleEdit(group)}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                color="error"
+                onClick={() => handleDelete(group)}
+              >
+                Delete
+              </Button>
+            </Stack>
+          </Paper>
+        ))
+      ) : (
+        <Typography color="text.secondary">Keine Gruppen vorhanden.</Typography>
+      )}
 
       {totalPages > 1 && (
         <Pagination
-          sx={{ mt: 3 }}
+          sx={{ mt: 3, display: "flex", justifyContent: "center" }}
           page={page}
           count={totalPages}
           color="primary"
@@ -91,8 +147,8 @@ export default function GroupList() {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Group bearbeiten</DialogTitle>
-        <DialogContent>
+        <DialogTitle>Gruppe bearbeiten</DialogTitle>
+        <DialogContent dividers>
           {editGroup && (
             <GroupEditForm
               group={editGroup}

@@ -1,59 +1,164 @@
-import { useQuery } from "@tanstack/react-query";
-import { parentsAPI } from "../../../api/parentsService";
-import { Box, List, ListItem, Typography } from "@mui/material";
-import { childAPI } from "../../../api/childService";
+import { useState } from "react";
+import {
+  Box,
+  Typography,
+  Stack,
+  Card,
+  CardContent,
+  Button,
+  Pagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
+
+import { useParentApi } from "../api/ParentApi";
+import ParentEditForm from "./ParentEditForm.jsx";
 
 export default function ParentsList() {
+  const [page, setPage] = useState(1);
+  const [editParent, setEditParent] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+
   const {
-    data: parents = [],
+    parents = [],
     isLoading,
     error,
-  } = useQuery({
-    queryKey: ["parents"],
-    queryFn: parentsAPI.getAll,
-  });
+    updateMutation,
+    deleteMutation,
+  } = useParentApi({ page });
 
-  const { data: children = [] } = useQuery({
-    queryKey: ["children"],
-    queryFn: childAPI.getAll,
-  });
+  if (isLoading) return <Typography sx={{ p: 3 }}>Lädt Eltern...</Typography>;
+  if (error)
+    return (
+      <Typography color="error" sx={{ p: 3 }}>
+        Fehler beim Laden
+      </Typography>
+    );
 
-  const getChildName = (childId) => {
-    const child = children.find((c) => c.id === childId);
-    return child ? `${child.firstName} ${child.lastName}` : "-";
+  const paginatedParents = parents?.content ?? [];
+  const pageCount = parents?.totalPages ?? 0;
+
+  const handleEdit = (parent) => {
+    setEditParent(parent);
+    setOpenEdit(true);
   };
 
-  if (isLoading) return <Typography>Laden...</Typography>;
-  if (error) return <Typography>Fehler beim Laden der Eltern</Typography>;
-  console.log(parents);
+  const handleDelete = async (parent) => {
+    if (
+      window.confirm(
+        `Elternteil ${parent.firstName} ${parent.lastName} löschen?`,
+      )
+    ) {
+      await deleteMutation.mutateAsync(parent.uuid);
+    }
+  };
+
+  const handleSaveEdit = async (uuid, data) => {
+    await updateMutation.mutateAsync({ uuid, data });
+    setOpenEdit(false);
+  };
+
   return (
-    <Box component={"section"}>
-      <Typography variant="h2">Eltern Liste</Typography>
+    <Box component="section" sx={{ p: 2 }}>
+      <Typography variant="h5" gutterBottom>
+        Elternliste
+      </Typography>
 
-      {parents.length === 0 ? (
-        <Typography>Keine Eltern hinzugefügt.</Typography>
+      {paginatedParents.length === 0 ? (
+        <Typography>Keine Eltern gefunden.</Typography>
       ) : (
-        <List>
-          {parents.map((parent, index) => (
-            <ListItem key={parent.uuid ?? index}>
-              <strong>
-                {parent.firstName} {parent.lastName}
-              </strong>
-              <Box>{parent.phoneNumber}</Box>
-
-              {parent.child && (
+        <Stack spacing={2}>
+          {paginatedParents.map((parent) => (
+            <Card key={parent.uuid || parent.id} elevation={2}>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <Box>
-                  Kind: {parent.child.firstName} {parent.child.lastName}
-                </Box>
-              )}
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {parent.firstName} {parent.lastName}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Telephone: {parent.addressDTO.phoneNumber || "-"}
+                  </Typography>
 
-              {!parent.child && parent.childUuid && (
-                <Box>Kind: {getChildName(parent.childId)}</Box>
-              )}
-            </ListItem>
+                  {parent.addressDTO && (
+                    <Typography variant="body2" color="text.secondary">
+                      Address: {parent.addressDTO.street}{" "}
+                      {parent.addressDTO.houseNumber}, {parent.addressDTO.city}
+                    </Typography>
+                  )}
+
+                  {parent.children && parent.children.length > 0 && (
+                    <Box sx={{ mt: 1 }}>
+                      {parent.children.map((child) => (
+                        <Typography
+                          key={child.uuid}
+                          variant="body2"
+                          color="text.secondary"
+                        >
+                          Kinder: {child.firstName} {child.lastName}
+                        </Typography>
+                      ))}
+                    </Box>
+                  )}
+                </Box>
+
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => handleEdit(parent)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="error"
+                    onClick={() => handleDelete(parent)}
+                  >
+                    Delete
+                  </Button>
+                </Stack>
+              </CardContent>
+            </Card>
           ))}
-        </List>
+        </Stack>
       )}
+
+      {pageCount > 1 && (
+        <Box display="flex" justifyContent="center" mt={3}>
+          <Pagination
+            count={pageCount}
+            page={page}
+            onChange={(_, v) => setPage(v)}
+            color="primary"
+          />
+        </Box>
+      )}
+
+      <Dialog
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Elternteil bearbeiten</DialogTitle>
+        <DialogContent dividers>
+          {editParent && (
+            <ParentEditForm
+              parent={editParent}
+              onSave={handleSaveEdit}
+              onCancel={() => setOpenEdit(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }
