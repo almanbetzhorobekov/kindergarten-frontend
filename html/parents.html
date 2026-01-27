@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Parents</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/images/logos-backgrounds/favicon.png">
+    <link rel="stylesheet" href="style-2.css">
+    <link rel="stylesheet" href="responsive.css">
+</head>
+
+<body>
+
+    <header>
+        <a class="logo" href="index.html">Wunderkind</a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Startseite</a></li>
+                <li><a href="kindergarten.html">Kindergarten</a></li>
+                <li><a href="group.html">Gruppen</a></li>
+                <li><a href="child.html">Kinder</a></li>
+                <li><a href="parents.html" class="active">Eltern</a></li>
+                <li><a href="educator.html">Erzieher*innen</a></li>
+                <li><a href="about-me.html">Über mich</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main>
+        <section class="intro">
+            <h1>Eltern-Registrierung</h1>
+            <p>
+                Bitte fülle das Formular aus, um dich als Elternteil zu registrieren.
+                Alle Angaben werden vertraulich behandelt.
+            </p>
+        </section>
+
+        <section class="parents">
+            <form id="parents-form" novalidate>
+
+                <input type="text" id="firstName" name="firstName" placeholder="Vorname" required>
+                <span class="error" aria-live="polite"></span>
+
+                <input type="text" id="lastName" name="lastName" placeholder="Nachname" required>
+                <span class="error" aria-live="polite"></span>
+
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Telefonnummer" pattern="[0-9+\-\s]+" required>
+                <span class="error" aria-live="polite"></span>
+
+                <input type="date" id="birthday" name="birthday" required>
+                <span class="error" aria-live="polite"></span>
+
+                <fieldset>
+
+                    <input type="text" id="street" name="street" placeholder="Straße" required>
+
+                    <input type="text" id="houseNumber" name="houseNumber" placeholder="Hausnummer" required>
+
+                    <input type="text" id="plz" name="plz" placeholder="PLZ" pattern="[0-9]{5}" required>
+                </fieldset>
+
+                <select id="childSelect">
+                    <option value="">-- Wähle ein Kind --</option>
+                </select>
+
+                <button type="submit">Anmelden</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Kindergarten Wunderkind. Alle Rechte vorbehalten.</p>
+        <nav>
+            <ul class="footer-links">
+                <li><a href="index.html">Startseite</a></li>
+                <li><a href="contact.html">Kontakt</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+    <script src="parents.js"></script>
+</body>
+</html>
