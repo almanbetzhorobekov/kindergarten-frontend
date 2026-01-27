@@ -137,7 +137,7 @@ export default function ParentsForm({ onAddParent }) {
               <FormInput
                 label="Telefonnummer"
                 {...register("phoneNumber", { required: "Pflichtfeld" })}
-                error={errors.phoneNumber?.message}
+                error={errors.parentsDTO.phoneNumber?.message}
               />
 
               <Controller
@@ -162,6 +162,12 @@ export default function ParentsForm({ onAddParent }) {
               >
                 {mutation.isLoading ? "Speichern..." : "Eltern speichern"}
               </Button>
+
+              {mutation.isError && (
+                <Typography style={{ color: "red " }}>
+                  Fehler beim Speichern
+                </Typography>
+              )}
             </Stack>
           </Box>
         </CardContent>

@@ -19,12 +19,12 @@ export function useParentApi({ page = 1 }) {
 
   const updateMutation = useMutation({
     mutationFn: ({ uuid, data }) => parentsAPI.update(uuid, data),
-    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_PARENTS]),
+    onSuccess: () => queryClient.invalidateQueries(QUERY_KEY_PARENTS),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (uuid) => parentsAPI.delete(uuid),
-    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_PARENTS]),
+    onSuccess: () => queryClient.invalidateQueries(QUERY_KEY_PARENTS),
   });
 
   return {
@@ -32,5 +32,6 @@ export function useParentApi({ page = 1 }) {
     error,
     updateMutation,
     deleteMutation,
+    isLoading,
   };
 }

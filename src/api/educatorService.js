@@ -4,6 +4,7 @@ const EDUCATORS_URL = "/api/educators";
 
 export const educatorAPI = {
   getAll: () => fetchService(EDUCATORS_URL),
+  getInfo: () => fetchService(`${EDUCATORS_URL}/miniInfo`),
   getById: (id) => fetchService(`${EDUCATORS_URL}/${id}`),
   create: (data) =>
     fetchService(EDUCATORS_URL, {

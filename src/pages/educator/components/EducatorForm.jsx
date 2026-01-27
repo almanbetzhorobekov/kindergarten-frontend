@@ -16,7 +16,7 @@ import {
   Stack,
 } from "@mui/material";
 
-export default function EducatorForm(onAddEducator) {
+export default function EducatorForm({ onAddEducator }) {
   const {
     control,
     register,
@@ -24,7 +24,11 @@ export default function EducatorForm(onAddEducator) {
     reset,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      addressDTO: {},
+    },
+  });
 
   const queryClient = useQueryClient();
 
@@ -54,85 +58,87 @@ export default function EducatorForm(onAddEducator) {
 
   const mutation = useMutation({
     mutationFn: educatorAPI.create,
-    onSuccess: () => {
+    onSuccess: (newEducator) => {
       queryClient.invalidateQueries(["educators"]);
       reset();
+      if (onAddEducator) onAddEducator(newEducator);
     },
   });
 
   const onSubmit = (data) => {
-    mutation.mutate(data);
-    if (onAddEducator) {
-      onAddEducator(data);
-    }
+    const payload = {
+      ...data,
+      groupIds: data.groupId ? [data.groupId] : [],
+    };
+    mutation.mutate(payload);
   };
 
   return (
-    <Box component={"section"}>
+    <Box component="section">
+      <Typography variant="h6" gutterBottom>
+        Erzieher anmelden
+      </Typography>
+
       <Card sx={{ mb: 4 }} elevation={5}>
         <CardContent>
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={3}>
+              {/* Данные пользователя */}
               <FormInput
                 label="Vorname"
-                {...register("firstName", {
-                  required: "Vorname ist erforderlich",
-                })}
+                {...register("firstName", { required: "Pflichtfeld" })}
                 error={errors.firstName?.message}
               />
-
               <FormInput
                 label="Nachname"
-                {...register("lastName", {
-                  required: "Nachname ist erforderlich",
-                })}
+                {...register("lastName", { required: "Pflichtfeld" })}
                 error={errors.lastName?.message}
               />
-
               <FormInput
                 type="date"
-                {...register("birthday", {
-                  required: "Geburtsdatum ist erforderlich",
-                })}
+                {...register("birthday", { required: "Pflichtfeld" })}
                 error={errors.birthday?.message}
               />
 
+              {/* Адресный блок */}
               <Box>
-                <Typography variant="subtitle1">Adresse</Typography>
-
+                <Typography variant="subtitle1" gutterBottom>
+                  Adresse
+                </Typography>
                 <Stack spacing={2} direction="row">
                   <FormInput
                     label="Straße"
-                    {...register("street", {
-                      required: "Straße ist erforderlich",
+                    {...register("addressDTO.street", {
+                      required: "Pflichtfeld",
                     })}
-                    error={errors.street?.message}
+                    error={errors.addressDTO?.street?.message}
                   />
-
                   <FormInput
                     label="Nr."
-                    {...register("houseNumber", {
-                      required: "Hausnummer ist erforderlich",
+                    {...register("addressDTO.houseNumber", {
+                      required: "Pflichtfeld",
                     })}
-                    error={errors.houseNumber?.message}
+                    error={errors.addressDTO?.houseNumber?.message}
                   />
                 </Stack>
-
-                <FormInput
-                  label="PLZ"
-                  {...register("plz", { required: "PLZ ist erforderlich" })}
-                  error={errors.plz?.message}
-                />
               </Box>
 
+              {/* Контакты */}
+              <FormInput
+                label="Email"
+                {...register("email", {
+                  required: "Pflichtfeld",
+                  pattern: { value: /^\S+@\S+$/i, message: "Ungültige E-Mail" },
+                })}
+                error={errors.email?.message}
+              />
               <FormInput
                 label="Telefonnummer"
-                {...register("phone", {
-                  required: "Telefonnummer ist erforderlich",
-                })}
-                error={errors.phone?.message}
+                {...register("phoneNumber", { required: "Pflichtfeld" })}
+                error={errors.phoneNumber?.message}
               />
 
+              {/* Выбор организации */}
               <Controller
                 name="kindergartenId"
                 control={control}
@@ -141,8 +147,7 @@ export default function EducatorForm(onAddEducator) {
                   <FormSelect
                     label="Kindergarten"
                     options={kindergartenOptions}
-                    value={field.value}
-                    onChange={field.onChange}
+                    {...field}
                     error={errors.kindergartenId?.message}
                   />
                 )}
@@ -151,15 +156,11 @@ export default function EducatorForm(onAddEducator) {
               <Controller
                 name="groupId"
                 control={control}
-                rules={{
-                  required: "Gruppe auswählen",
-                }}
                 render={({ field }) => (
                   <FormSelect
                     label="Gruppe"
                     options={filteredGroupOptions}
-                    value={field.value}
-                    onChange={field.onChange}
+                    {...field}
                     disabled={!selectedKindergartenId}
                     error={errors.groupId?.message}
                   />
@@ -169,14 +170,17 @@ export default function EducatorForm(onAddEducator) {
               <Button
                 type="submit"
                 variant="contained"
+                fullWidth
                 disabled={mutation.isLoading}
-                sx={{ alignSelf: "flex-start" }}
               >
-                {mutation.isLoading ? "Speichern..." : "Anmelden"}
+                {mutation.isLoading ? "Speichern..." : "Erzieher speichern"}
               </Button>
 
               {mutation.isError && (
-                <Typography style={{ color: "red " }}>
+                <Typography
+                  variant="body2"
+                  sx={{ color: "error.main", textAlign: "center" }}
+                >
                   Fehler beim Speichern
                 </Typography>
               )}
