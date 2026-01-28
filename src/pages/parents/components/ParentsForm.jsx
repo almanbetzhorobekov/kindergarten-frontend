@@ -71,7 +71,7 @@ export default function ParentsForm({ onAddParent }) {
 
   return (
     <Box component="section">
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h5" gutterBottom>
         Eltern anmelden
       </Typography>
       <Card sx={{ mb: 4 }} elevation={5}>
@@ -92,6 +92,12 @@ export default function ParentsForm({ onAddParent }) {
                 type="date"
                 {...register("birthday", { required: "Pflichtfeld" })}
                 error={errors.birthday?.message}
+              />
+
+              <FormInput
+                label="Telefonnummer"
+                {...register("phoneNumber", { required: "Pflichtfeld" })}
+                error={errors.phoneNumber?.message}
               />
 
               <Box>
@@ -133,12 +139,6 @@ export default function ParentsForm({ onAddParent }) {
                   </Stack>
                 </Stack>
               </Box>
-
-              <FormInput
-                label="Telefonnummer"
-                {...register("phoneNumber", { required: "Pflichtfeld" })}
-                error={errors.parentsDTO.phoneNumber?.message}
-              />
 
               <Controller
                 name="childrenId"

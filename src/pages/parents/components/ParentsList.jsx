@@ -82,8 +82,9 @@ export default function ParentsList() {
                   <Typography variant="subtitle1" fontWeight="bold">
                     {parent.firstName} {parent.lastName}
                   </Typography>
+
                   <Typography variant="body2" color="text.secondary">
-                    Telephone: {parent.addressDTO.phoneNumber || "-"}
+                    Telephone: {parent.phoneNumber || "-"}
                   </Typography>
 
                   {parent.addressDTO && (
