@@ -6,37 +6,52 @@ import {
   Card,
   CardContent,
   Button,
-  Pagination,
-  Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@mui/material";
-
 import { useEducatorApi } from "../api/EducatorApi";
-import { useQuery } from "@tanstack/react-query";
-import { groupAPI } from "../../../api/groupService";
+import EducatorEditForm from "./EducatorEditForm";
 
 export default function EducatorList() {
-  const [page, setPage] = useState(1);
-  const { educators, isLoading, error, deleteMutation } = useEducatorApi({
-    page,
-  });
+  const [editEducator, setEditEducator] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
 
-  const { data: groups = [] } = useQuery({
-    queryKey: ["groups"],
-    queryFn: groupAPI.getAll,
-  });
+  const { educators, isLoading, error, deleteMutation, updateMutation } =
+    useEducatorApi();
 
   if (isLoading) return <Typography sx={{ p: 3 }}>Lädt...</Typography>;
-  if (error) return <Typography color="error">Fehler beim Laden</Typography>;
+  if (error)
+    return (
+      <Typography color="error" sx={{ p: 3 }}>
+        Fehler beim Laden
+      </Typography>
+    );
 
-  const educatorItems =
-    educators?.content ?? (Array.isArray(educators) ? educators : []);
-  const pageCount = educators?.totalPages ?? 0;
+  const educatorItems = Array.isArray(educators) ? educators : [];
 
-  const getGroupName = (id) =>
-    groups.find((g) => g.uuid === id)?.groupName || "Unbekannt";
+  const handleEdit = (educator) => {
+    setEditEducator(educator);
+    setOpenEdit(true);
+  };
+
+  const handleDelete = async (educator) => {
+    if (
+      window.confirm(
+        `Erzieher ${educator.firstName} ${educator.lastName} löschen?`,
+      )
+    ) {
+      await deleteMutation.mutateAsync(educator.uuid);
+    }
+  };
+
+  const handleSaveEdit = async (uuid, data) => {
+    await updateMutation.mutateAsync({ uuid, data });
+    setOpenEdit(false);
+  };
 
   return (
-    <Box component="section">
+    <Box component="section" sx={{ p: 2 }}>
       <Typography variant="h6" gutterBottom>
         Erzieherliste
       </Typography>
@@ -52,33 +67,31 @@ export default function EducatorList() {
               }}
             >
               <Box>
-                <Typography>
-                  {educator.firstName} {educator.lastName}
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                  {educator.fullName ||
+                    `${educator.firstName} ${educator.lastName}`}
                 </Typography>
 
-                <Typography color="text.secondary">
-                  {educator.groupIds && educator.groupIds.length > 0
-                    ? `Gruppen: ${educator.groupIds.map(getGroupName).join(", ")}`
-                    : "Keine Gruppen zugewiesen"}
-                </Typography>
-
-                <Divider sx={{ my: 1, width: "100%" }} />
-
-                <Typography>
+                <Typography variant="body2">
                   <strong>E-Mail:</strong> {educator.email || "---"}
                 </Typography>
-                <Typography>
+                <Typography variant="body2">
                   <strong>Tel:</strong> {educator.phoneNumber || "---"}
                 </Typography>
 
-                {educator.addressDTO && (
-                  <Typography>
+                {educator.addressDTO ? (
+                  <Typography variant="body2">
                     <strong>Adresse:</strong> {educator.addressDTO.street}{" "}
-                    {educator.addressDTO.houseNumber},{" "}
+                    {educator.addressDTO.houseNumber}, {educator.addressDTO.plz}{" "}
                     {educator.addressDTO.city}
+                  </Typography>
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    Keine Adresse hinterlegt
                   </Typography>
                 )}
               </Box>
+
               <Stack direction="row" spacing={1}>
                 <Button
                   variant="outlined"
@@ -87,7 +100,6 @@ export default function EducatorList() {
                 >
                   Bearbeiten
                 </Button>
-
                 <Button
                   variant="outlined"
                   size="small"
@@ -102,16 +114,23 @@ export default function EducatorList() {
         ))}
       </Stack>
 
-      {pageCount > 1 && (
-        <Box display="flex" justifyContent="center" mt={4}>
-          <Pagination
-            count={pageCount}
-            page={page}
-            onChange={(_, v) => setPage(v)}
-            color="primary"
-          />
-        </Box>
-      )}
+      <Dialog
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Erzieher bearbeiten</DialogTitle>
+        <DialogContent dividers>
+          {editEducator && (
+            <EducatorEditForm
+              educator={editEducator}
+              onSave={handleSaveEdit}
+              onCancel={() => setOpenEdit(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

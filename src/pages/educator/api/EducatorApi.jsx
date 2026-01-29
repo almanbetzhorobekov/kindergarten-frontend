@@ -2,9 +2,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { educatorAPI } from "../../../api/educatorService";
 
 const QUERY_KEY_EDUCATORS = "educators";
-export const ITEMS_PER_PAGE = 5;
 
-export function useEducatorApi({ page = 1 } = {}) {
+export function useEducatorApi() {
   const queryClient = useQueryClient();
 
   const {
@@ -12,31 +11,24 @@ export function useEducatorApi({ page = 1 } = {}) {
     isLoading,
     error,
   } = useQuery({
-    queryKey: [QUERY_KEY_EDUCATORS, page],
-    queryFn: () => educatorAPI.getAll(page - 1, ITEMS_PER_PAGE),
-    keepPreviousData: true,
-  });
-
-  const createMutation = useMutation({
-    mutationFn: (data) => educatorAPI.create(data),
-    onSuccess: () => queryClient.invalidateQueries(QUERY_KEY_EDUCATORS),
+    queryKey: [QUERY_KEY_EDUCATORS],
+    queryFn: () => educatorAPI.getAll(),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ uuid, data }) => educatorAPI.update(uuid, data),
-    onSuccess: () => queryClient.invalidateQueries(QUERY_KEY_EDUCATORS),
+    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_EDUCATORS]),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (uuid) => educatorAPI.delete(uuid),
-    onSuccess: () => queryClient.invalidateQueries(QUERY_KEY_EDUCATORS),
+    onSuccess: () => queryClient.invalidateQueries([QUERY_KEY_EDUCATORS]),
   });
 
   return {
     educators,
     isLoading,
     error,
-    createMutation,
     updateMutation,
     deleteMutation,
   };

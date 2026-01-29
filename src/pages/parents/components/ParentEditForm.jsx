@@ -15,12 +15,12 @@ export default function ParentEditForm({ parent, children, onSave, onCancel }) {
       firstName: parent?.firstName || "",
       lastName: parent?.lastName || "",
       birthday: parent?.birthday || "",
+      phoneNumber: parent?.phoneNumber || "",
 
       street: parent?.addressDTO?.street || "",
       houseNumber: parent?.addressDTO?.houseNumber || "",
       plz: parent?.addressDTO?.plz || "",
       city: parent?.addressDTO?.city || "",
-      phoneNumber: parent?.phoneNumber || "",
 
       childrenId:
         parent?.childrenId || parent?.children?.map((c) => c.uuid) || [],

@@ -83,7 +83,6 @@ export default function EducatorForm({ onAddEducator }) {
         <CardContent>
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={3}>
-              {/* Данные пользователя */}
               <FormInput
                 label="Vorname"
                 {...register("firstName", { required: "Pflichtfeld" })}
@@ -100,12 +99,26 @@ export default function EducatorForm({ onAddEducator }) {
                 error={errors.birthday?.message}
               />
 
-              {/* Адресный блок */}
               <Box>
                 <Typography variant="subtitle1" gutterBottom>
                   Adresse
                 </Typography>
+
                 <Stack spacing={2} direction="row">
+                  <FormInput
+                    label="Stadt"
+                    {...register("addressDTO.city", {
+                      required: "Pflichtfeld",
+                    })}
+                    error={errors.addressDTO?.city?.message}
+                  />
+                  <FormInput
+                    label="PLZ"
+                    {...register("addressDTO.plz", {
+                      required: "Pflichtfeld",
+                    })}
+                    error={errors.addressDTO?.plz?.message}
+                  />
                   <FormInput
                     label="Straße"
                     {...register("addressDTO.street", {
@@ -113,6 +126,7 @@ export default function EducatorForm({ onAddEducator }) {
                     })}
                     error={errors.addressDTO?.street?.message}
                   />
+
                   <FormInput
                     label="Nr."
                     {...register("addressDTO.houseNumber", {
@@ -123,7 +137,9 @@ export default function EducatorForm({ onAddEducator }) {
                 </Stack>
               </Box>
 
-              {/* Контакты */}
+              <Typography variant="subtitle1" gutterBottom>
+                Kontakt
+              </Typography>
               <FormInput
                 label="Email"
                 {...register("email", {
@@ -137,8 +153,6 @@ export default function EducatorForm({ onAddEducator }) {
                 {...register("phoneNumber", { required: "Pflichtfeld" })}
                 error={errors.phoneNumber?.message}
               />
-
-              {/* Выбор организации */}
               <Controller
                 name="kindergartenId"
                 control={control}

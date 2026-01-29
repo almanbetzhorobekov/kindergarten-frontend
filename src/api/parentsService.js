@@ -7,7 +7,7 @@ export const parentsAPI = {
     fetchService(`${PARENTS_URL}?page=${page}&size=${size}`),
 
   getMini: () => fetchService(`${PARENTS_URL}/mini`),
-  getById: (id) => fetchService(`${PARENTS_URL}/${id}`),
+  getById: (id) => fetchService(`${PARENTS_URL}/${uuid}`),
 
   create: (data) =>
     fetchService(PARENTS_URL, {

@@ -5,19 +5,19 @@ const EDUCATORS_URL = "/api/educators";
 export const educatorAPI = {
   getAll: () => fetchService(EDUCATORS_URL),
   getInfo: () => fetchService(`${EDUCATORS_URL}/miniInfo`),
-  getById: (id) => fetchService(`${EDUCATORS_URL}/${id}`),
+  getById: (id) => fetchService(`${EDUCATORS_URL}/${uuid}`),
   create: (data) =>
     fetchService(EDUCATORS_URL, {
       method: "POST",
       body: data,
     }),
-  update: (id, data) =>
-    fetchService(`${EDUCATORS_URL}/${id}`, {
+  update: (uuid, data) =>
+    fetchService(`${EDUCATORS_URL}/${uuid}`, {
       method: "PUT",
       body: data,
     }),
-  delete: (id) =>
-    fetchService(`${EDUCATORS_URL}/${id}`, {
+  delete: (uuid) =>
+    fetchService(`${EDUCATORS_URL}/${uuid}`, {
       method: "DELETE",
     }),
 };
