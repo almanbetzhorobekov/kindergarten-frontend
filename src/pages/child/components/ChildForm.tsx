@@ -1,4 +1,4 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 
@@ -11,11 +11,15 @@ import {
   CardContent,
 } from "@mui/material";
 import { useChildApi } from "../api/ChildApi";
-import { ChildDTO } from "api/child.type";
+import { ChildDTO, CreateChildDTO } from "api/child.type";
 
 type ChildFormProps = {
   // TODO
   onAddChild: (child: unknown) => void;
+};
+
+type CreateChildFormValues = CreateChildDTO & {
+  kindergartenId: string;
 };
 
 export default function ChildForm(props: ChildFormProps) {
@@ -28,10 +32,14 @@ export default function ChildForm(props: ChildFormProps) {
     reset,
     watch,
     formState: { errors },
-  } = useForm({
+  } = useForm<CreateChildFormValues>({
     defaultValues: {
-      kindergartenId: "",
       groupId: "",
+      birthday: new Date(),
+      firstName: "",
+      lastName: "",
+      parentsId: [],
+      kindergartenId: "",
     },
   });
 
@@ -48,7 +56,7 @@ export default function ChildForm(props: ChildFormProps) {
     .filter((g) => g.kindergartenId === selectedKindergartenId)
     .map((g) => ({ value: g.uuid, label: g.groupName }));
 
-  const onSubmit = (data: ChildDTO) => {
+  const onSubmit: SubmitHandler<CreateChildDTO> = (data) => {
     createChild.mutate(data);
     if (onAddChild) onAddChild(data);
   };
@@ -121,10 +129,10 @@ export default function ChildForm(props: ChildFormProps) {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={createChild?.isLoading}
+                disabled={createChild?.isPending}
                 sx={{ alignSelf: "flex-start" }}
               >
-                {createChild?.isLoading ? "Speichern..." : "Anmelden"}
+                {createChild?.isPending ? "Speichern..." : "Anmelden"}
               </Button>
 
               {createChild?.isError && (

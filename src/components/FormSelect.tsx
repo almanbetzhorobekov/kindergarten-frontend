@@ -3,18 +3,26 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectProps,
   Typography,
 } from "@mui/material";
 import { useId } from "react";
 
-export default function FormSelect({ label, options = [], error, ...props }) {
+type FormSelectProps = SelectProps & {
+  label: string;
+  options: { value: string; label: string }[];
+  error: string | undefined;
+};
+
+export default function FormSelect(props: FormSelectProps) {
+  const { label, options, error, ...rest } = props;
   const id = useId();
 
   return (
     <FormControl fullWidth>
       <InputLabel id={id}>{label}</InputLabel>
 
-      <Select labelId={id} label={label} {...props}>
+      <Select labelId={id} label={label} {...rest}>
         <MenuItem key="default" value="">
           -- auswählen --
         </MenuItem>
@@ -25,7 +33,6 @@ export default function FormSelect({ label, options = [], error, ...props }) {
           </MenuItem>
         ))}
       </Select>
-
       {error && <Typography>{error}</Typography>}
     </FormControl>
   );

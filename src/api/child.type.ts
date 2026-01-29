@@ -5,3 +5,6 @@ export type ChildDTO = Person & {
   parentsId: string[];
   groupId: string;
 };
+
+export type CreateChildDTO = Omit<ChildDTO, "uuid">;
+export type UpdateChildDTO = Partial<Omit<ChildDTO, "uuid">>;
