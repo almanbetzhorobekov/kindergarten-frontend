@@ -1,8 +1,30 @@
 import { useForm, Controller } from "react-hook-form";
+import { SubmitHandler } from "react-hook-form";
+
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
+
 import { Box, Button, Stack } from "@mui/material";
 import { useEffect, useRef } from "react";
+import { ChildDTO, UpdateChildDTO } from "api/child.type";
+import { GroupDTO } from "api/group.type";
+import { KindergartenDTO } from "api/kindergarten.type";
+
+type ChildEditFormValues = {
+  firstName: string;
+  lastName: string;
+  birthday: string;
+  kindergartenID: string;
+  groupID: string;
+};
+
+type ChildEditFormProps = {
+  child: ChildDTO;
+  groups: GroupDTO[];
+  kindergartens: KindergartenDTO[];
+  onSave: (id: string, data: UpdateChildDTO) => void;
+  onCancel: () => void;
+};
 
 export default function ChildEditForm({
   child,
@@ -10,7 +32,7 @@ export default function ChildEditForm({
   kindergartens,
   onSave,
   onCancel,
-}) {
+}: ChildEditFormProps) {
   const {
     control,
     register,
@@ -19,19 +41,19 @@ export default function ChildEditForm({
     reset,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<ChildEditFormValues>({
     defaultValues: {
       firstName: "",
       lastName: "",
       birthday: "",
-      kindergartenId: "",
-      groupId: "",
+      kindergartenID: "",
+      groupID: "",
     },
     shouldUnregister: false,
   });
 
-  const selectedKindergartenId = watch("kindergartenId");
-  const isInitializing = useRef(true);
+  const selectedKindergartenId = watch("kindergartenID");
+  const isInitializing = useRef<boolean>(true);
 
   useEffect(() => {
     if (!child) return;
@@ -39,9 +61,10 @@ export default function ChildEditForm({
     reset({
       firstName: child.firstName ?? "",
       lastName: child.lastName ?? "",
-      birthday: child.birthday ?? "",
-      kindergartenId: child.kindergartenId ?? "",
-      groupId: child.groupId ?? "",
+      birthday: child.birthday
+        ? child.birthday.toISOString().split("T")[0]
+        : "",
+      groupID: child.groupId ?? "",
     });
 
     isInitializing.current = true;
@@ -53,7 +76,7 @@ export default function ChildEditForm({
       return;
     }
 
-    setValue("groupId", "");
+    setValue("groupID", "");
   }, [selectedKindergartenId, setValue]);
 
   const filteredGroupOptions = isInitializing.current
@@ -73,14 +96,20 @@ export default function ChildEditForm({
     label: k.kindergartenName,
   }));
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<ChildEditFormValues> = (data) => {
     if (!child?.uuid) return;
-    onSave(child.uuid, data);
+
+    const payload: UpdateChildDTO = {
+      ...data,
+      birthday: new Date(data.birthday),
+    };
+
+    onSave(child.uuid, payload);
   };
   console.log("groupId from child:", child.groupId);
   console.log(
     "group options:",
-    groups.map((g) => g.uuid)
+    groups.map((g) => g.uuid),
   );
 
   return (
@@ -107,7 +136,7 @@ export default function ChildEditForm({
         />
 
         <Controller
-          name="kindergartenId"
+          name="kindergartenID"
           control={control}
           rules={{ required: "Kindergarten auswählen" }}
           render={({ field }) => (
@@ -116,13 +145,13 @@ export default function ChildEditForm({
               options={kindergartenOptions}
               value={field.value}
               onChange={field.onChange}
-              error={errors.kindergartenId?.message}
+              error={errors.kindergartenID?.message}
             />
           )}
         />
 
         <Controller
-          name="groupId"
+          name="groupID"
           control={control}
           rules={{ required: "Gruppe auswählen" }}
           render={({ field }) => (
@@ -132,7 +161,7 @@ export default function ChildEditForm({
               value={field.value}
               onChange={field.onChange}
               disabled={!selectedKindergartenId}
-              error={errors.groupId?.message}
+              error={errors.groupID?.message}
             />
           )}
         />

@@ -8,10 +8,10 @@ import {
 } from "@mui/material";
 import { useId } from "react";
 
-type FormSelectProps = SelectProps & {
+type FormSelectProps = Omit<SelectProps, "error"> & {
   label: string;
   options: { value: string; label: string }[];
-  error: string | undefined;
+  error?: string | undefined;
 };
 
 export default function FormSelect(props: FormSelectProps) {

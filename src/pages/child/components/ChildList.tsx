@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { GroupDTO } from "api/group.type";
+import { ChildDTO, UpdateChildDTO } from "api/child.type";
+import { KindergartenDTO } from "api/kindergarten.type";
 import {
   Box,
   Typography,
@@ -11,13 +14,13 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
-import { ITEMS_PER_PAGE, useChildApi } from "../api/childApi";
+import { useChildApi } from "../api/ChildApi";
 import ChildEditForm from "./ChildEditForm";
 
 export default function ChildList() {
-  const [page, setPage] = useState(1);
-  const [editChild, setEditChild] = useState(null);
-  const [openEdit, setOpenEdit] = useState(false);
+  const [page, setPage] = useState<number>(1);
+  const [editChild, setEditChild] = useState<ChildDTO | null>(null);
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
 
   const {
     children,
@@ -31,13 +34,13 @@ export default function ChildList() {
     changeGroupMutation,
   } = useChildApi({ page });
 
-  const getGroupName = (groupId) =>
-    groups.find((g) => g.uuid === groupId)?.groupName || "-";
+  const getGroupName = (groupID: string): string =>
+    groups.find((g: GroupDTO) => g.uuid === groupID)?.groupName || "-";
 
   if (isLoading) return <Typography>Lädt...</Typography>;
   if (error) return <Typography>Fehler beim Laden der Kinder</Typography>;
 
-  const paginatedChildren = children.content ?? [];
+  const paginatedChildren: ChildDTO[] = children?.content ?? [];
   const pageCount = children?.totalPages ?? 0;
 
   const handleEdit = (child) => {

@@ -8,3 +8,6 @@ export type GroupDTO = {
   kindergartenName: string;
   educatorId: string;
 };
+
+export type CreateGroupDTO = Omit<GroupDTO, "uuid">;
+export type UpdateGroupDTO = Partial<Omit<GroupDTO, "uuid">>;
