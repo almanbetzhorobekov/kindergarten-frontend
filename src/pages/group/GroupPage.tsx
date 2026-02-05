@@ -1,6 +1,6 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import GroupForm from "./components/GroupForm.jsx";
-import GroupList from "./components/GroupList.jsx";
+import GroupForm from "./components/GroupForm";
+import GroupList from "./components/GroupList";
 
 export default function GroupPage() {
   return (
@@ -14,7 +14,11 @@ export default function GroupPage() {
     >
       <Container maxWidth="lg">
         <Stack spacing={4}>
-          <GroupForm />
+          <GroupForm
+            onAddGroup={(group) => {
+              console.log("Neu Group: ", group);
+            }}
+          />
           <GroupList />
         </Stack>
       </Container>

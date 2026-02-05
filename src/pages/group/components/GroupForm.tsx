@@ -15,8 +15,17 @@ import {
   FormHelperText,
 } from "@mui/material";
 
-export default function GroupForm() {
+import { CreateGroupDTO, GroupDTO } from "api/group.type";
+import { KindergartenDTO } from "api/kindergarten.type";
+
+type GroupFormProps = {
+  onAddGroup: (group: GroupDTO) => void;
+};
+
+export default function GroupForm(props: GroupFormProps) {
   const queryClient = useQueryClient();
+
+  const { onAddGroup } = props;
 
   const {
     control,
@@ -24,26 +33,30 @@ export default function GroupForm() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm<CreateGroupDTO>();
 
   const {
     data: kindergartens = [],
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<KindergartenDTO[]>({
     queryKey: ["kindergartens"],
     queryFn: kindergartenAPI.getAll,
   });
 
-  const mutation = useMutation({
+  const mutation = useMutation<GroupDTO, Error, CreateGroupDTO>({
     mutationFn: groupAPI.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["groups"]);
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["groups"],
+      });
+
+      onAddGroup?.(data);
       reset();
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: CreateGroupDTO) => {
     mutation.mutate(data);
   };
 
@@ -58,7 +71,6 @@ export default function GroupForm() {
 
       <Card elevation={5} sx={{ p: 3 }}>
         <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-          {/* Gruppenname */}
           <TextField
             fullWidth
             label="Gruppenname"
@@ -70,7 +82,6 @@ export default function GroupForm() {
             helperText={errors.groupName?.message}
           />
 
-          {/* Kindergarten Select */}
           <FormControl
             fullWidth
             margin="normal"
@@ -96,15 +107,14 @@ export default function GroupForm() {
             <FormHelperText>{errors.kindergartenId?.message}</FormHelperText>
           </FormControl>
 
-          {/* Submit */}
           <Button
             type="submit"
             variant="contained"
             fullWidth
             sx={{ mt: 3 }}
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
           >
-            {mutation.isLoading ? "Speichern..." : "Erstellen"}
+            {mutation.isError ? "Speichern..." : "Erstellen"}
           </Button>
 
           {mutation.isError && (

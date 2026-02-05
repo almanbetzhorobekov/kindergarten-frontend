@@ -15,8 +15,19 @@ import {
   Card,
   Stack,
 } from "@mui/material";
+import { CreateEducatorDTO, EducatorDTO } from "api/educator.type";
 
-export default function EducatorForm(onAddEducator) {
+type EducatorFormProps = {
+  onAddEducator: (educator: EducatorDTO) => void;
+};
+
+type CreateEducatorFormValues = CreateEducatorDTO & {
+  groupID: string;
+};
+
+export default function EducatorForm(props: EducatorFormProps) {
+  const { onAddEducator } = props;
+
   const {
     control,
     register,
@@ -24,7 +35,7 @@ export default function EducatorForm(onAddEducator) {
     reset,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm<CreateEducatorFormValues>({});
 
   const queryClient = useQueryClient();
 

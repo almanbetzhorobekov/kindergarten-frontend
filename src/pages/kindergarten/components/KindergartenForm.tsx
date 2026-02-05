@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { kindergartenAPI } from "../../../api/kindergartenService";
+
 import {
   Box,
   Button,
@@ -11,43 +12,58 @@ import {
 } from "@mui/material";
 
 import FormInput from "../../../components/FormInput";
+import { CreateKindergartenDTO, KindergartenDTO } from "api/kindergarten.type";
+import { CreateAddressDTO } from "api/address.type";
 
-export default function KindergartenForm() {
+type KindergartenFormProps = {
+  onAddKindergarten: (kindergarten: KindergartenDTO) => void;
+};
+
+export default function KindergartenForm(props: KindergartenFormProps) {
   const queryClient = useQueryClient();
 
-  // GET
+  const { onAddKindergarten } = props;
+
   const {
     data: kindergartens = [],
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<KindergartenDTO[]>({
     queryKey: ["kindergartens"],
     queryFn: kindergartenAPI.getAll,
   });
 
-  // POST
-  const mutation = useMutation({
+  const mutation = useMutation<KindergartenDTO, Error, CreateKindergartenDTO>({
     mutationFn: kindergartenAPI.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["kindergartens"]);
+
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["kindergartens"],
+      });
+
+      onAddKindergarten(data);
     },
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
 
-    const newKindergarten = {
-      kindergartenName: formData.get("kindergartenName"),
-      address: {
-        street: formData.get("street"),
-        houseNumber: formData.get("houseNumber"),
-        plz: formData.get("plz"),
-      },
+    const formData = new FormData(event.currentTarget);
+
+    const address: CreateAddressDTO = {
+      street: formData.get("street") as string,
+      houseNumber: formData.get("houseNumber") as string,
+      plz: formData.get("plz") as string,
+      city: formData.get("city") as string,
     };
 
+    const newKindergarten: CreateKindergartenDTO = {
+      kindergartenName: formData.get("kindergartenName") as string,
+      address: address,
+    };
     mutation.mutate(newKindergarten);
-    event.target.reset();
+
+    event.currentTarget.reset();
   };
 
   if (isLoading) return <Typography>Lädt...</Typography>;
@@ -74,13 +90,17 @@ export default function KindergartenForm() {
 
               <Stack spacing={2}>
                 <FormInput type="text" name="street" label="Straße" required />
+
                 <FormInput
                   type="text"
                   name="houseNumber"
                   label="Hausnummer"
                   required
                 />
+
                 <FormInput type="text" name="plz" label="PLZ" required />
+
+                <FormInput type="text" name="city" label="Stadt" required />
               </Stack>
 
               <Button
@@ -95,15 +115,14 @@ export default function KindergartenForm() {
         </CardContent>
       </Card>
 
-      {/* LISTE */}
       <Stack spacing={1} mt={4}>
         {kindergartens.map((kita) => (
-          <Typography key={kita.id} variant="body2">
+          <Typography key={kita.uuid} variant="body2">
             <Box component="span" sx={{ fontWeight: 600 }}>
               {kita.kindergartenName}
             </Box>{" "}
             — {kita.address?.street} {kita.address?.houseNumber},{" "}
-            {kita.address?.plz}
+            {kita.address?.plz} {kita.address?.city}
           </Typography>
         ))}
       </Stack>

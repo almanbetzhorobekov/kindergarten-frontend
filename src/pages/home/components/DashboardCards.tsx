@@ -55,7 +55,6 @@ export default function DashboardCards() {
           <CardContent sx={{ flexGrow: 1, p: 3 }}>
             <Typography
               color="green"
-              underline="black"
               variant="h6"
               sx={{ mb: 1, fontWeight: "bold" }}
             >
@@ -67,10 +66,9 @@ export default function DashboardCards() {
             <Typography color="text.secondary">{card.description}</Typography>
           </CardContent>
 
-          {/*link*/}
           <Box sx={{ p: 2, pt: 0 }}>
             <Divider variant="fullWidth" />
-            <Link component={RouterLink} to={card.link} underline="hover">
+            <Link component={RouterLink} to={card.link} underline="always">
               Mehr
             </Link>
           </Box>

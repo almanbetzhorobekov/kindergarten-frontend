@@ -9,6 +9,7 @@ import {
   Divider,
   Paper,
 } from "@mui/material";
+import { GroupDTO } from "api/group.type";
 
 const pageSize = 6;
 
@@ -20,7 +21,7 @@ export default function GroupList() {
     isLoading,
     error,
     refetch,
-  } = useQuery({
+  } = useQuery<GroupDTO[]>({
     queryKey: ["groups"],
     queryFn: groupAPI.getAll,
   });
@@ -28,15 +29,18 @@ export default function GroupList() {
   if (isLoading) return <Typography>Lädt Gruppen...</Typography>;
   if (error) return <Typography color="error">Fehler beim Laden!</Typography>;
 
-  // Pagination (frontend)
   const totalPages = Math.ceil(groups.length / pageSize);
   const paginatedGroups = groups.slice((page - 1) * pageSize, page * pageSize);
 
-  // Gruppировка
-  const groupedByKindergarten = paginatedGroups.reduce((acc, group) => {
+  const groupedByKindergarten = paginatedGroups.reduce<
+    Record<string, GroupDTO[]>
+  >((acc, group) => {
     const kitaName = group.kindergartenName || "Unbekannt";
 
-    if (!acc[kitaName]) acc[kitaName] = [];
+    if (!acc[kitaName]) {
+      acc[kitaName] = [];
+    }
+
     acc[kitaName].push(group);
 
     return acc;
@@ -63,10 +67,9 @@ export default function GroupList() {
               </Typography>
             ))}
           </Paper>
-        )
+        ),
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <Pagination
           sx={{ mt: 3 }}
@@ -77,7 +80,6 @@ export default function GroupList() {
         />
       )}
 
-      {/* Reload */}
       <Box mt={2}>
         <Button variant="outlined" onClick={() => refetch()}>
           Gruppen neu laden

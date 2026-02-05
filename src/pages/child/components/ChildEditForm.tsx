@@ -118,13 +118,13 @@ export default function ChildEditForm({
         <FormInput
           label="Vorname"
           {...register("firstName", { required: "Vorname ist erforderlich" })}
-          error={errors.firstName?.message}
+          errorMessage={errors.firstName?.message}
         />
 
         <FormInput
           label="Nachname"
           {...register("lastName", { required: "Nachname ist erforderlich" })}
-          error={errors.lastName?.message}
+          errorMessage={errors.lastName?.message}
         />
 
         <FormInput
@@ -132,7 +132,7 @@ export default function ChildEditForm({
           {...register("birthday", {
             required: "Geburtsdatum ist erforderlich",
           })}
-          error={errors.birthday?.message}
+          errorMessage={errors.birthday?.message}
         />
 
         <Controller

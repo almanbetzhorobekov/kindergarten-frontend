@@ -1,5 +1,5 @@
 import { GroupDTO } from "./group.type";
-import { AddressDTO } from "./address.type";
+import { AddressDTO, CreateAddressDTO } from "./address.type";
 import { EducatorDTO } from "./educator.type";
 
 export type KindergartenDTO = {
@@ -9,3 +9,9 @@ export type KindergartenDTO = {
   groups: GroupDTO[];
   educators: EducatorDTO[];
 };
+
+export type CreateKindergartenDTO = {
+  kindergartenName: string;
+  address: CreateAddressDTO;
+};
+export type UpdateKindergartenDTO = Partial<Omit<KindergartenDTO, "uuid">>;

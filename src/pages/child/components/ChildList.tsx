@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { GroupDTO } from "api/group.type";
 import { ChildDTO, UpdateChildDTO } from "api/child.type";
-import { KindergartenDTO } from "api/kindergarten.type";
 import {
   Box,
   Typography,
@@ -40,34 +39,40 @@ export default function ChildList() {
   if (isLoading) return <Typography>Lädt...</Typography>;
   if (error) return <Typography>Fehler beim Laden der Kinder</Typography>;
 
-  const paginatedChildren: ChildDTO[] = children?.content ?? [];
-  const pageCount = children?.totalPages ?? 0;
+  const paginatedChildren: ChildDTO[] = children ?? [];
+  const pageCount: number = 0;
 
-  const handleEdit = (child) => {
+  const handleEdit = (child: ChildDTO) => {
     setEditChild(child);
     setOpenEdit(true);
   };
 
-  const handleDelete = async (child) => {
+  const handleDelete = async (child: ChildDTO): Promise<void> => {
     if (window.confirm(`Kind ${child.firstName} wirklich löschen?`)) {
       await deleteMutation.mutateAsync(child.uuid);
     }
   };
 
-  const handleDeactivate = async (child) => {
+  const handleDeactivate = async (child: ChildDTO): Promise<void> => {
     if (window.confirm(`Kind ${child.firstName} inaktiv setzen?`)) {
       await deactivateMutation.mutateAsync(child.uuid);
     }
   };
 
-  const handleChangeGroup = async (child, newGroupId) => {
+  const handleChangeGroup = async (
+    child: ChildDTO,
+    newGroupId: string,
+  ): Promise<void> => {
     await changeGroupMutation.mutateAsync({
       uuid: child.uuid,
       groupId: newGroupId,
     });
   };
 
-  const handleSaveEdit = async (uuid, data) => {
+  const handleSaveEdit = async (
+    uuid: string,
+    data: UpdateChildDTO,
+  ): Promise<void> => {
     await updateMutation.mutateAsync({ uuid, data });
     setEditChild(null);
     setOpenEdit(false);
@@ -100,6 +105,7 @@ export default function ChildList() {
                     Gruppe: {getGroupName(child.groupId)}
                   </Typography>
                 </Box>
+
                 <Stack direction="row" spacing={1}>
                   <Button
                     variant="outlined"
@@ -108,6 +114,7 @@ export default function ChildList() {
                   >
                     Edit
                   </Button>
+
                   <Button
                     variant="outlined"
                     size="small"
@@ -116,6 +123,7 @@ export default function ChildList() {
                   >
                     Delete
                   </Button>
+
                   <Button
                     variant="outlined"
                     size="small"
@@ -136,7 +144,7 @@ export default function ChildList() {
           <Pagination
             count={pageCount}
             page={page}
-            onChange={(_, value) => setPage(value)}
+            onChange={(_, value: number) => setPage(value)}
             color="primary"
           />
         </Box>

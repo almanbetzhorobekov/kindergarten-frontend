@@ -15,7 +15,7 @@ import { ChildDTO, CreateChildDTO } from "api/child.type";
 
 type ChildFormProps = {
   // TODO
-  onAddChild: (child: unknown) => void;
+  onAddChild: (child: ChildDTO) => void;
 };
 
 type CreateChildFormValues = CreateChildDTO & {
@@ -57,8 +57,11 @@ export default function ChildForm(props: ChildFormProps) {
     .map((g) => ({ value: g.uuid, label: g.groupName }));
 
   const onSubmit: SubmitHandler<CreateChildDTO> = (data) => {
-    createChild.mutate(data);
-    if (onAddChild) onAddChild(data);
+    createChild.mutate(data, {
+      onSuccess: (newChild) => {
+        if (onAddChild) onAddChild(newChild);
+      },
+    });
   };
 
   return (
@@ -76,7 +79,7 @@ export default function ChildForm(props: ChildFormProps) {
                 {...register("firstName", {
                   required: "Vorname ist erforderlich",
                 })}
-                error={errors.firstName?.message}
+                errorMessage={errors.firstName?.message}
               />
 
               <FormInput
@@ -84,7 +87,7 @@ export default function ChildForm(props: ChildFormProps) {
                 {...register("lastName", {
                   required: "Nachname ist erforderlich",
                 })}
-                error={errors.lastName?.message}
+                errorMessage={errors.lastName?.message}
               />
 
               <FormInput
@@ -92,7 +95,7 @@ export default function ChildForm(props: ChildFormProps) {
                 {...register("birthday", {
                   required: "Geburtsdatum ist erforderlich",
                 })}
-                error={errors.birthday?.message}
+                errorMessage={errors.birthday?.message}
               />
 
               <Controller
