@@ -14,7 +14,6 @@ import { useChildApi } from "../api/ChildApi";
 import { ChildDTO, CreateChildDTO } from "api/child.type";
 
 type ChildFormProps = {
-  // TODO
   onAddChild: (child: ChildDTO) => void;
 };
 

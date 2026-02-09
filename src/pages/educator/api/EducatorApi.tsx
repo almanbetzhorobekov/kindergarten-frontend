@@ -1,16 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { kindergartenAPI } from "api/kindergartenService";
-import { KindergartenDTO } from "api/kindergarten.type";
-import { GroupDTO } from "api/group.type";
+import { educatorAPI } from "api/educatorService";
 import { groupAPI } from "../../../api/groupService";
+
+import { KindergartenDTO } from "api/kindergarten.type";
+import { EducatorDTO } from "api/educator.type";
+import { GroupDTO } from "api/group.type";
 
 const QUERY_KEY_EDUCATOR = "educator";
 const QUERY_KEY_KINDERGARTENS = "kindergartens";
 const QUERY_KEY_GROUPS = "groups";
-
-import { ITEMS_PER_PAGE } from "pages/child/api/ChildApi";
-import { EducatorDTO } from "api/educator.type";
-import { educatorAPI } from "api/educatorService";
 
 type UseEducatorApiParams = {
   reset?: () => void;
@@ -36,16 +36,16 @@ export function useEducatorApi({ reset, page = 1 }: UseEducatorApiParams) {
     error,
   } = useQuery<EducatorDTO[]>({
     queryKey: [QUERY_KEY_EDUCATOR, page],
-    queryFn: educatorAPI.getAll,
+    queryFn: () => educatorAPI.getAll(page),
   });
 
   const createEducator = useMutation({
     mutationFn: educatorAPI.create,
     onSuccess: () => {
-        queryClient.invalidateQueries({
-            queryKey: [QUERY_KEY_EDUCATOR],
-        });
-        reset?.();
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY_EDUCATOR],
+      });
+      reset?.();
     },
   });
 
@@ -57,20 +57,21 @@ export function useEducatorApi({ reset, page = 1 }: UseEducatorApiParams) {
   };
 
   const updateMutation = useMutation<void, Error, UpdateEducatorParams>({
-    mutationFn: ({uuid, data}) => educatorAPI.update(uuid, data),
-    onSuccess: () => queryClient.invalidateQueries({
+    mutationFn: ({ uuid, data }) => educatorAPI.update(uuid, data),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
         queryKey: [QUERY_KEY_EDUCATOR],
-    }),
+      }),
   });
 
   type DeleteEducatorParams = string;
 
   const deleteMutation = useMutation<void, Error, DeleteEducatorParams>({
     mutationFn: (uuid) => educatorAPI.delete(uuid),
-    onSuccess: () => 
-        queryClient.invalidateQueries({
-            queryKey: [QUERY_KEY_EDUCATOR, page],
-        }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY_EDUCATOR, page],
+      }),
   });
 
   return {
@@ -82,6 +83,5 @@ export function useEducatorApi({ reset, page = 1 }: UseEducatorApiParams) {
     createEducator,
     updateMutation,
     deleteMutation,
-    
   };
 }

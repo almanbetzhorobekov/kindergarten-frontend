@@ -10,7 +10,7 @@ export default function EducatorListe() {
     error,
   } = useQuery({
     queryKey: ["educators"],
-    queryFn: educatorAPI.getAll,
+    queryFn: () => educatorAPI.getAll(),
   });
 
   const { data: groups = [] } = useQuery({
@@ -18,8 +18,8 @@ export default function EducatorListe() {
     queryFn: groupAPI.getAll,
   });
 
-  const getGroupName = (groupId) => {
-    const group = groups.find((g) => g.uuid === groupId);
+  const getGroupName = (groupID: string) => {
+    const group = groups.find((g) => g.uuid === groupID);
     return group?.groupName || "-";
   };
 

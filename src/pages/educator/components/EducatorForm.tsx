@@ -1,11 +1,9 @@
-import { useForm, Controller } from "react-hook-form";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 import { educatorAPI } from "../../../api/educatorService";
-import { groupAPI } from "../../../api/groupService";
-import { kindergartenAPI } from "../../../api/kindergartenService";
 
 import {
   Box,
@@ -16,9 +14,10 @@ import {
   Stack,
 } from "@mui/material";
 import { CreateEducatorDTO, EducatorDTO } from "api/educator.type";
+import { useEducatorApi } from "../api/EducatorApi";
 
 type EducatorFormProps = {
-  onAddEducator: (educator: EducatorDTO) => void;
+  onAddEducator: (educator: CreateEducatorFormValues) => void;
 };
 
 type CreateEducatorFormValues = CreateEducatorDTO & {
@@ -28,6 +27,8 @@ type CreateEducatorFormValues = CreateEducatorDTO & {
 export default function EducatorForm(props: EducatorFormProps) {
   const { onAddEducator } = props;
 
+  const queryClient = useQueryClient();
+
   const {
     control,
     register,
@@ -35,19 +36,26 @@ export default function EducatorForm(props: EducatorFormProps) {
     reset,
     watch,
     formState: { errors },
-  } = useForm<CreateEducatorFormValues>({});
-
-  const queryClient = useQueryClient();
-
-  const { data: kindergartens = [] } = useQuery({
-    queryKey: ["kindergartens"],
-    queryFn: kindergartenAPI.getAll,
+  } = useForm<CreateEducatorFormValues>({
+    defaultValues: {
+      email: "",
+      phoneNumber: "",
+      firstName: "",
+      birthday: new Date(),
+      lastName: "",
+      kindergartenId: "",
+      groupID: "",
+      addressDTO: {
+        uuid: "",
+        plz: "",
+        street: "",
+        houseNumber: "",
+        city: "",
+      },
+    },
   });
 
-  const { data: groups = [] } = useQuery({
-    queryKey: ["groups"],
-    queryFn: groupAPI.getAll,
-  });
+  const { kindergartens, groups, createEducator } = useEducatorApi({ reset });
 
   const selectedKindergartenId = watch("kindergartenId");
 
@@ -66,14 +74,14 @@ export default function EducatorForm(props: EducatorFormProps) {
   const mutation = useMutation({
     mutationFn: educatorAPI.create,
     onSuccess: () => {
-      queryClient.invalidateQueries(["educators"]);
+      queryClient.invalidateQueries({ queryKey: ["educators"] });
       reset();
     },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit: SubmitHandler<CreateEducatorFormValues> = (data) => {
     mutation.mutate(data);
-    if (onAddEducator) {
+    if (mutation.isSuccess && onAddEducator) {
       onAddEducator(data);
     }
   };
@@ -89,7 +97,8 @@ export default function EducatorForm(props: EducatorFormProps) {
                 {...register("firstName", {
                   required: "Vorname ist erforderlich",
                 })}
-                error={errors.firstName?.message}
+                error={!!errors.firstName}
+                helperText={errors.firstName?.message}
               />
 
               <FormInput
@@ -97,7 +106,8 @@ export default function EducatorForm(props: EducatorFormProps) {
                 {...register("lastName", {
                   required: "Nachname ist erforderlich",
                 })}
-                error={errors.lastName?.message}
+                error={!!errors.lastName}
+                helperText={errors.lastName?.message}
               />
 
               <FormInput
@@ -105,7 +115,8 @@ export default function EducatorForm(props: EducatorFormProps) {
                 {...register("birthday", {
                   required: "Geburtsdatum ist erforderlich",
                 })}
-                error={errors.birthday?.message}
+                error={!!errors.birthday}
+                helperText={errors.birthday?.message}
               />
 
               <Box>
@@ -114,34 +125,40 @@ export default function EducatorForm(props: EducatorFormProps) {
                 <Stack spacing={2} direction="row">
                   <FormInput
                     label="Straße"
-                    {...register("street", {
+                    {...register("addressDTO.street", {
                       required: "Straße ist erforderlich",
                     })}
-                    error={errors.street?.message}
+                    error={!!errors.addressDTO?.street}
+                    helperText={errors.addressDTO?.street?.message}
                   />
 
                   <FormInput
                     label="Nr."
-                    {...register("houseNumber", {
+                    {...register("addressDTO.houseNumber", {
                       required: "Hausnummer ist erforderlich",
                     })}
-                    error={errors.houseNumber?.message}
+                    error={!!errors.addressDTO?.houseNumber}
+                    helperText={errors.addressDTO?.houseNumber?.message}
                   />
                 </Stack>
 
                 <FormInput
                   label="PLZ"
-                  {...register("plz", { required: "PLZ ist erforderlich" })}
-                  error={errors.plz?.message}
+                  {...register("addressDTO.plz", {
+                    required: "PLZ ist erforderlich",
+                  })}
+                  error={!!errors.addressDTO?.plz}
+                  helperText={errors.addressDTO?.plz?.message}
                 />
               </Box>
 
               <FormInput
                 label="Telefonnummer"
-                {...register("phone", {
+                {...register("phoneNumber", {
                   required: "Telefonnummer ist erforderlich",
                 })}
-                error={errors.phone?.message}
+                error={!!errors.phoneNumber}
+                helperText={errors.phoneNumber?.message}
               />
 
               <Controller
@@ -160,7 +177,7 @@ export default function EducatorForm(props: EducatorFormProps) {
               />
 
               <Controller
-                name="groupId"
+                name="groupID"
                 control={control}
                 rules={{
                   required: "Gruppe auswählen",
@@ -172,7 +189,7 @@ export default function EducatorForm(props: EducatorFormProps) {
                     value={field.value}
                     onChange={field.onChange}
                     disabled={!selectedKindergartenId}
-                    error={errors.groupId?.message}
+                    error={errors.groupID?.message}
                   />
                 )}
               />
@@ -180,10 +197,10 @@ export default function EducatorForm(props: EducatorFormProps) {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={mutation.isLoading}
+                disabled={mutation.isPending}
                 sx={{ alignSelf: "flex-start" }}
               >
-                {mutation.isLoading ? "Speichern..." : "Anmelden"}
+                {mutation.isPending ? "Speichern..." : "Anmelden"}
               </Button>
 
               {mutation.isError && (
