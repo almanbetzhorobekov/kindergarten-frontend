@@ -6,6 +6,7 @@ import { childAPI } from "../../../api/childService";
 import { ChildDTO } from "api/child.type";
 import { GroupDTO } from "api/group.type";
 import { KindergartenDTO } from "api/kindergarten.type";
+import { UpdateChildDTO } from "api/child.type";
 
 const QUERY_KEY_CHILDREN = "children";
 const QUERY_KEY_GROUPS = "groups";
@@ -36,24 +37,25 @@ export function useChildApi({ reset, page = 1 }: UseChildApiParams) {
     isLoading,
     error,
   } = useQuery<ChildDTO[]>({
-    queryKey: [QUERY_KEY_CHILDREN, page],
+    queryKey: [QUERY_KEY_CHILDREN, page], //Cache key
     queryFn: () => childAPI.getAll(page - 1, ITEMS_PER_PAGE),
   });
 
   const createChild = useMutation({
     mutationFn: childAPI.create,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("onSuccess", data);
+
       queryClient.invalidateQueries({
+        //Was macht genau?
         queryKey: [QUERY_KEY_CHILDREN],
       });
       reset?.();
     },
   });
 
-  type UpdateChildDTO = Partial<Omit<ChildDTO, "uuid">>;
-
   type UpdateChildParams = {
-    uuid: string;
+    uuid: string; //nur wegen endpoint?
     data: UpdateChildDTO;
   };
 

@@ -11,9 +11,17 @@ import AboutMePage from "./pages/about-me/AboutMePage.jsx";
 import ContactPage from "./pages/contact/ContactPage.jsx";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 import theme from "./styling/theme.js";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 6 * 60 * 1000,
+    },
+  },
+});
 
 export default function App() {
   return (
@@ -35,6 +43,7 @@ export default function App() {
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

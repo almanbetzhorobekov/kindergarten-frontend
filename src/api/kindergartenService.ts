@@ -16,7 +16,7 @@ export const kindergartenAPI = {
   getById: (uuid: string): Promise<KindergartenDTO> =>
     fetchService(`${KINDERGARTENS_URL}/${uuid}`),
 
-  create: (data: CreateKindergartenDTO): Promise<KindergartenDTO> =>
+  create: (data: CreateKindergartenDTO): Promise<void> =>
     fetchService(KINDERGARTENS_URL, {
       method: "POST",
       body: data,

@@ -33,15 +33,12 @@ export default function KindergartenForm(props: KindergartenFormProps) {
     queryFn: kindergartenAPI.getAll,
   });
 
-  const mutation = useMutation<KindergartenDTO, Error, CreateKindergartenDTO>({
+  const mutation = useMutation<void, Error, CreateKindergartenDTO>({
     mutationFn: kindergartenAPI.create,
-
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["kindergartens"],
       });
-
-      onAddKindergarten(data);
     },
   });
 
