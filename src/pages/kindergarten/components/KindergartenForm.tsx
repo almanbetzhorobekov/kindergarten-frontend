@@ -111,18 +111,6 @@ export default function KindergartenForm(props: KindergartenFormProps) {
           </Box>
         </CardContent>
       </Card>
-
-      <Stack spacing={1} mt={4}>
-        {kindergartens.map((kita) => (
-          <Typography key={kita.uuid} variant="body2">
-            <Box component="span" sx={{ fontWeight: 600 }}>
-              {kita.kindergartenName}
-            </Box>{" "}
-            — {kita.address?.street} {kita.address?.houseNumber},{" "}
-            {kita.address?.plz} {kita.address?.city}
-          </Typography>
-        ))}
-      </Stack>
     </Box>
   );
 }

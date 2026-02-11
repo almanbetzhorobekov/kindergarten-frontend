@@ -7,6 +7,7 @@ import { ChildDTO } from "api/child.type";
 import { GroupDTO } from "api/group.type";
 import { KindergartenDTO } from "api/kindergarten.type";
 import { UpdateChildDTO } from "api/child.type";
+import { PageDTO } from "api/page.type";
 
 const QUERY_KEY_CHILDREN = "children";
 const QUERY_KEY_GROUPS = "groups";
@@ -33,11 +34,11 @@ export function useChildApi({ reset, page = 1 }: UseChildApiParams) {
   });
 
   const {
-    data: children = [],
+    data: childrenPage,
     isLoading,
     error,
-  } = useQuery<ChildDTO[]>({
-    queryKey: [QUERY_KEY_CHILDREN, page], //Cache key
+  } = useQuery<PageDTO<ChildDTO>>({
+    queryKey: [QUERY_KEY_CHILDREN, page],
     queryFn: () => childAPI.getAll(page - 1, ITEMS_PER_PAGE),
   });
 
@@ -47,7 +48,6 @@ export function useChildApi({ reset, page = 1 }: UseChildApiParams) {
       console.log("onSuccess", data);
 
       queryClient.invalidateQueries({
-        //Was macht genau?
         queryKey: [QUERY_KEY_CHILDREN],
       });
       reset?.();
@@ -55,7 +55,7 @@ export function useChildApi({ reset, page = 1 }: UseChildApiParams) {
   });
 
   type UpdateChildParams = {
-    uuid: string; //nur wegen endpoint?
+    uuid: string;
     data: UpdateChildDTO;
   };
 
@@ -102,7 +102,8 @@ export function useChildApi({ reset, page = 1 }: UseChildApiParams) {
   return {
     kindergartens,
     groups,
-    children,
+    children: childrenPage?.content ?? [],
+    totalPages: childrenPage?.totalPages ?? 0,
     isLoading,
     error,
     createChild,

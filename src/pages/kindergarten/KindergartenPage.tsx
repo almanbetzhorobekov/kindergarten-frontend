@@ -1,5 +1,6 @@
 import KindergartenForm from "./components/KindergartenForm";
 import { Box, Container, Stack } from "@mui/material";
+import KindergartenList from "./components/KindergartenList";
 
 export default function KindergartenPage() {
   return (
@@ -19,6 +20,7 @@ export default function KindergartenPage() {
             }}
           />
         </Stack>
+        <KindergartenList />
       </Container>
     </Box>
   );

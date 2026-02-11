@@ -23,6 +23,7 @@ export default function ChildList() {
 
   const {
     children,
+    totalPages,
     error,
     isLoading,
     groups,
@@ -40,7 +41,7 @@ export default function ChildList() {
   if (error) return <Typography>Fehler beim Laden der Kinder</Typography>;
 
   const paginatedChildren: ChildDTO[] = children ?? [];
-  const pageCount: number = 0;
+  const pageCount: number = totalPages;
 
   const handleEdit = (child: ChildDTO) => {
     setEditChild(child);
@@ -144,7 +145,7 @@ export default function ChildList() {
           <Pagination
             count={pageCount}
             page={page}
-            onChange={(_, value: number) => setPage(value)}
+            onChange={(_, value) => setPage(value)}
             color="primary"
           />
         </Box>

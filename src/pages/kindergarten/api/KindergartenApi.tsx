@@ -2,7 +2,7 @@ import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { KindergartenDTO } from "api/kindergarten.type";
 import { kindergartenAPI } from "../../../api/kindergartenService";
 
-const QUERY_KEY_KINDERGARTENS = "kindergartens"; //memory
+const QUERY_KEY_KINDERGARTENS = "kindergartens";
 
 export const ITEMS_PER_PAGE = 5;
 
@@ -12,11 +12,6 @@ type UseKindergartenParams = {
 };
 export function useKinergartenApi({ reset, page }: UseKindergartenParams) {
   const queryClient = useQueryClient();
-
-  const { data: kindergartens = [] } = useQuery<KindergartenDTO[]>({
-    queryKey: [QUERY_KEY_KINDERGARTENS],
-    queryFn: kindergartenAPI.getAll,
-  });
 
   const {
     data: kindergarten = [],
@@ -65,7 +60,6 @@ export function useKinergartenApi({ reset, page }: UseKindergartenParams) {
   });
 
   return {
-    kindergartens,
     isLoading,
     error,
     createKindergraten,

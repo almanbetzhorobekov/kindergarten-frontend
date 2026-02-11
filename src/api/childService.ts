@@ -1,10 +1,11 @@
 import { fetchService } from "./fetchService";
 import { ChildDTO, CreateChildDTO, UpdateChildDTO } from "./child.type";
+import { PageDTO } from "./page.type";
 
 const CHILDREN_URL = "/api/children";
 
 export const childAPI = {
-  getAll: (page = 0, size = 5): Promise<ChildDTO[]> =>
+  getAll: (page = 0, size = 5): Promise<PageDTO<ChildDTO>> =>
     fetchService(`${CHILDREN_URL}?page=${page}&size=${size}`),
 
   getById: (uuid: string): Promise<ChildDTO> =>
