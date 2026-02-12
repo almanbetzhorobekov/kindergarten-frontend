@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { parentsAPI } from "../../../api/parentsService";
+import { parentsAPI } from "api/parentsService";
 import { Box, List, ListItem, Typography } from "@mui/material";
 import { childAPI } from "../../../api/childService";
 

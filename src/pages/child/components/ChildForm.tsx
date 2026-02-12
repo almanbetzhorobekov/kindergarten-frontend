@@ -34,7 +34,7 @@ export default function ChildForm(props: ChildFormProps) {
   } = useForm<CreateChildFormValues>({
     defaultValues: {
       groupId: "",
-      birthday: new Date(),
+      birthday: "",
       firstName: "",
       lastName: "",
       parentsId: [],
