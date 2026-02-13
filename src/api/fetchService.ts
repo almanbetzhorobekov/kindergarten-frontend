@@ -8,8 +8,9 @@ export async function fetchService(
     body: requestOptions?.body ? JSON.stringify(requestOptions.body) : null,
   });
 
-  if (!res.ok) {
-    throw new Error("Fehler bei Kommunikation mit dem Server");
+  const contentType = res.headers.get("Content-Type");
+  if (contentType?.includes("application/json")) {
+    return await res.json();
   }
-  return await res.json();
+  return null;
 }

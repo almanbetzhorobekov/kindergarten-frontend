@@ -1,36 +1,27 @@
-import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { kindergartenAPI } from "../../../api/kindergartenService";
 import { Box, Typography, Paper, Divider, Button, Stack } from "@mui/material";
+import { useState } from "react";
 import { KindergartenDTO } from "api/kindergarten.type";
+import { useKindergartenApi } from "../api/KindergartenApi";
+import KindergartenEditForm from "./KindergartenEditForm";
 
 export default function KindergartenList() {
-  const queryClient = useQueryClient();
+  const { kindergartens, isLoading, error, deleteMutation, updateMutation } =
+    useKindergartenApi();
 
-  const {
-    data: kindergartens = [],
-    isLoading,
-    error,
-    refetch,
-  } = useQuery<KindergartenDTO[]>({
-    queryKey: ["kindergartens"],
-    queryFn: kindergartenAPI.getAll,
-  });
+  const [editingKita, setEditingKita] = useState<KindergartenDTO | null>(null);
 
-  const deleteMutation = useMutation({
-    mutationFn: (uuid: string) => kindergartenAPI.delete(uuid),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["kindergartens"],
-      });
-    },
-  });
-
-  const handleDelete = (uuid: string) => {
-    deleteMutation.mutate(uuid);
+  const handlEdit = (kita: KindergartenDTO) => {
+    setEditingKita(kita);
+    setOpenEdit(true);
   };
 
-  if (isLoading) return <Typography>Lädt Kindergärten...</Typography>;
-  if (error) return <Typography color="error">Fehler beim Laden!</Typography>;
+  if (isLoading) return <Typography>Lädt...</Typography>;
+  if (error) return <Typography color="error">Fehler!</Typography>;
+
+  const handleUpdate = (uuid: string, data: any) => {
+    updateMutation.mutate({ uuid, data });
+    setEditingKita(null);
+  };
 
   return (
     <Box component="section">
@@ -41,45 +32,49 @@ export default function KindergartenList() {
       <Stack spacing={3}>
         {kindergartens.map((kita) => (
           <Paper key={kita.uuid} elevation={2} sx={{ p: 2 }}>
-            <Typography variant="h6">{kita.kindergartenName}</Typography>
+            {editingKita?.uuid === kita.uuid ? (
+              <KindergartenEditForm
+                kindergarten={kita}
+                onSave={handleUpdate}
+                onCancel={() => setEditingKita(null)}
+              />
+            ) : (
+              <>
+                <Typography variant="h6">{kita.kindergartenName}</Typography>
 
-            <Divider sx={{ my: 1 }} />
+                <Divider sx={{ my: 1 }} />
 
-            <Typography variant="body2">
-              {kita.address?.street} {kita.address?.houseNumber}
-            </Typography>
+                <Typography>
+                  {kita.address.street} {kita.address.houseNumber}
+                </Typography>
 
-            <Typography variant="body2">
-              {kita.address?.plz} {kita.address?.city}
-            </Typography>
+                <Typography>
+                  {kita.address.plz} {kita.address.city}
+                </Typography>
 
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              Gruppen: {kita.groups?.length ?? 0}
-            </Typography>
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    onClick={() => setEditingKita(kita)}
+                  >
+                    Edit
+                  </Button>
 
-            <Typography variant="body2">
-              Erzieher: {kita.educators?.length ?? 0}
-            </Typography>
-
-            <Box mt={2}>
-              <Button
-                variant="outlined"
-                color="error"
-                size="small"
-                onClick={() => handleDelete(kita.uuid)}
-              >
-                Delete
-              </Button>
-            </Box>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="error"
+                    onClick={() => deleteMutation.mutate(kita.uuid)}
+                  >
+                    Delete
+                  </Button>
+                </Stack>
+              </>
+            )}
           </Paper>
         ))}
       </Stack>
-
-      <Box mt={3}>
-        <Button variant="outlined" onClick={() => refetch()}>
-          Neu laden
-        </Button>
-      </Box>
     </Box>
   );
 }

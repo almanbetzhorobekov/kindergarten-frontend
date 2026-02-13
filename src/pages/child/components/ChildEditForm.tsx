@@ -3,25 +3,16 @@ import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
 import { Box, Button, Stack } from "@mui/material";
 import { useEffect } from "react";
-import { ChildDTO, UpdateChildDTO } from "api/child.type";
-import { GroupDTO } from "api/group.type";
-import { KindergartenDTO } from "api/kindergarten.type";
-
-type ChildEditFormValues = {
-  firstName: string;
-  lastName: string;
-  birthday: string;
-  kindergartenId: string;
-  groupId: string;
-};
-
-type ChildEditFormProps = {
-  child: ChildDTO;
-  groups: GroupDTO[];
-  kindergartens: KindergartenDTO[];
-  onSave: (uuid: string, data: UpdateChildDTO) => void;
-  onCancel: () => void;
-};
+import { toBackendDate, toInputDate } from "api/utils/date";
+import {
+  mapFormToUpdateChild,
+  ChildEditFormValues,
+  ChildEditFormProps,
+} from "../lib/mapChildToUpdates";
+import {
+  filterGroupsByKindergarten,
+  mapKindergartensToOptions,
+} from "../lib/childForm.utils";
 
 export default function ChildEditForm({
   child,
@@ -44,23 +35,18 @@ export default function ChildEditForm({
     defaultValues: {
       firstName: child.firstName ?? "",
       lastName: child.lastName ?? "",
-      // 2024-02-24
-      birthday: child.birthday
-        ? new Date(child.birthday).toISOString().split("T")[0]
-        : "",
+      birthday: toInputDate(child.birthday),
       kindergartenId,
       groupId: child.groupId ?? "",
     },
     shouldUnregister: false,
   });
 
-  const watchedKindergartenId = watch("kindergartenId");
-
   useEffect(() => {
     reset({
       firstName: child.firstName ?? "",
       lastName: child.lastName ?? "",
-      birthday: formatDateForBackend(child.birthday),
+      birthday: toBackendDate(child.birthday),
       kindergartenId: kindergartenId,
       groupId: child.groupId ?? "",
     });
@@ -68,28 +54,18 @@ export default function ChildEditForm({
 
   const onSubmit: SubmitHandler<ChildEditFormValues> = (data) => {
     if (!child?.uuid) return;
-
-    const payload: UpdateChildDTO = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      birthday: data.birthday,
-      groupId: data.groupId,
-    };
-
+    const payload = mapFormToUpdateChild(data);
     onSave(child.uuid, payload);
   };
 
-  const kindergartenOptions = kindergartens.map((kg) => ({
-    label: kg.kindergartenName,
-    value: kg.uuid,
-  }));
+  const watchedKindergartenId = watch("kindergartenId");
 
-  const groupOptions = groups
-    .filter((g) => g.kindergartenId === watchedKindergartenId)
-    .map((g) => ({
-      label: g.groupName,
-      value: g.uuid,
-    }));
+  const kindergartenOptions = mapKindergartensToOptions(kindergartens);
+
+  const groupOptions = filterGroupsByKindergarten(
+    groups,
+    watchedKindergartenId,
+  );
 
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ pt: 0.6 }}>
@@ -107,11 +83,13 @@ export default function ChildEditForm({
         />
 
         <FormInput
+          label="Geburtsdatum"
           type="date"
           {...register("birthday", {
             required: "Geburtsdatum ist erforderlich",
           })}
           errorMessage={errors.birthday?.message}
+          InputLabelProps={{ shrink: true }}
         />
 
         <Controller
@@ -125,7 +103,6 @@ export default function ChildEditForm({
               value={field.value}
               onChange={field.onChange}
               error={errors.kindergartenId?.message}
-              disabled
             />
           )}
         />
@@ -157,20 +134,4 @@ export default function ChildEditForm({
       </Stack>
     </Box>
   );
-}
-
-type BackendLocalDate = `${number}-${number}-${number}`;
-
-function formatDateForBackend(
-  inputDate: string | null,
-): BackendLocalDate | null {
-  if (!inputDate) return null;
-
-  const date = new Date(inputDate);
-
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDay();
-
-  return `${year}-${month}-${day}`;
 }

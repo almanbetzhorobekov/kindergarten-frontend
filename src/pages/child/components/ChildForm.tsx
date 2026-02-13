@@ -1,6 +1,7 @@
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
+import { handleCreateChildSubmit } from "../lib/childForm.handlers";
 
 import {
   Box,
@@ -11,15 +12,11 @@ import {
   CardContent,
 } from "@mui/material";
 import { useChildApi } from "../api/ChildApi";
-import { ChildDTO, CreateChildDTO } from "api/child.type";
-
-type ChildFormProps = {
-  onAddChild: (child: ChildDTO) => void;
-};
-
-type CreateChildFormValues = CreateChildDTO & {
-  kindergartenId: string;
-};
+import { CreateChildFormValues, ChildFormProps } from "api/child.type";
+import {
+  filterGroupsByKindergarten,
+  mapKindergartensToOptions,
+} from "../lib/childForm.utils";
 
 export default function ChildForm(props: ChildFormProps) {
   const { onAddChild } = props;
@@ -46,22 +43,14 @@ export default function ChildForm(props: ChildFormProps) {
 
   const selectedKindergartenId = watch("kindergartenId");
 
-  const kindergartenOptions = kindergartens.map((k) => ({
-    value: k.uuid,
-    label: k.kindergartenName,
-  }));
+  const kindergartenOptions = mapKindergartensToOptions(kindergartens);
 
-  const filteredGroupOptions = groups
-    .filter((g) => g.kindergartenId === selectedKindergartenId)
-    .map((g) => ({ value: g.uuid, label: g.groupName }));
+  const filteredGroupOptions = filterGroupsByKindergarten(
+    groups,
+    selectedKindergartenId,
+  );
 
-  const onSubmit: SubmitHandler<CreateChildDTO> = (data) => {
-    createChild.mutate(data, {
-      onSuccess: (newChild) => {
-        if (onAddChild) onAddChild(newChild);
-      },
-    });
-  };
+  const onSubmit = handleCreateChildSubmit(createChild, onAddChild);
 
   return (
     <Box component="section">
@@ -90,11 +79,13 @@ export default function ChildForm(props: ChildFormProps) {
               />
 
               <FormInput
+                label="Geburtsdatum"
                 type="date"
                 {...register("birthday", {
                   required: "Geburtsdatum ist erforderlich",
                 })}
                 errorMessage={errors.birthday?.message}
+                InputLabelProps={{ shrink: true }}
               />
 
               <Controller

@@ -1,6 +1,3 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { kindergartenAPI } from "../../../api/kindergartenService";
-
 import {
   Box,
   Button,
@@ -10,37 +7,13 @@ import {
   Stack,
   Divider,
 } from "@mui/material";
-
 import FormInput from "../../../components/FormInput";
-import { CreateKindergartenDTO, KindergartenDTO } from "api/kindergarten.type";
+import { CreateKindergartenDTO } from "api/kindergarten.type";
 import { CreateAddressDTO } from "api/address.type";
+import { useKindergartenApi } from "../api/KindergartenApi";
 
-type KindergartenFormProps = {
-  onAddKindergarten: (kindergarten: KindergartenDTO) => void;
-};
-
-export default function KindergartenForm(props: KindergartenFormProps) {
-  const queryClient = useQueryClient();
-
-  const { onAddKindergarten } = props;
-
-  const {
-    data: kindergartens = [],
-    isLoading,
-    error,
-  } = useQuery<KindergartenDTO[]>({
-    queryKey: ["kindergartens"],
-    queryFn: kindergartenAPI.getAll,
-  });
-
-  const mutation = useMutation<void, Error, CreateKindergartenDTO>({
-    mutationFn: kindergartenAPI.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["kindergartens"],
-      });
-    },
-  });
+export default function KindergartenForm() {
+  const { createMutation } = useKindergartenApi();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,15 +29,12 @@ export default function KindergartenForm(props: KindergartenFormProps) {
 
     const newKindergarten: CreateKindergartenDTO = {
       kindergartenName: formData.get("kindergartenName") as string,
-      address: address,
+      address,
     };
-    mutation.mutate(newKindergarten);
 
+    createMutation.mutate(newKindergarten);
     event.currentTarget.reset();
   };
-
-  if (isLoading) return <Typography>Lädt...</Typography>;
-  if (error) return <Typography>Fehler beim Laden der Kindergärten</Typography>;
 
   return (
     <Box component="section">
@@ -86,25 +56,13 @@ export default function KindergartenForm(props: KindergartenFormProps) {
               <Divider />
 
               <Stack spacing={2}>
-                <FormInput type="text" name="street" label="Straße" required />
-
-                <FormInput
-                  type="text"
-                  name="houseNumber"
-                  label="Hausnummer"
-                  required
-                />
-
-                <FormInput type="text" name="plz" label="PLZ" required />
-
-                <FormInput type="text" name="city" label="Stadt" required />
+                <FormInput name="street" label="Straße" required />
+                <FormInput name="houseNumber" label="Hausnummer" required />
+                <FormInput name="plz" label="PLZ" required />
+                <FormInput name="city" label="Stadt" required />
               </Stack>
 
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ alignSelf: "flex-start" }}
-              >
+              <Button type="submit" variant="contained">
                 Erstellen
               </Button>
             </Stack>

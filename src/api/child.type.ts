@@ -8,3 +8,11 @@ export type ChildDTO = Person & {
 
 export type CreateChildDTO = Omit<ChildDTO, "uuid">;
 export type UpdateChildDTO = Partial<Omit<ChildDTO, "uuid">>;
+
+export type ChildFormProps = {
+  onAddChild: (child: ChildDTO) => void;
+};
+
+export type CreateChildFormValues = CreateChildDTO & {
+  kindergartenId: string;
+};

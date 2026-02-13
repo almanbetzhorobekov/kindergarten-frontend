@@ -1,47 +1,39 @@
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
-import { KindergartenDTO } from "api/kindergarten.type";
+import {
+  KindergartenDTO,
+  CreateKindergartenDTO,
+  UpdateKindergartenDTO,
+} from "api/kindergarten.type";
 import { kindergartenAPI } from "../../../api/kindergartenService";
 
-const QUERY_KEY_KINDERGARTENS = "kindergartens";
+export const QUERY_KEY_KINDERGARTENS = "kindergartens";
 
-export const ITEMS_PER_PAGE = 5;
-
-type UseKindergartenParams = {
-  reset?: () => void;
-  page?: number;
+type UpdateParams = {
+  uuid: string;
+  data: UpdateKindergartenDTO;
 };
-export function useKinergartenApi({ reset, page }: UseKindergartenParams) {
+
+export function useKindergartenApi() {
   const queryClient = useQueryClient();
 
   const {
-    data: kindergarten = [],
+    data: kindergartens = [],
     isLoading,
     error,
   } = useQuery<KindergartenDTO[]>({
-    queryKey: [QUERY_KEY_KINDERGARTENS, page],
+    queryKey: [QUERY_KEY_KINDERGARTENS],
     queryFn: kindergartenAPI.getAll,
   });
 
-  const createKindergraten = useMutation({
+  const createMutation = useMutation<void, Error, CreateKindergartenDTO>({
     mutationFn: kindergartenAPI.create,
-    onSuccess: (data) => {
-      console.log("onSuccess", data);
-
+    onSuccess: () =>
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY_KINDERGARTENS],
-      });
-      reset?.();
-    },
+      }),
   });
 
-  type UpdateKindergartenDTO = Partial<Omit<KindergartenDTO, "uuid">>;
-
-  type UpdateKindergartenParams = {
-    uuid: string;
-    data: UpdateKindergartenDTO;
-  };
-
-  const updateMutation = useMutation<void, Error, UpdateKindergartenParams>({
+  const updateMutation = useMutation<void, Error, UpdateParams>({
     mutationFn: ({ uuid, data }) => kindergartenAPI.update(uuid, data),
     onSuccess: () =>
       queryClient.invalidateQueries({
@@ -49,22 +41,20 @@ export function useKinergartenApi({ reset, page }: UseKindergartenParams) {
       }),
   });
 
-  type DeleteKindergartensParams = string;
-
-  const deleteMutation = useMutation<void, Error, DeleteKindergartensParams>({
-    mutationFn: (uuid) => kindergartenAPI.delete(uuid),
+  const deleteMutation = useMutation<void, Error, string>({
+    mutationFn: kindergartenAPI.delete,
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY_KINDERGARTENS, page],
+        queryKey: [QUERY_KEY_KINDERGARTENS],
       }),
   });
 
   return {
+    kindergartens,
     isLoading,
     error,
-    createKindergraten,
+    createMutation,
     updateMutation,
     deleteMutation,
-    kindergarten,
   };
 }
