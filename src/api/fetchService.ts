@@ -2,11 +2,16 @@ export async function fetchService(
   endpoint: string,
   requestOptions?: { method?: string; body?: unknown },
 ) {
-  const res = await fetch("http://localhost:8080" + endpoint, {
+  const options: RequestInit = {
     method: requestOptions?.method || "GET",
-    headers: { "Content-Type": "application/json" },
-    body: requestOptions?.body ? JSON.stringify(requestOptions.body) : null,
-  });
+  };
+
+  if (requestOptions?.body) {
+    options.body = JSON.stringify(requestOptions.body);
+    options.headers = { "Content-Type": "application/json" };
+  }
+
+  const res = await fetch("http://localhost:8080" + endpoint, options);
 
   const contentType = res.headers.get("Content-Type");
   if (contentType?.includes("application/json")) {

@@ -14,4 +14,12 @@ export type CreateKindergartenDTO = {
   kindergartenName: string;
   address: CreateAddressDTO;
 };
-export type UpdateKindergartenDTO = Partial<Omit<KindergartenDTO, "uuid">>;
+export type UpdateKindergartenDTO = {
+  kindergartenName?: string;
+  address?: {
+    plz?: string;
+    street?: string;
+    houseNumber?: string;
+    city?: string;
+  };
+};

@@ -1,6 +1,6 @@
 import { Box, Typography, Paper, Divider, Button, Stack } from "@mui/material";
 import { useState } from "react";
-import { KindergartenDTO } from "api/kindergarten.type";
+import { KindergartenDTO, UpdateKindergartenDTO } from "api/kindergarten.type";
 import { useKindergartenApi } from "../api/KindergartenApi";
 import KindergartenEditForm from "./KindergartenEditForm";
 
@@ -10,15 +10,10 @@ export default function KindergartenList() {
 
   const [editingKita, setEditingKita] = useState<KindergartenDTO | null>(null);
 
-  const handlEdit = (kita: KindergartenDTO) => {
-    setEditingKita(kita);
-    setOpenEdit(true);
-  };
-
   if (isLoading) return <Typography>Lädt...</Typography>;
   if (error) return <Typography color="error">Fehler!</Typography>;
 
-  const handleUpdate = (uuid: string, data: any) => {
+  const handleUpdate = (uuid: string, data: UpdateKindergartenDTO) => {
     updateMutation.mutate({ uuid, data });
     setEditingKita(null);
   };

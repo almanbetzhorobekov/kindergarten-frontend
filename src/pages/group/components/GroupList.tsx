@@ -79,12 +79,6 @@ export default function GroupList() {
           onChange={(e, value) => setPage(value)}
         />
       )}
-
-      <Box mt={2}>
-        <Button variant="outlined" onClick={() => refetch()}>
-          Gruppen neu laden
-        </Button>
-      </Box>
     </Box>
   );
 }

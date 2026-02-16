@@ -13,8 +13,7 @@ export const filterGroupsByKindergarten = (
     .filter((g) => g.kindergartenId === kindergartenId)
     .map((g) => ({ value: g.uuid, label: g.groupName }));
 
-export const handleEdit = (child: ) => {
-    setEditChild(child);
-    setOpenEdit(true);
-  };
-
+/*export const handleEdit = (child: ChildDTO) => {
+  setEditChild(child);
+  setOpenEdit(true);
+};*/

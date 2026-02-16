@@ -39,15 +39,9 @@ export default function KindergartenEditForm({
   }, [kindergarten, reset]);
 
   const onSubmit: SubmitHandler<KindergartenEditFormValues> = (data) => {
-    const { kindergarten: kindergartenData, address } =
-      mapFormToUpdateKindergarten(data);
+    const updateData = mapFormToUpdateKindergarten(data);
 
-    onSave(
-      kindergarten.uuid,
-      kindergartenData,
-      kindergarten.address.uuid,
-      address,
-    );
+    onSave(kindergarten.uuid, updateData);
   };
 
   return (
