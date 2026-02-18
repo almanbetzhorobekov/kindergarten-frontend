@@ -1,6 +1,5 @@
 import { GroupDTO } from "api/group.type";
 import { KindergartenDTO } from "api/kindergarten.type";
-import { ChildDTO } from "api/child.type";
 
 export const mapKindergartensToOptions = (kindergartens: KindergartenDTO[]) =>
   kindergartens.map((k) => ({ value: k.uuid, label: k.kindergartenName }));

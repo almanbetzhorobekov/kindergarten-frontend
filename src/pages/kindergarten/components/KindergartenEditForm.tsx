@@ -45,7 +45,7 @@ export default function KindergartenEditForm({
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ pt: 1.5 }}>
       <Stack spacing={2}>
         <FormInput
           label="Kindergarten Name"

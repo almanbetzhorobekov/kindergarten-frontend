@@ -1,31 +1,25 @@
-import { useForm, Controller } from "react-hook-form";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { groupAPI } from "../../../api/groupService";
-import { kindergartenAPI } from "../../../api/kindergartenService";
 import {
-  Card,
   Box,
   Button,
   Typography,
-  TextField,
-  Select,
+  Card,
+  CardContent,
+  Stack,
   MenuItem,
+  Select,
   FormControl,
   InputLabel,
   FormHelperText,
 } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+import FormInput from "../../../components/FormInput";
+import { CreateGroupDTO } from "api/group.type";
+import { useGroupApi } from "../api/GroupApi";
+import { useKindergartenApi } from "../../kindergarten/api/KindergartenApi";
 
-import { CreateGroupDTO, GroupDTO } from "api/group.type";
-import { KindergartenDTO } from "api/kindergarten.type";
-
-type GroupFormProps = {
-  onAddGroup: (group: GroupDTO) => void;
-};
-
-export default function GroupForm(props: GroupFormProps) {
-  const queryClient = useQueryClient();
-
-  const { onAddGroup } = props;
+export default function GroupForm() {
+  const { createMutation } = useGroupApi();
+  const { kindergartens, isLoading: isLoadingKitas } = useKindergartenApi();
 
   const {
     control,
@@ -33,96 +27,83 @@ export default function GroupForm(props: GroupFormProps) {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CreateGroupDTO>();
-
-  const {
-    data: kindergartens = [],
-    isLoading,
-    error,
-  } = useQuery<KindergartenDTO[]>({
-    queryKey: ["kindergartens"],
-    queryFn: kindergartenAPI.getAll,
-  });
-
-  const mutation = useMutation<GroupDTO, Error, CreateGroupDTO>({
-    mutationFn: groupAPI.create,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ["groups"],
-      });
-
-      onAddGroup?.(data);
-      reset();
+  } = useForm<CreateGroupDTO>({
+    defaultValues: {
+      groupName: "",
+      kindergartenId: "",
     },
   });
 
   const onSubmit = (data: CreateGroupDTO) => {
-    mutation.mutate(data);
+    createMutation.mutate(data, {
+      onSuccess: () => {
+        reset();
+      },
+    });
   };
 
-  if (isLoading) return <Typography>Lädt Kindergärten...</Typography>;
-  if (error) return <Typography color="error">Fehler beim Laden!</Typography>;
+  if (isLoadingKitas) return <Typography>Lädt Kindergärten...</Typography>;
 
   return (
-    <Box component="section" sx={{ maxWidth: 400 }}>
-      <Typography variant="h6" gutterBottom>
-        Gruppe erstellen
+    <Box component="section">
+      <Typography variant="h4" mb={2}>
+        Neue Gruppe erstellen
       </Typography>
 
-      <Card elevation={5} sx={{ p: 3 }}>
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-          <TextField
-            fullWidth
-            label="Gruppenname"
-            margin="normal"
-            {...register("groupName", {
-              required: "Name ist erforderlich",
-            })}
-            error={!!errors.groupName}
-            helperText={errors.groupName?.message}
-          />
+      <Card elevation={5}>
+        <CardContent>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+            <Stack spacing={3}>
+              <FormInput
+                label="Gruppenname"
+                register={register("groupName", {
+                  required: "Gruppenname ist erforderlich",
+                })}
+                errorMessage={errors.groupName?.message}
+              />
 
-          <FormControl
-            fullWidth
-            margin="normal"
-            error={!!errors.kindergartenId}
-          >
-            <InputLabel>Kindergarten</InputLabel>
+              <FormControl fullWidth error={!!errors.kindergartenId}>
+                <InputLabel id="kindergarten-label">Kindergarten</InputLabel>
+                <Controller
+                  name="kindergartenId"
+                  control={control}
+                  rules={{ required: "Bitte Kindergarten auswählen" }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      labelId="kindergarten-label"
+                      label="Kindergarten"
+                    >
+                      {kindergartens.map((kita) => (
+                        <MenuItem key={kita.uuid} value={kita.uuid}>
+                          {kita.kindergartenName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+                <FormHelperText>
+                  {errors.kindergartenId?.message}
+                </FormHelperText>
+              </FormControl>
 
-            <Controller
-              name="kindergartenId"
-              control={control}
-              rules={{ required: "Bitte Kindergarten auswählen" }}
-              render={({ field }) => (
-                <Select {...field} label="Kindergarten">
-                  {kindergartens.map((kita) => (
-                    <MenuItem key={kita.uuid} value={kita.uuid}>
-                      {kita.kindergartenName}
-                    </MenuItem>
-                  ))}
-                </Select>
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                disabled={createMutation.isPending}
+              >
+                {createMutation.isPending ? "Speichern..." : "Erstellen"}
+              </Button>
+
+              {createMutation.isError && (
+                <Typography color="error" textAlign="center">
+                  Fehler: {createMutation.error.message}
+                </Typography>
               )}
-            />
-
-            <FormHelperText>{errors.kindergartenId?.message}</FormHelperText>
-          </FormControl>
-
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ mt: 3 }}
-            disabled={mutation.isPending}
-          >
-            {mutation.isError ? "Speichern..." : "Erstellen"}
-          </Button>
-
-          {mutation.isError && (
-            <Typography color="error" mt={2}>
-              Fehler beim Speichern
-            </Typography>
-          )}
-        </Box>
+            </Stack>
+          </Box>
+        </CardContent>
       </Card>
     </Box>
   );

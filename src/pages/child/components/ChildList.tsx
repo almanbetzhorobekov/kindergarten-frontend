@@ -31,7 +31,6 @@ export default function ChildList() {
     updateMutation,
     deleteMutation,
     deactivateMutation,
-    changeGroupMutation,
   } = useChildApi({ page });
 
   const getGroupName = (groupID: string): string =>
@@ -58,16 +57,6 @@ export default function ChildList() {
     if (window.confirm(`Kind ${child.firstName} inaktiv setzen?`)) {
       await deactivateMutation.mutateAsync(child.uuid);
     }
-  };
-
-  const handleChangeGroup = async (
-    child: ChildDTO,
-    newGroupId: string,
-  ): Promise<void> => {
-    await changeGroupMutation.mutateAsync({
-      uuid: child.uuid,
-      groupId: newGroupId,
-    });
   };
 
   const handleSaveEdit = async (

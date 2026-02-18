@@ -1,20 +1,18 @@
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Box, Button, Stack, MenuItem } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import FormInput from "../../../components/FormInput";
-import FormSelect from "../../../components/FormSelect";
 import {
   GroupEditFormProps,
   GroupEditFormValues,
   mapFormToUpdateGroup,
-} from "pages/group/components/mapGroupToUpdates";
+} from "./mapGroupToUpdates";
 
 export default function GroupEditForm({
   group,
-  kindergartens,
-  educators,
   onSave,
   onCancel,
-}: GroupEditFormProps) {
+}: Omit<GroupEditFormProps, "kindergartens" | "educators">) {
   const {
     register,
     handleSubmit,
@@ -23,46 +21,48 @@ export default function GroupEditForm({
   } = useForm<GroupEditFormValues>({
     defaultValues: {
       groupName: group.groupName,
-      kindergartenId: group.kindergartenId,
-      educatorId: group.educatorId,
     },
   });
 
+  useEffect(() => {
+    reset({
+      groupName: group.groupName ?? "",
+    });
+  }, [group, reset]);
+
   const onSubmit: SubmitHandler<GroupEditFormValues> = (data) => {
-    const updated = mapFormToUpdateGroup(data);
-    onSave(group.uuid, updated);
+    onSave(group.uuid, mapFormToUpdateGroup(data));
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={2}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      sx={{ pt: 1.5 }}
+    >
+      <Stack spacing={3}>
         <FormInput
           label="Gruppenname"
-          {...register("groupName", {
-            required: "Gruppenname ist erforderlich",
-          })}
+          //
+          {...register("groupName", { required: "Name erforderlich" })}
           errorMessage={errors.groupName?.message}
+          fullWidth
         />
 
-        <FormSelect
-          label="Kindergarten"
-          {...register("kindergartenId", {
-            required: "Kindergarten auswählen",
-          })}
-          options={kindergartens.map((k) => ({ value: k.uuid, label: k.name }))}
-        />
-
-        <FormSelect
-          label="Erzieher"
-          {...register("educatorId", { required: "Erzieher auswählen" })}
-          options={educators.map((e) => ({ value: e.uuid, label: e.name }))}
-        />
-
-        <Stack direction="row" spacing={2}>
-          <Button type="submit" variant="contained">
+        <Stack direction="row" spacing={2} pt={1}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ fontWeight: "bold", textTransform: "none", px: 4 }}
+          >
             Speichern
           </Button>
-          <Button variant="outlined" onClick={onCancel}>
+          <Button
+            variant="outlined"
+            onClick={onCancel}
+            sx={{ textTransform: "none", px: 4 }}
+          >
             Abbrechen
           </Button>
         </Stack>
