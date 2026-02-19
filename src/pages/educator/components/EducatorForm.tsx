@@ -1,10 +1,6 @@
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import FormSelect from "../../../components/FormSelect";
 import FormInput from "../../../components/FormInput";
-import { educatorAPI } from "../../../api/educatorService";
-
 import {
   Box,
   Button,
@@ -13,22 +9,24 @@ import {
   Card,
   Stack,
 } from "@mui/material";
-import { CreateEducatorDTO, EducatorDTO } from "api/educator.type";
+import { CreateEducatorDTO } from "api/educator.type";
 import { useEducatorApi } from "../api/EducatorApi";
 
+import {
+  filterGroupsByKindergarten,
+  mapKindergartensToOptions,
+} from "pages/child/lib/childForm.utils";
+import { handleCreateEducatorSubmit } from "../lib/educatorForm.handlers";
+
 type EducatorFormProps = {
-  onAddEducator: (educator: CreateEducatorFormValues) => void;
+  onAddEducator?: (educator: any) => void;
 };
 
 type CreateEducatorFormValues = CreateEducatorDTO & {
   groupID: string;
 };
 
-export default function EducatorForm(props: EducatorFormProps) {
-  const { onAddEducator } = props;
-
-  const queryClient = useQueryClient();
-
+export default function EducatorForm({ onAddEducator }: EducatorFormProps) {
   const {
     control,
     register,
@@ -38,15 +36,14 @@ export default function EducatorForm(props: EducatorFormProps) {
     formState: { errors },
   } = useForm<CreateEducatorFormValues>({
     defaultValues: {
+      firstName: "",
+      lastName: "",
       email: "",
       phoneNumber: "",
-      firstName: "",
-      birthday: new Date(),
-      lastName: "",
+      birthday: "",
       kindergartenId: "",
       groupID: "",
       addressDTO: {
-        uuid: "",
         plz: "",
         street: "",
         houseNumber: "",
@@ -59,112 +56,106 @@ export default function EducatorForm(props: EducatorFormProps) {
 
   const selectedKindergartenId = watch("kindergartenId");
 
-  const kindergartenOptions = kindergartens.map((k) => ({
-    value: k.uuid,
-    label: k.kindergartenName,
-  }));
+  const kindergartenOptions = mapKindergartensToOptions(kindergartens);
 
-  const filteredGroupOptions = groups
-    .filter((g) => g.kindergartenId === selectedKindergartenId)
-    .map((g) => ({
-      value: g.uuid,
-      label: g.groupName,
-    }));
+  const filteredGroupOptions = filterGroupsByKindergarten(
+    groups,
+    selectedKindergartenId,
+  );
 
-  const mutation = useMutation({
-    mutationFn: educatorAPI.create,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["educators"] });
-      reset();
-    },
-  });
-
-  const onSubmit: SubmitHandler<CreateEducatorFormValues> = (data) => {
-    mutation.mutate(data);
-    if (mutation.isSuccess && onAddEducator) {
-      onAddEducator(data);
-    }
-  };
+  const onSubmit = handleCreateEducatorSubmit(createEducator, onAddEducator);
 
   return (
-    <Box component={"section"}>
-      <Card sx={{ mb: 4 }} elevation={5}>
+    <Box component="section">
+      <Card sx={{ mb: 4 }} elevation={3}>
         <CardContent>
+          <Typography variant="h6" gutterBottom>
+            Erzieher anmelden
+          </Typography>
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={3}>
-              <FormInput
-                label="Vorname"
-                {...register("firstName", {
-                  required: "Vorname ist erforderlich",
-                })}
-                error={!!errors.firstName}
-                helperText={errors.firstName?.message}
-              />
+              <Stack direction="row" spacing={2}>
+                <FormInput
+                  label="Vorname"
+                  register={register("firstName", { required: "Pflichtfeld" })}
+                  errorMessage={errors.firstName?.message}
+                />
+                <FormInput
+                  label="Nachname"
+                  register={register("lastName", { required: "Pflichtfeld" })}
+                  errorMessage={errors.lastName?.message}
+                />
+              </Stack>
 
               <FormInput
-                label="Nachname"
-                {...register("lastName", {
-                  required: "Nachname ist erforderlich",
-                })}
-                error={!!errors.lastName}
-                helperText={errors.lastName?.message}
-              />
-
-              <FormInput
+                label="Geburtsdatum"
                 type="date"
-                {...register("birthday", {
-                  required: "Geburtsdatum ist erforderlich",
-                })}
-                error={!!errors.birthday}
-                helperText={errors.birthday?.message}
+                InputLabelProps={{ shrink: true }}
+                register={register("birthday", { required: "Pflichtfeld" })}
+                errorMessage={errors.birthday?.message}
               />
 
               <Box>
-                <Typography variant="subtitle1">Adresse</Typography>
-
-                <Stack spacing={2} direction="row">
-                  <FormInput
-                    label="Straße"
-                    {...register("addressDTO.street", {
-                      required: "Straße ist erforderlich",
-                    })}
-                    error={!!errors.addressDTO?.street}
-                    helperText={errors.addressDTO?.street?.message}
-                  />
-
-                  <FormInput
-                    label="Nr."
-                    {...register("addressDTO.houseNumber", {
-                      required: "Hausnummer ist erforderlich",
-                    })}
-                    error={!!errors.addressDTO?.houseNumber}
-                    helperText={errors.addressDTO?.houseNumber?.message}
-                  />
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  sx={{ mb: 1 }}
+                >
+                  Adresse
+                </Typography>
+                <Stack spacing={2}>
+                  <Stack direction="row" spacing={2}>
+                    <FormInput
+                      label="Straße"
+                      register={register("addressDTO.street", {
+                        required: "Pflichtfeld",
+                      })}
+                      errorMessage={errors.addressDTO?.street?.message}
+                    />
+                    <FormInput
+                      label="Nr."
+                      register={register("addressDTO.houseNumber", {
+                        required: "Pflichtfeld",
+                      })}
+                      errorMessage={errors.addressDTO?.houseNumber?.message}
+                    />
+                  </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <FormInput
+                      label="PLZ"
+                      register={register("addressDTO.plz", {
+                        required: "Pflichtfeld",
+                      })}
+                      errorMessage={errors.addressDTO?.plz?.message}
+                    />
+                    <FormInput
+                      label="Stadt"
+                      register={register("addressDTO.city", {
+                        required: "Pflichtfeld",
+                      })}
+                      errorMessage={errors.addressDTO?.city?.message}
+                    />
+                  </Stack>
                 </Stack>
-
-                <FormInput
-                  label="PLZ"
-                  {...register("addressDTO.plz", {
-                    required: "PLZ ist erforderlich",
-                  })}
-                  error={!!errors.addressDTO?.plz}
-                  helperText={errors.addressDTO?.plz?.message}
-                />
               </Box>
 
               <FormInput
+                label="Email"
+                type="email"
+                register={register("email", { required: "Pflichtfeld" })}
+                errorMessage={errors.email?.message}
+              />
+
+              <FormInput
                 label="Telefonnummer"
-                {...register("phoneNumber", {
-                  required: "Telefonnummer ist erforderlich",
-                })}
-                error={!!errors.phoneNumber}
-                helperText={errors.phoneNumber?.message}
+                register={register("phoneNumber", { required: "Pflichtfeld" })}
+                errorMessage={errors.phoneNumber?.message}
               />
 
               <Controller
                 name="kindergartenId"
                 control={control}
-                rules={{ required: "Kindergarten auswählen" }}
+                rules={{ required: "Auswählen" }}
                 render={({ field }) => (
                   <FormSelect
                     label="Kindergarten"
@@ -179,9 +170,7 @@ export default function EducatorForm(props: EducatorFormProps) {
               <Controller
                 name="groupID"
                 control={control}
-                rules={{
-                  required: "Gruppe auswählen",
-                }}
+                rules={{ required: "Auswählen" }}
                 render={({ field }) => (
                   <FormSelect
                     label="Gruppe"
@@ -197,17 +186,14 @@ export default function EducatorForm(props: EducatorFormProps) {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={mutation.isPending}
-                sx={{ alignSelf: "flex-start" }}
+                color="primary"
+                disabled={createEducator.isPending}
+                sx={{ py: 1.5 }}
               >
-                {mutation.isPending ? "Speichern..." : "Anmelden"}
+                {createEducator.isPending
+                  ? "Speichern..."
+                  : "Erzieher Anmelden"}
               </Button>
-
-              {mutation.isError && (
-                <Typography style={{ color: "red " }}>
-                  Fehler beim Speichern
-                </Typography>
-              )}
             </Stack>
           </Box>
         </CardContent>

@@ -1,46 +1,123 @@
-import { useQuery } from "@tanstack/react-query";
-import { educatorAPI } from "../../../api/educatorService";
-import { groupAPI } from "../../../api/groupService";
-import { Box, List, ListItem, Typography } from "@mui/material";
+import { useState } from "react";
+import {
+  Box,
+  Stack,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Pagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from "@mui/material";
+import { useEducatorApi } from "../api/EducatorApi";
+import { EducatorDTO } from "api/educator.type";
+import EducatorEditForm from "../components/EducatorEditForm";
 
 export default function EducatorListe() {
+  const [page, setPage] = useState(1);
+  const [editItem, setEditItem] = useState<EducatorDTO | null>(null);
+
   const {
-    data: educators = [],
+    educators,
+    totalPages,
     isLoading,
     error,
-  } = useQuery({
-    queryKey: ["educators"],
-    queryFn: () => educatorAPI.getAll(),
-  });
-
-  const { data: groups = [] } = useQuery({
-    queryKey: ["groups"],
-    queryFn: groupAPI.getAll,
-  });
-
-  const getGroupName = (groupID: string) => {
-    const group = groups.find((g) => g.uuid === groupID);
-    return group?.groupName || "-";
-  };
+    deleteMutation,
+    updateMutation,
+  } = useEducatorApi({ page });
 
   if (isLoading) return <Typography>Laden...</Typography>;
-  if (error) return <Typography>Fehler beim Laden der Erzieher</Typography>;
+  if (error) return <Typography color="error">Fehler beim Laden.</Typography>;
 
-  console.log(educators);
   return (
-    <Box component={"section"}>
-      <Typography variant="h3">Erzieher Liste</Typography>
-      {educators.length === 0 ? (
-        <Typography>Keine Erzieher hinzugefügt.</Typography>
-      ) : (
-        <List>
-          {educators.map((educator, index) => (
-            <ListItem key={educator.uuid ?? index}>
-              {educator.firstName} {educator.lastName}
-            </ListItem>
-          ))}
-        </List>
-      )}
+    <Box>
+      <Typography variant="h5" gutterBottom>
+        Erzieher Liste
+      </Typography>
+      <Stack spacing={2}>
+        {educators.map((edu) => (
+          <Card key={edu.uuid} elevation={2}>
+            <CardContent
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                  {edu.firstName} {edu.lastName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {edu.email} | {edu.phoneNumber}
+                </Typography>
+                <Typography variant="caption" display="block">
+                  Gruppen:{" "}
+                  {edu.groupIds?.map((g) => g.groupName).join(", ") || "-"}
+                </Typography>
+              </Box>
+              <Stack direction="row" spacing={1}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => setEditItem(edu)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  color="error"
+                  onClick={() =>
+                    window.confirm("Löschen?") &&
+                    deleteMutation.mutate(edu.uuid)
+                  }
+                >
+                  Delete
+                </Button>
+              </Stack>
+            </CardContent>
+          </Card>
+        ))}
+      </Stack>
+
+      <Pagination
+        count={totalPages}
+        page={page}
+        onChange={(_, v) => setPage(v)}
+        sx={{ mt: 3, display: "flex", justifyContent: "center" }}
+      />
+
+      <Dialog
+        open={!!editItem}
+        onClose={() => setEditItem(null)}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Erzieher bearbeiten</DialogTitle>
+        <DialogContent>
+          {editItem && (
+            <EducatorEditForm
+              educator={editItem}
+              onCancel={() => setEditItem(null)}
+              onSave={async (uuid: string, data: EducatorDTO) => {
+                const payload = {
+                  ...data,
+                  groupIds: Array.isArray(data.groupIds)
+                    ? data.groupIds.map((g: any) =>
+                        typeof g === "string" ? g : g.uuid,
+                      )
+                    : [],
+                };
+                await updateMutation.mutateAsync({ uuid, data: payload });
+                setEditItem(null);
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 }

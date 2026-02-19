@@ -8,8 +8,8 @@ import {
 const EDUCATORS_URL = "/api/educators";
 
 export const educatorAPI = {
-  getAll: (page = 0, size = 5): Promise<EducatorDTO[]> =>
-    fetchService(EDUCATORS_URL),
+  getAll: (page = 0, size = 10): Promise<any> =>
+    fetchService(`${EDUCATORS_URL}?page=${page}&size=${size}`),
 
   getById: (uuid: string): Promise<EducatorDTO> =>
     fetchService(`${EDUCATORS_URL}/${uuid}`),

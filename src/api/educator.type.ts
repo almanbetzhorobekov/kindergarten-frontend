@@ -11,5 +11,7 @@ export type EducatorDTO = Person & {
   addressDTO: AddressDTO;
 };
 
-export type CreateEducatorDTO = Omit<EducatorDTO, "uuid">;
-export type UpdateEducatorDTO = Partial<Omit<GroupDTO, "uuid">>;
+export type CreateEducatorDTO = Omit<EducatorDTO, "uuid" | "groupIds"> & {
+  groupIds: string[];
+};
+export type UpdateEducatorDTO = Partial<CreateEducatorDTO>;
