@@ -11,63 +11,42 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
-import { ParentsDTO, UpdateParentsDTO } from "api/parents.type";
+import { ParentsDTO } from "api/parents.type";
 import { useParentsApi } from "../api/ParentsApi";
-import ParentEditForm from "../components/ParentEditForm";
+import ParentEditForm from "./ParentEditForm";
 
 export default function ParentsList() {
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState(1);
   const [editParent, setEditParent] = useState<ParentsDTO | null>(null);
-  const [openEdit, setOpenEdit] = useState<boolean>(false);
 
-  const { parents, isLoading, error, updateMutation, deleteMutation } =
-    useParentsApi({ page });
+  const {
+    parents,
+    totalPages,
+    isLoading,
+    error,
+    updateMutation,
+    deleteMutation,
+  } = useParentsApi(page);
 
   if (isLoading) return <Typography sx={{ p: 2 }}>Lädt...</Typography>;
   if (error)
     return (
       <Typography color="error" sx={{ p: 2 }}>
-        Fehler при загрузке родителей
+        Fehler beim Laden
       </Typography>
     );
 
-  const ITEMS_PER_PAGE = 5;
-  const pageCount = Math.ceil(parents.length / ITEMS_PER_PAGE);
-  const paginatedParents = parents.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE,
-  );
-
-  const handleEdit = (parent: ParentsDTO) => {
-    setEditParent(parent);
-    setOpenEdit(true);
-  };
-
-  const handleDelete = async (parent: ParentsDTO) => {
-    if (window.confirm(`Elternteil ${parent.firstName} ${parent.lastName} `)) {
-      await deleteMutation.mutateAsync(parent.uuid);
-    }
-  };
-
-  const handleSaveEdit = async (uuid: string, data: UpdateParentsDTO) => {
-    await updateMutation.mutateAsync({ uuid, data });
-    setOpenEdit(false);
-    setEditParent(null);
-  };
-
   return (
     <Box component="section" sx={{ mt: 4 }}>
-      <Typography variant="h6" gutterBottom>
-        Eltern Liste
+      <Typography variant="h5" mb={2}>
+        Eltern Übersicht
       </Typography>
 
       {parents.length === 0 ? (
-        <Typography color="text.secondary">
-          Keine Eltern hinzugefügt.
-        </Typography>
+        <Typography color="text.secondary">Keine Eltern gefunden.</Typography>
       ) : (
         <Stack spacing={2}>
-          {paginatedParents.map((parent) => (
+          {parents.map((parent) => (
             <Card key={parent.uuid} elevation={2}>
               <CardContent
                 sx={{
@@ -77,33 +56,32 @@ export default function ParentsList() {
                 }}
               >
                 <Box>
-                  <Typography sx={{ fontWeight: "bold" }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
                     {parent.firstName} {parent.lastName}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Tel: {parent.phoneNumber}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Kinder:{" "}
-                    {parent.childrenId
-                      ?.map((c) => `${c.firstName}`)
-                      .join(", ") || "-"}
+                    Tel: {parent.phoneNumber} | Kinder:{" "}
+                    {parent.childrenId?.map((c) => c.firstName).join(", ") ||
+                      "-"}
                   </Typography>
                 </Box>
-
                 <Stack direction="row" spacing={1}>
                   <Button
-                    variant="outlined"
                     size="small"
-                    onClick={() => handleEdit(parent)}
+                    variant="outlined"
+                    onClick={() => setEditParent(parent)}
                   >
                     Edit
                   </Button>
                   <Button
-                    variant="outlined"
                     size="small"
+                    variant="outlined"
                     color="error"
-                    onClick={() => handleDelete(parent)}
+                    disabled={deleteMutation.isPending}
+                    onClick={() =>
+                      window.confirm("Löschen?") &&
+                      deleteMutation.mutate(parent.uuid)
+                    }
                   >
                     Delete
                   </Button>
@@ -114,20 +92,20 @@ export default function ParentsList() {
         </Stack>
       )}
 
-      {pageCount > 1 && (
-        <Box display="flex" justifyContent="flex-end" mt={2}>
+      {totalPages > 1 && (
+        <Box display="flex" justifyContent="center" mt={3}>
           <Pagination
-            count={pageCount}
+            count={totalPages}
             page={page}
-            onChange={(_, value) => setPage(value)}
             color="primary"
+            onChange={(_, value) => setPage(value)}
           />
         </Box>
       )}
 
       <Dialog
-        open={openEdit}
-        onClose={() => setOpenEdit(false)}
+        open={!!editParent}
+        onClose={() => setEditParent(null)}
         maxWidth="sm"
         fullWidth
       >
@@ -136,8 +114,11 @@ export default function ParentsList() {
           {editParent && (
             <ParentEditForm
               parent={editParent}
-              onSave={handleSaveEdit}
-              onCancel={() => setOpenEdit(false)}
+              onCancel={() => setEditParent(null)}
+              onSave={async (uuid, data) => {
+                await updateMutation.mutateAsync({ uuid, data });
+                setEditParent(null);
+              }}
             />
           )}
         </DialogContent>

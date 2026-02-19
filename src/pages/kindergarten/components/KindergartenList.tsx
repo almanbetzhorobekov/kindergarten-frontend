@@ -7,21 +7,31 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Pagination,
 } from "@mui/material";
 import { useState } from "react";
 import { KindergartenDTO, UpdateKindergartenDTO } from "api/kindergarten.type";
 import { useKindergartenApi } from "../api/KindergartenApi";
 import KindergartenEditForm from "./KindergartenEditForm";
 
-export default function KindergartenList() {
-  const { kindergartens, isLoading, error, deleteMutation, updateMutation } =
-    useKindergartenApi();
+const pageSize = 5;
 
+export default function KindergartenList() {
+  const [page, setPage] = useState(1);
   const [editingKita, setEditingKita] = useState<KindergartenDTO | null>(null);
   const [openEdit, setOpenEdit] = useState<boolean>(false);
 
+  const { kindergartens, isLoading, error, deleteMutation, updateMutation } =
+    useKindergartenApi();
+
   if (isLoading) return <Typography>Lädt...</Typography>;
   if (error) return <Typography color="error">Fehler!</Typography>;
+
+  const totalPages = Math.ceil(kindergartens.length / pageSize);
+  const paginatedKitas = kindergartens.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
 
   const handleEdit = (kita: KindergartenDTO) => {
     setEditingKita(kita);
@@ -35,7 +45,7 @@ export default function KindergartenList() {
   };
 
   const handleDelete = (uuid: string) => {
-    if (window.confirm("Kindergarten wirklich löschen?")) {
+    if (window.confirm("Kindergarten действительно удалить?")) {
       deleteMutation.mutate(uuid);
     }
   };
@@ -47,37 +57,28 @@ export default function KindergartenList() {
       </Typography>
 
       <Stack spacing={2}>
-        {kindergartens.map((kita) => (
+        {paginatedKitas.map((kita) => (
           <Paper
             key={kita.uuid}
             elevation={1}
-            sx={{
-              p: 2,
-              "&:hover": { bgcolor: "action.hover" },
-            }}
+            sx={{ p: 2, "&:hover": { bgcolor: "action.hover" } }}
           >
             <Box
               sx={{
                 display: "flex",
-                alignItems: "flex-start",
                 justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
               <Box>
-                <Typography variant="h6" lineHeight={1.2}>
-                  {kita.kindergartenName}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 0.5 }}
-                >
+                <Typography variant="h6">{kita.kindergartenName}</Typography>
+                <Typography variant="body2" color="text.secondary">
                   {kita.address.street} {kita.address.houseNumber},{" "}
                   {kita.address.plz} {kita.address.city}
                 </Typography>
               </Box>
 
-              <Stack direction="row" spacing={1} sx={{ ml: 2 }}>
+              <Stack direction="row" spacing={1}>
                 <Button
                   variant="outlined"
                   size="small"
@@ -85,7 +86,6 @@ export default function KindergartenList() {
                 >
                   Edit
                 </Button>
-
                 <Button
                   variant="outlined"
                   size="small"
@@ -100,6 +100,17 @@ export default function KindergartenList() {
           </Paper>
         ))}
       </Stack>
+
+      {totalPages > 1 && (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+            color="primary"
+          />
+        </Box>
+      )}
 
       <Dialog
         open={openEdit}

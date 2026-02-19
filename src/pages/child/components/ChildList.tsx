@@ -13,8 +13,9 @@ import {
   DialogTitle,
   DialogContent,
 } from "@mui/material";
-import { useChildApi } from "../api/ChildApi";
 import ChildEditForm from "./ChildEditForm";
+
+import { useChildApi } from "../api/ChildApi";
 
 export default function ChildList() {
   const [page, setPage] = useState<number>(1);
@@ -130,7 +131,7 @@ export default function ChildList() {
       )}
 
       {pageCount > 1 && (
-        <Box display="flex" justifyContent="flex-end" mt={2}>
+        <Box display="flex" justifyContent="center" mt={3}>
           <Pagination
             count={pageCount}
             page={page}

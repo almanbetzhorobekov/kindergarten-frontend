@@ -7,6 +7,15 @@ import {
   Divider,
 } from "@mui/material";
 
+interface ContactCardProps {
+  firstName: string;
+  lastName: string;
+  role: string;
+  email: string;
+  phone: string;
+  workTime: string;
+}
+
 export default function ContactCard({
   firstName,
   lastName,
@@ -14,7 +23,7 @@ export default function ContactCard({
   email,
   phone,
   workTime,
-}) {
+}: ContactCardProps) {
   return (
     <Card
       sx={{

@@ -1,14 +1,14 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Layout from "./pages/layout/Layout.jsx";
+import Layout from "./pages/layout/Layout";
 
-import HomePage from "./pages/home/HomePage.jsx";
-import KindergartenPage from "./pages/kindergarten/KindergartenPage.jsx";
-import GroupPage from "./pages/group/GroupPage.jsx";
-import ChildPage from "./pages/child/ChildPage.jsx";
-import ParentsPage from "./pages/parents/ParentsPage.jsx";
-import EducatorPage from "./pages/educator/EducatorPage.jsx";
-import AboutMePage from "./pages/about-me/AboutMePage.jsx";
-import ContactPage from "./pages/contact/ContactPage.jsx";
+import HomePage from "./pages/home/HomePage";
+import KindergartenPage from "./pages/kindergarten/KindergartenPage";
+import GroupPage from "./pages/group/GroupPage";
+import ChildPage from "./pages/child/ChildPage";
+import ParentsPage from "./pages/parents/ParentsPage";
+import EducatorPage from "./pages/educator/EducatorPage";
+import AboutMePage from "./pages/about-me/AboutMePage";
+import ContactPage from "./pages/contact/ContactPage";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";

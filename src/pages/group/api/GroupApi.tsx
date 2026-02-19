@@ -1,9 +1,5 @@
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
-import {
-  GroupDTO,
-  CreateGroupDTO,
-  UpdateGroupDTO,
-} from "api/group.type";
+import { GroupDTO, CreateGroupDTO, UpdateGroupDTO } from "api/group.type";
 import { groupAPI } from "api/groupService";
 
 export const QUERY_KEY_GROUPS = "groups";
@@ -34,8 +30,7 @@ export function useGroupApi() {
   });
 
   const updateMutation = useMutation<void, Error, UpdateParams>({
-    mutationFn: ({ uuid, data }) =>
-      groupAPI.update(uuid, data),
+    mutationFn: ({ uuid, data }) => groupAPI.update(uuid, data),
     onSuccess: () =>
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEY_GROUPS],

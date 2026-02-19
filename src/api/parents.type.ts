@@ -9,33 +9,18 @@ export type ParentsDTO = Person & {
   phoneNumber: string;
 };
 
-export type CreateParentsDTO = Omit<
-  ParentsDTO,
-  "uuid" | "addressDTO" | "childrenId"
-> & {
+export type CreateParentsDTO = Person & {
   addressDTO: CreateAddressDTO;
-
-  childrenId: string[];
-};
-/*export type UpdateParentsDTO = Partial<
-  Omit<ParentsDTO, "uuid" | "addressDTO" | "childrenId">
-> & {
-  addressDTO?: Partial<CreateAddressDTO>;
-  childrenId?: string[];
-};*/
-export type UpdateParentsDTO = Person & {
-  addressDTO?: {
-    plz?: string;
-    street?: string;
-    houseNumber?: string;
-    city?: string;
-  };
   childrenId: string[];
   phoneNumber: string;
 };
 
-export type ParentsFormProps = {
-  onAddParent: (parents: ParentsDTO) => void;
+export type UpdateParentsDTO = Partial<Person> & {
+  addressDTO?: Partial<CreateAddressDTO>;
+  childrenId?: string[];
+  phoneNumber?: string;
 };
 
-export type ParentsFormValues = CreateParentsDTO;
+export interface ParentsFormProps {
+  onAddParent?: (parent: ParentsDTO) => void;
+}

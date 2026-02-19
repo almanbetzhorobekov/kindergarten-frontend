@@ -40,7 +40,6 @@ export default function KindergartenEditForm({
 
   const onSubmit: SubmitHandler<KindergartenEditFormValues> = (data) => {
     const updateData = mapFormToUpdateKindergarten(data);
-
     onSave(kindergarten.uuid, updateData);
   };
 
@@ -49,35 +48,31 @@ export default function KindergartenEditForm({
       <Stack spacing={2}>
         <FormInput
           label="Kindergarten Name"
-          {...register("kindergartenName", {
+          register={register("kindergartenName", {
             required: "Name ist erforderlich",
           })}
           errorMessage={errors.kindergartenName?.message}
         />
-
         <FormInput
           label="PLZ"
-          {...register("plz", { required: "PLZ ist erforderlich" })}
+          register={register("plz", { required: "PLZ ist erforderlich" })}
           errorMessage={errors.plz?.message}
         />
-
         <FormInput
           label="Straße"
-          {...register("street", { required: "Straße ist erforderlich" })}
+          register={register("street", { required: "Straße ist erforderlich" })}
           errorMessage={errors.street?.message}
         />
-
         <FormInput
           label="Hausnummer"
-          {...register("houseNumber", {
+          register={register("houseNumber", {
             required: "Hausnummer ist erforderlich",
           })}
           errorMessage={errors.houseNumber?.message}
         />
-
         <FormInput
           label="Stadt"
-          {...register("city", { required: "Stadt ist erforderlich" })}
+          register={register("city", { required: "Stadt ist erforderlich" })}
           errorMessage={errors.city?.message}
         />
 

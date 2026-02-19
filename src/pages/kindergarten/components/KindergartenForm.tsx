@@ -17,7 +17,6 @@ export default function KindergartenForm() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const formData = new FormData(event.currentTarget);
 
     const address: CreateAddressDTO = {
@@ -41,28 +40,27 @@ export default function KindergartenForm() {
       <Typography variant="h4" mb={2}>
         Neuen Kindergarten erstellen
       </Typography>
-
       <Card elevation={5}>
         <CardContent>
           <Box component="form" onSubmit={handleSubmit}>
             <Stack spacing={3}>
               <FormInput
-                type="text"
                 name="kindergartenName"
                 label="Kindergartenname"
                 required
               />
-
               <Divider />
-
               <Stack spacing={2}>
                 <FormInput name="street" label="Straße" required />
                 <FormInput name="houseNumber" label="Hausnummer" required />
                 <FormInput name="plz" label="PLZ" required />
                 <FormInput name="city" label="Stadt" required />
               </Stack>
-
-              <Button type="submit" variant="contained">
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={createMutation.isPending}
+              >
                 Erstellen
               </Button>
             </Stack>

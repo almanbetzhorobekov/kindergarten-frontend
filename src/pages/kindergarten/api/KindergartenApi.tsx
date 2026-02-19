@@ -28,25 +28,19 @@ export function useKindergartenApi() {
   const createMutation = useMutation<void, Error, CreateKindergartenDTO>({
     mutationFn: kindergartenAPI.create,
     onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY_KINDERGARTENS],
-      }),
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY_KINDERGARTENS] }),
   });
 
   const updateMutation = useMutation<void, Error, UpdateParams>({
     mutationFn: ({ uuid, data }) => kindergartenAPI.update(uuid, data),
     onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY_KINDERGARTENS],
-      }),
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY_KINDERGARTENS] }),
   });
 
   const deleteMutation = useMutation<void, Error, string>({
     mutationFn: kindergartenAPI.delete,
     onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY_KINDERGARTENS],
-      }),
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY_KINDERGARTENS] }),
   });
 
   return {

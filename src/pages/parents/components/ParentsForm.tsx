@@ -12,6 +12,8 @@ import {
 import { childAPI } from "../../../api/childService";
 import { useParentsApi } from "../api/ParentsApi";
 import { CreateParentsDTO, ParentsFormProps } from "../../../api/parents.type";
+import { PageDTO } from "api/page.type";
+import { ChildDTO } from "../../../api/child.type";
 import FormInput from "../../../components/FormInput";
 import FormSelect from "../../../components/FormSelect";
 
@@ -38,29 +40,30 @@ export default function ParentsForm({ onAddParent }: ParentsFormProps) {
     },
   });
 
-  const { createParents } = useParentsApi({ reset, page: 1 });
+  const { createMutation } = useParentsApi();
 
-  const { data: childrenData } = useQuery({
+  const { data: childrenData } = useQuery<PageDTO<ChildDTO>>({
     queryKey: ["children"],
     queryFn: () => childAPI.getAll(0, 100),
   });
 
-  const childOptions = (childrenData?.content || []).map((c: any) => ({
+  const childOptions = (childrenData?.content || []).map((c) => ({
     value: c.uuid,
     label: `${c.firstName} ${c.lastName}`,
   }));
 
   const onSubmit: SubmitHandler<CreateParentsDTO> = (data) => {
-    createParents.mutate(data as any, {
-      onSuccess: (savedParent: any) => {
-        if (onAddParent) onAddParent(savedParent as any);
+    createMutation.mutate(data, {
+      onSuccess: (savedParent) => {
+        reset();
+        if (onAddParent) onAddParent(savedParent);
       },
     });
   };
 
   return (
     <Box component="section" sx={{ mt: 2 }}>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
         Eltern anmelden
       </Typography>
 
@@ -90,8 +93,9 @@ export default function ParentsForm({ onAddParent }: ParentsFormProps) {
               />
 
               <Divider>
-                {" "}
-                <Typography variant="caption">Adresse</Typography>{" "}
+                <Typography variant="caption" color="text.secondary">
+                  ADRESSE
+                </Typography>
               </Divider>
 
               <FormInput
@@ -140,7 +144,8 @@ export default function ParentsForm({ onAddParent }: ParentsFormProps) {
                   <FormSelect
                     label="Kind auswählen"
                     options={childOptions}
-                    value={field.value?.[0] || ""}
+                    multiple
+                    value={field.value?.[0] || []}
                     onChange={(e) => field.onChange([e.target.value])}
                     error={errors.childrenId?.message}
                   />
@@ -150,10 +155,10 @@ export default function ParentsForm({ onAddParent }: ParentsFormProps) {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={createParents.isPending}
-                sx={{ mt: 2, fontWeight: "bold" }}
+                disabled={createMutation.isPending}
+                sx={{ mt: 2, height: 45, fontWeight: "bold" }}
               >
-                {createParents.isPending ? "Speichern..." : "Eltern speichern"}
+                {createMutation.isPending ? "Speichern..." : "Eltern speichern"}
               </Button>
             </Stack>
           </Box>

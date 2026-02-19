@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import ContactCard from "./ContactCard.jsx";
+import ContactCard from "./ContactCard";
 
 const contacts = [
   {
