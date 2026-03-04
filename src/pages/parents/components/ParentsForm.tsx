@@ -145,8 +145,8 @@ export default function ParentsForm({ onAddParent }: ParentsFormProps) {
                     label="Kind auswählen"
                     options={childOptions}
                     multiple
-                    value={field.value?.[0] || []}
-                    onChange={(e) => field.onChange([e.target.value])}
+                    value={field.value || []}
+                    onChange={(e) => field.onChange(e.target.value)}
                     error={errors.childrenId?.message}
                   />
                 )}
