@@ -21,8 +21,6 @@ export default function FormInput({
         error={!!errorMessage}
         helperText={errorMessage}
       />
-
-      {errorMessage && <Typography>{errorMessage}</Typography>}
     </Box>
   );
 }

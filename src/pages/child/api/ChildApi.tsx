@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { groupAPI } from "../../../api/groupService";
 import { kindergartenAPI } from "../../../api/kindergartenService";
 import { childAPI } from "../../../api/childService";
-import { ChildDTO } from "api/child.type";
+import { ChildDTO, CreateChildDTO } from "api/child.type";
 import { GroupDTO } from "api/group.type";
 import { KindergartenDTO } from "api/kindergarten.type";
 import { UpdateChildDTO } from "api/child.type";
@@ -43,7 +43,7 @@ export function useChildApi({ reset, page = 1 }: UseChildApiParams) {
   });
 
   const createChild = useMutation({
-    mutationFn: childAPI.create,
+    mutationFn: (data: CreateChildDTO) => childAPI.create(data),
     onSuccess: (data) => {
       console.log("onSuccess", data);
 
@@ -51,6 +51,9 @@ export function useChildApi({ reset, page = 1 }: UseChildApiParams) {
         queryKey: [QUERY_KEY_CHILDREN],
       });
       reset?.();
+    },
+    onError: (error) => {
+      console.error("Fehler beim neu Kind Erstellen: ", error);
     },
   });
 
@@ -98,6 +101,8 @@ export function useChildApi({ reset, page = 1 }: UseChildApiParams) {
         queryKey: [QUERY_KEY_CHILDREN, page],
       }),
   });
+
+  console.log(childrenPage, isLoading, error);
 
   return {
     kindergartens,

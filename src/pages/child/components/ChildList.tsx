@@ -89,7 +89,7 @@ export default function ChildList() {
                 }}
               >
                 <Box>
-                  <Typography>
+                  <Typography data-testid="children-name">
                     {child.firstName} {child.lastName}
                   </Typography>
                   <Typography color="text.secondary">
