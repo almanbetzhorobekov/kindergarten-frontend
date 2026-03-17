@@ -11,12 +11,21 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-import { useChildApi } from "../api/ChildApi";
-import { CreateChildFormValues, ChildFormProps } from "api/child.type";
+import {
+  QUERY_KEY_CHILDREN,
+  useChildApi,
+  usePostCreateChild,
+} from "../api/ChildApi";
+import {
+  CreateChildFormValues,
+  ChildFormProps,
+  CreateChildDTO,
+} from "api/child.type";
 import {
   filterGroupsByKindergarten,
   mapKindergartensToOptions,
 } from "../lib/childForm.utils";
+import { queryClient } from "App";
 
 export default function ChildForm(props: ChildFormProps) {
   const { onAddChild } = props;
@@ -39,7 +48,8 @@ export default function ChildForm(props: ChildFormProps) {
     },
   });
 
-  const { kindergartens, groups, createChild } = useChildApi({ reset });
+  const { kindergartens, groups } = useChildApi({ reset });
+  const { mutate, isPending, isError } = usePostCreateChild();
 
   const selectedKindergartenId = watch("kindergartenId");
 
@@ -50,7 +60,24 @@ export default function ChildForm(props: ChildFormProps) {
     selectedKindergartenId,
   );
 
-  const onSubmit = handleCreateChildSubmit(createChild, onAddChild);
+  //const onSubmit = handleCreateChildSubmit(createChild, onAddChild);
+  const onSubmit: SubmitHandler<CreateChildDTO> = (data) => {
+    console.log(onSubmit.name);
+
+    mutate(data, {
+      onSuccess: (newChild) => {
+        if (onAddChild) onAddChild(newChild);
+        console.log("onSuccess", data);
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEY_CHILDREN],
+        });
+        reset();
+      },
+      onError: (error) => {
+        console.error("Fehler beim neu Kind Erstellen: ", error);
+      },
+    });
+  };
 
   return (
     <Box component="section">
@@ -122,13 +149,13 @@ export default function ChildForm(props: ChildFormProps) {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={createChild?.isPending}
+                disabled={isPending}
                 sx={{ alignSelf: "flex-start" }}
               >
-                {createChild?.isPending ? "Speichern..." : "Anmelden"}
+                {isPending ? "Speichern..." : "Anmelden"}
               </Button>
 
-              {createChild?.isError && (
+              {isError && (
                 <Typography sx={{ color: "red" }}>
                   Fehler beim Speichern
                 </Typography>

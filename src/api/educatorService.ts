@@ -5,7 +5,7 @@ import {
   UpdateEducatorDTO,
 } from "./educator.type";
 
-const EDUCATORS_URL = "/api/educators";
+export const EDUCATORS_URL = "/api/educators";
 
 export const educatorAPI = {
   getAll: (page = 0, size = 10): Promise<any> =>

@@ -15,7 +15,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import theme from "./styling/theme.js";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: 6 * 60 * 1000,

@@ -5,7 +5,7 @@ import {
   UpdateKindergartenDTO,
 } from "./kindergarten.type";
 
-const KINDERGARTENS_URL = "/api/kindergartens";
+export const KINDERGARTENS_URL = "/api/kindergartens";
 
 export const kindergartenAPI = {
   getAll: (): Promise<KindergartenDTO[]> => fetchService(KINDERGARTENS_URL),
