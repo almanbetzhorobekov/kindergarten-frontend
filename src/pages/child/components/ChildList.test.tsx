@@ -1,7 +1,6 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import ChildList from "./ChildList";
-import { useChildApi } from "../api/ChildApi";
-import { vi, describe, test, expect, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach } from "vitest";
 import nock from "nock";
 import { CHILDREN_URL } from "api/childService";
 import { PageDTO } from "api/page.type";
@@ -13,7 +12,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 vi.mock("../api/ChildApi", () => ({
   useChildApi: vi.fn(),
 }));*/
-
+/*
+Настройка окружения (QueryClient):
+Создается экземпляр QueryClient с отключенными повторными попытками (retry: false).
+Это важно для тестов: если запрос упадет, мы хотим узнать об этом сразу, а не ждать,
+пока библиотека сделает 3 попытки.
+*/
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -48,18 +52,36 @@ describe("ChildList kompomemt new", () => {
     nock.cleanAll();
   });
 
+  /**
+   * Имитация сервера (nock):
+    Вместо реального обращения к API,
+    библиотека nock «перехватывает» HTTP-запрос к http://localhost:8080.
+    Когда компонент внутри теста пытается сделать GET запрос,
+    nock возвращает ваш тестовый объект CHILDREN_TEST_PAYLOAD с кодом 200.
+   */
+
   test("initial page load", async () => {
     nock(new URL("http://localhost:8080"))
       .persist()
       .get(`${CHILDREN_URL}?page=${0}&size=${5}`)
       .reply(200, CHILDREN_TEST_PAYLOAD);
-
+    /**
+     * Рендеринг:
+      Компонент оборачивается в QueryClientProvider.
+      Это необходимо, так как ChildList, скорее всего,
+      использует useQuery под капотом.
+     */
     render(
       <QueryClientProvider client={queryClient}>
         <ChildList />
       </QueryClientProvider>,
     );
-
+    /**
+     * Ожидание асинхронности (waitFor):
+      Поскольку запросы данных асинхронны,
+      тест сначала ждет, пока исчезнет надпись "Lädt..." (Загрузка).
+      Это сигнал того, что данные либо пришли, либо произошла ошибка
+     */
     await waitFor(() => {
       expect(screen.queryByText("Lädt...")).not.toBeInTheDocument();
     });

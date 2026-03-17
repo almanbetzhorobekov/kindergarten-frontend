@@ -1,29 +1,60 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent } from "@testing-library/react";
 import ChildForm from "./ChildForm";
 import { useChildApi } from "../api/ChildApi";
-import { describe, vi, test, expect } from "vitest";
+import { vi } from "vitest";
 
-vi.mock("../api/ChildApi", () => ({
-  useChildApi: vi.fn(),
-}));
+vi.mock("../api/ChildApi");
 
-test("Soll Validierungsfehler bei einem leeren Formular anzeigen", async () => {
-  (useChildApi as any).mockReturnValue({
-    kindergartens: [],
-    groups: [],
-    createChild: { mutate: vi.fn(), isPending: false },
+(describe("ChildForm (unit)"),
+  () => {
+    const mockMutate = vi.fn();
+
+    beforeEach(() => {
+      (useChildApi as any).mockReturnValue({
+        kindergartens: [],
+        groups: [],
+        createChild: {
+          mutate: mockMutate,
+          isPending: false,
+          isError: false,
+        },
+      });
+    });
+
+    test("render form", () => {
+      render(<ChildForm onAddChild={vi.fn()} />);
+
+      expect(screen.getByLabelText("Vorname")).toBeInTheDocument();
+      expect(screen.getByLabelText("Nachname")).toBeInTheDocument();
+    });
+
+    test("validation works", async () => {
+      render(<ChildForm onAddChild={vi.fn()} />);
+
+      fireEvent.click(screen.getByRole("button", { name: "Anmelden" }));
+
+      expect(
+        await screen.findByText("Vorname ist erforderlich"),
+      ).toBeInTheDocument();
+    });
+
+    test("submit calls mutate", async () => {
+      render(<ChildForm onAddChild={vi.fn()} />);
+
+      fireEvent.change(screen.getByLabelText("Vorname"), {
+        target: { value: "Almanbet" },
+      });
+
+      fireEvent.change(screen.getByLabelText("Nachname"), {
+        target: { value: "Zhorobekov" },
+      });
+
+      fireEvent.change(screen.getByLabelText("Geburtsdatum"), {
+        target: { value: "2022-02-02" },
+      });
+
+      fireEvent.click(screen.getByRole("button", { name: "Anmelden" }));
+
+      expect(mockMutate).toHaveBeenCalled();
+    });
   });
-
-  render(<ChildForm onAddChild={vi.fn()} />);
-
-  const submitButton = screen.getByRole("button", { name: /anmelden/i });
-  fireEvent.click(submitButton);
-
-  expect(
-    await screen.findByText(/vorname ist erforderlich/i),
-  ).toBeInTheDocument();
-  expect(
-    await screen.findByText(/nachname ist erforderlich/i),
-  ).toBeInTheDocument();
-});
