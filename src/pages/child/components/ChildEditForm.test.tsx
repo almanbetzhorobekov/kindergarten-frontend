@@ -57,7 +57,6 @@ describe("ChildEditForm Component", () => {
       />,
     );
 
-    // Проверяем, Input
     expect(screen.getByLabelText(/vorname/i)).toHaveValue("Max");
     expect(screen.getByLabelText(/nachname/i)).toHaveValue("Mustermann");
   });
@@ -82,7 +81,6 @@ describe("ChildEditForm Component", () => {
     fireEvent.click(saveButton);
 
     await waitFor(() => {
-      // Проверяем, что onSave вызвана с UUID и обновленным объектом
       expect(mockOnSave).toHaveBeenCalledWith(
         "child-123",
         expect.objectContaining({

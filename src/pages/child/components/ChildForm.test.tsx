@@ -1,6 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ChildForm from "./ChildForm";
-import { useChildApi } from "../api/ChildApi";
 import { vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { TestingProvider } from "testing/testing";
@@ -93,7 +92,7 @@ describe("ChildForm (unit)", () => {
     const kindergartenIdEl: HTMLSelectElement =
       screen.getByLabelText("Kindergarten");
     await user.click(kindergartenIdEl);
-    await user.selectOptions(kindergartenIdEl, KINDERGARTEN_ID);
+    await user.selectOptions(kindergartenIdEl, KINDERGARTEN_ID); //Hier ich finde Problem
     expect(kindergartenIdEl).toHaveValue([KINDERGARTEN_ID]);
 
     const registerButtonEl = screen.getByRole("button", { name: /Anmelden/i });
@@ -127,16 +126,19 @@ const CHILDREN_TEST_PAYLOAD: PageDTO<ChildDTO> = {
 };
 
 const KINDERGARTEN_ID = "kindergarten-id";
-const KINDERGARTENS_TEST_PAYLOAD: KindergartenDTO = {
-  uuid: KINDERGARTEN_ID,
-  kindergartenName: "",
-  address: {
-    uuid: "",
-    city: "",
-    plz: "",
-    street: "",
-    houseNumber: "",
+
+const KINDERGARTENS_TEST_PAYLOAD: KindergartenDTO[] = [
+  {
+    uuid: KINDERGARTEN_ID,
+    kindergartenName: "Kita Test",
+    address: {
+      uuid: "",
+      city: "Bonn",
+      plz: "53111",
+      street: "Musterstraße",
+      houseNumber: "1",
+    },
+    groups: [],
+    educators: [],
   },
-  groups: [],
-  educators: [],
-};
+];
