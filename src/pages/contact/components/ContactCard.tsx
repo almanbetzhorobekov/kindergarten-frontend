@@ -24,8 +24,12 @@ export default function ContactCard({
   phone,
   workTime,
 }: ContactCardProps) {
+  const fullName = `${firstName} ${lastName}`;
   return (
     <Card
+      role="region"
+      tabIndex={0}
+      aria-label={`${role} im Kindergarten: ${fullName}. Kontaktinformationen folgen: Telefon und Email.`}
       sx={{
         width: 320,
         borderRadius: 3,
@@ -36,7 +40,7 @@ export default function ContactCard({
       <CardContent>
         <Avatar
           src="/images/educator/our-educator.jpg"
-          alt={`${firstName} ${lastName}`}
+          alt={`Profilbild von ${fullName}`}
           sx={{
             width: 96,
             height: 96,
@@ -45,8 +49,13 @@ export default function ContactCard({
           }}
         />
 
-        <Typography variant="h6" fontWeight="bold">
-          {firstName} {lastName}
+        <Typography
+          id={`contact-${fullName}`}
+          variant="h6"
+          component="h2"
+          fontWeight="bold"
+        >
+          {fullName}
         </Typography>
 
         <Typography variant="body2" color="text.secondary" mb={2}>
@@ -57,11 +66,13 @@ export default function ContactCard({
 
         <Box sx={{ textAlign: "left" }}>
           <Typography variant="body2">
-            <strong>Email:</strong> {email}
+            <strong>Email:</strong> <a href={`mailto:${email}`}>{email}</a>
           </Typography>
+
           <Typography variant="body2">
-            <strong>Telefon:</strong> {phone}
+            <strong>Telefon:</strong> <a href={`tel:${phone}`}>{phone}</a>
           </Typography>
+
           <Typography variant="body2">
             <strong>Arbeitszeit:</strong> {workTime}
           </Typography>
