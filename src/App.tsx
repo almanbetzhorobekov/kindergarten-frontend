@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import theme from "./styling/theme.js";
+//import { useState } from "react";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +25,9 @@ export const queryClient = new QueryClient({
 });
 
 export default function App() {
+  // const [mode, setMode] = useState<'light' | 'dark'>('light')>;
+  //const theme = getAppTheme(mode);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
